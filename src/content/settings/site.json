@@ -1,0 +1,22 @@
+{
+  "name": "Mon Site",
+  "shortName": "Mon Site",
+  "description": "Description par défaut du site, utilisée en meta description fallback.",
+  "nav": [
+    { "label": "Accueil", "href": "/" },
+    { "label": "Blog", "href": "/blog" },
+    { "label": "À propos", "href": "/a-propos" },
+    { "label": "Contact", "href": "/contact" }
+  ],
+  "organizationName": "Mon Organisation",
+  "social": {
+    "twitter": "",
+    "linkedin": ""
+  },
+  "faq": [
+    {
+      "q": "Exemple de question fréquente globale ?",
+      "a": "Réponse partagée, affichable sur plusieurs pages via le composant GlobalFaq. Éditée directement dans ce fichier."
+    }
+  ]
+}

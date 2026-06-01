@@ -1,0 +1,51 @@
+---
+title: "Audit énergétique pour PME"
+description: "Réduisez votre facture énergétique avec un audit actionnable en 2 semaines."
+tldr: "Landing de service : hero + sections structurées en frontmatter, corps MDX pour le sur-mesure. Génère un JSON-LD Service + FAQPage."
+topics: ["audit énergétique", "PME", "autoconsommation"]
+hero:
+  eyebrow: "Service"
+  headline: "Un audit énergétique clair et actionnable"
+  subheadline: "Diagnostic complet, recommandations chiffrées, accompagnement à la mise en oeuvre."
+  cta:
+    label: "Demander un audit"
+    href: "/contact"
+sections:
+  - type: features
+    title: "Ce que vous obtenez"
+    items:
+      - title: "Diagnostic complet"
+        body: "Analyse de vos consommations et de votre courbe de charge."
+      - title: "Recommandations chiffrées"
+        body: "Des actions priorisées avec ROI estimé."
+      - title: "Accompagnement"
+        body: "Support à la mise en oeuvre des préconisations."
+  - type: proof
+    title: "Ils nous font confiance"
+    items:
+      - quote: "Facture réduite de 18% en six mois."
+        author: "Dirigeant PME"
+        role: "Secteur industriel"
+  - type: faq
+    title: "Questions fréquentes"
+    items:
+      - q: "Combien de temps dure l audit ?"
+        a: "Environ deux semaines entre le recueil des données et la restitution."
+      - q: "Quelles données sont nécessaires ?"
+        a: "Vos factures et, idéalement, votre courbe de charge Enedis."
+  - type: cta
+    title: "Prêt à réduire votre facture ?"
+    label: "Demander un audit"
+    href: "/contact"
+schema:
+  type: "Service"
+  name: "Audit énergétique PME"
+  provider: "Mon Organisation"
+---
+
+import Card from "@/components/ui/Card.astro";
+
+Bloc MDX optionnel sous les sections, pour du contenu vraiment sur-mesure
+(tableaux comparatifs, composants importés, etc.).
+
+<Card>Exemple de composant importé dans le corps MDX.</Card>

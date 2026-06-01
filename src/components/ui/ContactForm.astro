@@ -1,0 +1,91 @@
+---
+// [starter forms] Formulaire de contact statique, sans îlot ni framework.
+// Poste vers un service tiers (Formspree, Web3Forms…) défini par
+// PUBLIC_FORM_ENDPOINT dans .env. Aucun backend, aucune hydratation.
+const field =
+  'w-full rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm';
+---
+
+<form data-contact-form class="space-y-4">
+  <!-- Honeypot anti-spam : si rempli, on ignore silencieusement. -->
+  <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+
+  <div>
+    <label class="mb-1 block text-sm font-medium" for="name">Nom</label>
+    <input id="name" name="name" type="text" required class={field} />
+  </div>
+  <div>
+    <label class="mb-1 block text-sm font-medium" for="email">Email</label>
+    <input id="email" name="email" type="email" required class={field} />
+  </div>
+  <div>
+    <label class="mb-1 block text-sm font-medium" for="message">Message</label>
+    <textarea id="message" name="message" required rows={5} class={field}></textarea>
+  </div>
+
+  <button
+    type="submit"
+    class="inline-flex items-center justify-center rounded-[var(--radius)] bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-[var(--color-accent-fg)] transition-colors hover:opacity-90 disabled:opacity-50"
+  >
+    Envoyer
+  </button>
+
+  <p data-status="ok" hidden class="text-sm text-green-600">Message envoyé, merci.</p>
+  <p data-status="error" hidden class="text-sm text-red-600"></p>
+</form>
+
+<script>
+  const ENDPOINT = import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined;
+
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const ok = form.querySelector<HTMLElement>('[data-status="ok"]');
+    const err = form.querySelector<HTMLElement>('[data-status="error"]');
+
+    const showError = (msg: string) => {
+      if (ok) ok.hidden = true;
+      if (err) {
+        err.textContent = msg;
+        err.hidden = false;
+      }
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      if (data.get('_gotcha')) return; // honeypot rempli → bot
+
+      if (!ENDPOINT) {
+        showError('PUBLIC_FORM_ENDPOINT non configuré (voir .env.example).');
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Envoi…';
+      }
+      if (err) err.hidden = true;
+
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: 'POST',
+          body: data,
+          headers: { Accept: 'application/json' },
+        });
+        if (res.ok) {
+          form.reset();
+          if (ok) ok.hidden = false;
+        } else {
+          showError('Une erreur est survenue. Réessayez.');
+        }
+      } catch {
+        showError('Une erreur est survenue. Réessayez.');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Envoyer';
+        }
+      }
+    });
+  });
+</script>

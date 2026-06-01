@@ -1,0 +1,12 @@
+---
+interface Props {
+  class?: string;
+  prose?: boolean;
+}
+const { class: cls = '', prose = false } = Astro.props;
+const width = prose ? 'max-w-[var(--container-prose)]' : 'max-w-5xl';
+---
+
+<div class={`mx-auto w-full px-4 ${width} ${cls}`}>
+  <slot />
+</div>

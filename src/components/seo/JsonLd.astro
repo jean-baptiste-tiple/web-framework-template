@@ -1,0 +1,143 @@
+---
+import { SITE } from '@/lib/site';
+import { getAuthor } from '@/lib/authors';
+
+type PageType = 'website' | 'article' | 'page' | 'service';
+
+interface FaqItem {
+  q: string;
+  a: string;
+}
+interface Crumb {
+  name: string;
+  url: string;
+}
+
+interface Props {
+  type: PageType;
+  url: string; // canonical
+  title: string;
+  description: string;
+  authorKey?: string;
+  pubDate?: Date;
+  updatedDate?: Date;
+  image?: string;
+  serviceName?: string;
+  faq?: FaqItem[];
+  breadcrumbs?: Crumb[];
+}
+
+const {
+  type,
+  url,
+  title,
+  description,
+  authorKey,
+  pubDate,
+  updatedDate,
+  image,
+  serviceName,
+  faq,
+  breadcrumbs,
+} = Astro.props;
+
+const orgId = `${SITE.url}#organization`;
+const siteId = `${SITE.url}#website`;
+
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': 'Organization',
+    '@id': orgId,
+    name: SITE.organization.name,
+    url: SITE.url,
+    logo: new URL(SITE.organization.logo, SITE.url).href,
+    ...(SITE.organization.sameAs.length
+      ? { sameAs: SITE.organization.sameAs }
+      : {}),
+  },
+  {
+    '@type': 'WebSite',
+    '@id': siteId,
+    name: SITE.name,
+    url: SITE.url,
+    inLanguage: SITE.locale,
+    publisher: { '@id': orgId },
+  },
+];
+
+if (type === 'article') {
+  const author = authorKey ? getAuthor(authorKey) : undefined;
+  graph.push({
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    headline: title,
+    description,
+    inLanguage: SITE.locale,
+    url,
+    mainEntityOfPage: url,
+    ...(image ? { image } : {}),
+    ...(pubDate ? { datePublished: pubDate.toISOString() } : {}),
+    dateModified: (updatedDate ?? pubDate ?? new Date()).toISOString(),
+    ...(author
+      ? {
+          author: {
+            '@type': 'Person',
+            name: author.name,
+            ...(author.url ? { url: author.url } : {}),
+            ...(author.sameAs?.length ? { sameAs: author.sameAs } : {}),
+          },
+        }
+      : {}),
+    publisher: { '@id': orgId },
+  });
+} else if (type === 'service') {
+  graph.push({
+    '@type': 'Service',
+    name: serviceName ?? title,
+    description,
+    url,
+    provider: { '@id': orgId },
+  });
+} else if (type === 'page') {
+  graph.push({
+    '@type': 'WebPage',
+    '@id': `${url}#webpage`,
+    name: title,
+    description,
+    url,
+    inLanguage: SITE.locale,
+    isPartOf: { '@id': siteId },
+  });
+}
+
+if (faq && faq.length) {
+  graph.push({
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+}
+
+if (breadcrumbs && breadcrumbs.length) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: c.url,
+    })),
+  });
+}
+
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
+---
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(jsonLd)}
+/>

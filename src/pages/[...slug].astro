@@ -1,0 +1,123 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/ui/Container.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import Faq from '@/components/ui/Faq.astro';
+import SectionRenderer from '@/components/landing/SectionRenderer.astro';
+import { SITE } from '@/lib/site';
+
+// Le catch-all racine agrège deux collections à URL racine :
+//  - landings (MDX, orientées conversion : hero + sections structurées)
+//  - pages éditoriales (MD : à propos, mentions légales…)
+// Les routes plus spécifiques (/blog/*, /index) gagnent sur ce catch-all.
+export async function getStaticPaths() {
+  const landings = await getCollection('landings');
+  const pages = await getCollection('pages');
+  return [
+    ...landings.map((entry) => ({
+      params: { slug: entry.id },
+      props: { kind: 'landing' as const, entry },
+    })),
+    ...pages.map((entry) => ({
+      params: { slug: entry.id },
+      props: { kind: 'page' as const, entry },
+    })),
+  ];
+}
+
+type Props =
+  | { kind: 'landing'; entry: CollectionEntry<'landings'> }
+  | { kind: 'page'; entry: CollectionEntry<'pages'> };
+
+const props = Astro.props as Props;
+const { Content } = await render(props.entry);
+const data = props.entry.data;
+
+const meta = {
+  title: data.title,
+  description: data.description,
+  seo: data.seo,
+};
+const breadcrumbs = [
+  { name: 'Accueil', url: new URL('/', SITE.url).href },
+  { name: data.title, url: new URL(`/${props.entry.id}`, SITE.url).href },
+];
+
+// FAQ pour le JSON-LD : pour une landing elle vit dans une section `faq` ;
+// pour une page, au top-level du frontmatter.
+const faqForJsonLd =
+  props.kind === 'landing'
+    ? props.entry.data.sections.find((s) => s.type === 'faq')?.items
+    : props.entry.data.faq;
+---
+
+{
+  props.kind === 'landing' ? (
+    <BaseLayout
+      meta={meta}
+      type="service"
+      serviceName={props.entry.data.schema?.name}
+      faq={faqForJsonLd}
+      breadcrumbs={breadcrumbs}
+    >
+      <Section>
+        <Container class="text-center">
+          {props.entry.data.hero.eyebrow && (
+            <p class="mb-3 text-sm font-medium text-[var(--color-accent)]">
+              {props.entry.data.hero.eyebrow}
+            </p>
+          )}
+          <h1 class="mx-auto max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
+            {props.entry.data.hero.headline}
+          </h1>
+          {props.entry.data.hero.subheadline && (
+            <p class="mx-auto mt-4 max-w-xl text-[var(--color-muted)]">
+              {props.entry.data.hero.subheadline}
+            </p>
+          )}
+          {props.entry.data.hero.cta && (
+            <div class="mt-8">
+              <Button href={props.entry.data.hero.cta.href}>
+                {props.entry.data.hero.cta.label}
+              </Button>
+            </div>
+          )}
+        </Container>
+      </Section>
+
+      {props.entry.data.sections.map((section) => (
+        <SectionRenderer section={section} />
+      ))}
+
+      <Container prose class="prose-content py-4">
+        <Content />
+      </Container>
+    </BaseLayout>
+  ) : (
+    <BaseLayout meta={meta} type="page" faq={faqForJsonLd} breadcrumbs={breadcrumbs}>
+      <Container prose class="py-12">
+        <article>
+          <h1 class="mb-6 text-3xl font-bold tracking-tight">
+            {props.entry.data.title}
+          </h1>
+          {props.entry.data.tldr && (
+            <p class="mb-8 rounded-[var(--radius)] border-l-4 border-[var(--color-accent)] bg-[var(--color-surface)] p-4 text-[var(--color-muted)]">
+              <strong class="text-[var(--color-fg)]">En bref :</strong>{' '}
+              {props.entry.data.tldr}
+            </p>
+          )}
+          <div class="prose-content">
+            <Content />
+          </div>
+          {props.entry.data.faq && props.entry.data.faq.length > 0 && (
+            <div class="mt-12">
+              <Faq items={props.entry.data.faq} />
+            </div>
+          )}
+        </article>
+      </Container>
+    </BaseLayout>
+  )
+}

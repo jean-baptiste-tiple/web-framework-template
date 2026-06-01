@@ -1,0 +1,67 @@
+---
+import '@/styles/global.css';
+import { SITE } from '@/lib/site';
+import { resolveSeo, type SeoInput } from '@/lib/seo';
+import BaseHead from '@/components/seo/BaseHead.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import Header from '@/components/ui/Header.astro';
+import Footer from '@/components/ui/Footer.astro';
+
+type PageType = 'website' | 'article' | 'page' | 'service';
+
+interface Props {
+  // Données SEO de la page (title/description + bloc seo override).
+  meta: SeoInput;
+  type?: PageType;
+  // Champs structurés optionnels (article / service).
+  authorKey?: string;
+  pubDate?: Date;
+  updatedDate?: Date;
+  image?: string;
+  serviceName?: string;
+  faq?: { q: string; a: string }[];
+  breadcrumbs?: { name: string; url: string }[];
+}
+
+const {
+  meta,
+  type = 'website',
+  authorKey,
+  pubDate,
+  updatedDate,
+  image,
+  serviceName,
+  faq,
+  breadcrumbs,
+} = Astro.props;
+
+const seo = resolveSeo(meta, Astro.url.pathname);
+const ogType = type === 'article' ? 'article' : 'website';
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <BaseHead seo={seo} ogType={ogType} />
+    <JsonLd
+      type={type}
+      url={seo.canonical}
+      title={meta.title ?? seo.title}
+      description={seo.description}
+      authorKey={authorKey}
+      pubDate={pubDate}
+      updatedDate={updatedDate}
+      image={image}
+      serviceName={serviceName}
+      faq={faq}
+      breadcrumbs={breadcrumbs}
+    />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,82 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Container from '@/components/ui/Container.astro';
+import Card from '@/components/ui/Card.astro';
+import Button from '@/components/ui/Button.astro';
+import Faq from '@/components/ui/Faq.astro';
+
+// `section` est une union discriminée (par `type`) dérivée du schéma Zod
+// de la collection `landings` dans content.config.ts.
+type Section = CollectionEntry<'landings'>['data']['sections'][number];
+
+interface Props {
+  section: Section;
+}
+const { section } = Astro.props;
+---
+
+{
+  section.type === 'features' && (
+    <section class="py-12">
+      <Container>
+        {section.title && (
+          <h2 class="mb-8 text-2xl font-semibold">{section.title}</h2>
+        )}
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {section.items.map((it) => (
+            <Card>
+              <h3 class="mb-1 font-semibold">{it.title}</h3>
+              <p class="text-sm text-[var(--color-muted)]">{it.body}</p>
+            </Card>
+          ))}
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+{
+  section.type === 'proof' && (
+    <section class="py-12">
+      <Container>
+        {section.title && (
+          <h2 class="mb-8 text-2xl font-semibold">{section.title}</h2>
+        )}
+        <div class="grid gap-6 sm:grid-cols-2">
+          {section.items.map((it) => (
+            <figure class="rounded-[var(--radius)] border border-[var(--color-border)] p-6">
+              <blockquote class="text-[var(--color-fg)]">“{it.quote}”</blockquote>
+              <figcaption class="mt-3 text-sm text-[var(--color-muted)]">
+                {it.author}
+                {it.role ? ` — ${it.role}` : ''}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+{
+  section.type === 'faq' && (
+    <section class="py-12">
+      <Container prose>
+        <Faq title={section.title} items={section.items} />
+      </Container>
+    </section>
+  )
+}
+
+{
+  section.type === 'cta' && (
+    <section class="py-16">
+      <Container class="text-center">
+        {section.title && (
+          <h2 class="mb-6 text-2xl font-semibold">{section.title}</h2>
+        )}
+        <Button href={section.href}>{section.label}</Button>
+      </Container>
+    </section>
+  )
+}

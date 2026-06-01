@@ -1,0 +1,22 @@
+---
+import { SITE } from '@/lib/site';
+import Container from './Container.astro';
+---
+
+<header class="border-b border-[var(--color-border)]">
+  <Container class="flex h-16 items-center justify-between">
+    <a href="/" class="font-semibold tracking-tight">{SITE.name}</a>
+    <nav class="flex items-center gap-6 text-sm">
+      {
+        SITE.nav.map((item) => (
+          <a
+            href={item.href}
+            class="text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+  </Container>
+</header>

@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/ui/Container.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import Card from '@/components/ui/Card.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+
+const meta = {
+  title: 'Accueil',
+  description: 'Page d’accueil du template. Remplacer par la vraie proposition de valeur.',
+};
+---
+
+<BaseLayout meta={meta} type="website">
+  <Section>
+    <Container class="text-center">
+      <p class="mb-3 text-sm font-medium text-[var(--color-accent)]">Template Astro statique</p>
+      <h1 class="mx-auto max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
+        Titre principal de la home
+      </h1>
+      <p class="mx-auto mt-4 max-w-xl text-[var(--color-muted)]">
+        Sous-titre. Cette page est en <code>.astro</code> (sur-mesure). Le blog et les pages
+        éditoriales viennent de collections Markdown.
+      </p>
+      <div class="mt-8 flex justify-center gap-3">
+        <Button href="/blog">Voir le blog</Button>
+        <Button href="/a-propos" variant="outline">À propos</Button>
+      </div>
+    </Container>
+  </Section>
+
+  {
+    posts.length > 0 && (
+      <Section>
+        <Container>
+          <h2 class="mb-8 text-2xl font-semibold">Derniers articles</h2>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => (
+              <a href={`/blog/${post.id}`}>
+                <Card class="h-full transition-colors hover:border-[var(--color-accent)]">
+                  <h3 class="font-semibold">{post.data.title}</h3>
+                  <p class="mt-1 text-sm text-[var(--color-muted)]">
+                    {post.data.description}
+                  </p>
+                </Card>
+              </a>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+</BaseLayout>

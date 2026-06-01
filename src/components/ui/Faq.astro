@@ -1,0 +1,21 @@
+---
+interface Props {
+  title?: string;
+  items: { q: string; a: string }[];
+}
+const { title = 'Questions fréquentes', items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <div class="space-y-3">
+      {title && <h2 class="text-xl font-semibold">{title}</h2>}
+      {items.map((item) => (
+        <details class="rounded-[var(--radius)] border border-[var(--color-border)] p-4">
+          <summary class="cursor-pointer font-medium">{item.q}</summary>
+          <p class="mt-2 text-[var(--color-muted)]">{item.a}</p>
+        </details>
+      ))}
+    </div>
+  )
+}

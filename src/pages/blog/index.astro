@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/ui/Container.astro';
+import Section from '@/components/ui/Section.astro';
+import Card from '@/components/ui/Card.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+const meta = {
+  title: 'Blog',
+  description: 'Tous les articles.',
+};
+const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' });
+---
+
+<BaseLayout meta={meta} type="website">
+  <Section>
+    <Container>
+      <h1 class="mb-8 text-3xl font-bold tracking-tight">Blog</h1>
+      <div class="grid gap-6 sm:grid-cols-2">
+        {
+          posts.map((post) => (
+            <a href={`/blog/${post.id}`}>
+              <Card class="h-full transition-colors hover:border-[var(--color-accent)]">
+                <p class="text-xs text-[var(--color-muted)]">
+                  {dateFmt.format(post.data.pubDate)}
+                </p>
+                <h2 class="mt-1 font-semibold">{post.data.title}</h2>
+                <p class="mt-1 text-sm text-[var(--color-muted)]">
+                  {post.data.description}
+                </p>
+              </Card>
+            </a>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

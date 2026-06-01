@@ -1,0 +1,14 @@
+---
+// FAQ globale partagée : texte unique défini dans src/content/settings/site.json
+// (SITE.faq), réutilisable sur plusieurs pages. Édité une fois → appliqué partout.
+// Pour aussi l'injecter en JSON-LD FAQPage, passer faq={SITE.faq} à BaseLayout.
+import { SITE } from '@/lib/site';
+import Faq from './Faq.astro';
+
+interface Props {
+  title?: string;
+}
+const { title } = Astro.props;
+---
+
+{SITE.faq.length > 0 && <Faq title={title} items={SITE.faq} />}

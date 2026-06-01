@@ -1,0 +1,15 @@
+---
+import { SITE } from '@/lib/site';
+import Container from './Container.astro';
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-[var(--color-border)] py-8 text-sm text-[var(--color-muted)]">
+  <Container class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <p>© {year} {SITE.organization.name}</p>
+    <nav class="flex gap-4">
+      <a href="/mentions-legales" class="hover:text-[var(--color-fg)]">Mentions légales</a>
+      <a href="/rss.xml" class="hover:text-[var(--color-fg)]">RSS</a>
+    </nav>
+  </Container>
+</footer>
