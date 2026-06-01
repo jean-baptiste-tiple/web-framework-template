@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # La version de pnpm vient de "packageManager" dans package.json.
+      # Ne PAS remettre `with: version`, sinon conflit ERR_PNPM_BAD_PM_VERSION.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install --no-frozen-lockfile
-      # astro check (types + templates) puis build statique : attrape frontmatter
-      # invalide, lien de collection cassé, erreur de génération. C est notre filet.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      # astro check (types + frontmatter Zod) puis build statique : attrape
+      # frontmatter invalide, lien de collection cassé, erreur de génération.
       - run: pnpm build
