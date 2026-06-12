@@ -11,3 +11,4 @@
 - Garde anti-collision de slugs (pages vs landings vs routes réservées) : build cassé avec message explicite.
 - ESLint couvre désormais les .ts (typescript-eslint) ; Button avec prop type réutilisé par ContactForm ; aria-current sur la nav, role=status/alert sur les états du formulaire ; header wrap sur mobile.
 - Descriptions des pages bespoke mises au format 140-160 caractères.
+- Checklist de bootstrap (.tiple/checklists/bootstrap.md) : personnalisation technique d'un site neuf, référencée dans README et CLAUDE.md.

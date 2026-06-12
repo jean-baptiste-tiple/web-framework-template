@@ -24,6 +24,7 @@ Voir .tiple/conventions/tech-stack.md pour les versions exactes.
 ## Méthode
 Le projet suit la Tiple Method (variante sites). La doc dans docs/ est la source de vérité.
 Lire les fichiers pertinents avant chaque action.
+Site neuf depuis le template : dérouler .tiple/checklists/bootstrap.md (URL de prod, site.json, placeholders og/logo, contenus d'exemple, PUBLIC_FORM_ENDPOINT) en plus du cadrage.
 
 ## Règles absolues
 1. output: static. Ne JAMAIS introduire d adapter, de SSR, d API route dynamique, de Server Action ou de dépendance serveur. Tout doit être généré au build.
