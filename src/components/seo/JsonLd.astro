@@ -23,6 +23,8 @@ interface Props {
   updatedDate?: Date;
   image?: string;
   serviceName?: string;
+  serviceType?: 'Service' | 'Product';
+  serviceProvider?: string;
   faq?: FaqItem[];
   breadcrumbs?: Crumb[];
 }
@@ -37,6 +39,8 @@ const {
   updatedDate,
   image,
   serviceName,
+  serviceType,
+  serviceProvider,
   faq,
   breadcrumbs,
 } = Astro.props;
@@ -91,12 +95,25 @@ if (type === 'article') {
     publisher: { '@id': orgId },
   });
 } else if (type === 'service') {
+  // Service OU Product selon le frontmatter (schema.type de la landing).
+  const schemaType = serviceType ?? 'Service';
   graph.push({
-    '@type': 'Service',
+    '@type': schemaType,
     name: serviceName ?? title,
     description,
     url,
-    provider: { '@id': orgId },
+    ...(schemaType === 'Product'
+      ? {
+          brand: {
+            '@type': 'Brand',
+            name: serviceProvider ?? SITE.organization.name,
+          },
+        }
+      : {
+          provider: serviceProvider
+            ? { '@type': 'Organization', name: serviceProvider }
+            : { '@id': orgId },
+        }),
   });
 } else if (type === 'page') {
   graph.push({
@@ -107,6 +124,7 @@ if (type === 'article') {
     url,
     inLanguage: SITE.locale,
     isPartOf: { '@id': siteId },
+    ...(updatedDate ? { dateModified: updatedDate.toISOString() } : {}),
   });
 }
 

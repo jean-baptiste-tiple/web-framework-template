@@ -1,15 +1,15 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // IMPORTANT : remplacer `site` par l'URL de prod réelle.
-// Elle sert au sitemap, au RSS, aux canonical et au JSON-LD.
+// Source UNIQUE de l'URL : canonical, sitemap, robots.txt, llms.txt, RSS et
+// JSON-LD en dérivent tous (via import.meta.env.SITE, lu dans src/lib/site.ts).
 export default defineConfig({
   site: 'https://example.com',
   output: 'static',
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx()],
   vite: {
     plugins: [tailwindcss()],
   },

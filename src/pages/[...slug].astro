@@ -1,5 +1,6 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Container from '@/components/ui/Container.astro';
 import Section from '@/components/ui/Section.astro';
@@ -15,6 +16,23 @@ import { SITE } from '@/lib/site';
 export async function getStaticPaths() {
   const landings = await getCollection('landings');
   const pages = await getCollection('pages');
+
+  // Garde anti-collision : un slug réservé (route .astro existante) ou présent
+  // dans les deux collections serait silencieusement masqué. On casse le build.
+  const reserved = new Set(['blog', 'contact', '404', 'index']);
+  const seen = new Set<string>();
+  for (const id of [...landings, ...pages].map((e) => e.id)) {
+    if (reserved.has(id))
+      throw new Error(
+        `Slug "${id}" réservé par une route src/pages/ : renommer le fichier de contenu.`,
+      );
+    if (seen.has(id))
+      throw new Error(
+        `Slug "${id}" présent dans les collections pages ET landings : renommer l'un des deux.`,
+      );
+    seen.add(id);
+  }
+
   return [
     ...landings.map((entry) => ({
       params: { slug: entry.id },
@@ -42,7 +60,7 @@ const meta = {
 };
 const breadcrumbs = [
   { name: 'Accueil', url: new URL('/', SITE.url).href },
-  { name: data.title, url: new URL(`/${props.entry.id}`, SITE.url).href },
+  { name: data.title, url: new URL(`/${props.entry.id}/`, SITE.url).href },
 ];
 
 // FAQ pour le JSON-LD : pour une landing elle vit dans une section `faq` ;
@@ -59,6 +77,9 @@ const faqForJsonLd =
       meta={meta}
       type="service"
       serviceName={props.entry.data.schema?.name}
+      serviceType={props.entry.data.schema?.type}
+      serviceProvider={props.entry.data.schema?.provider}
+      updatedDate={props.entry.data.updatedDate}
       faq={faqForJsonLd}
       breadcrumbs={breadcrumbs}
     >
@@ -84,6 +105,13 @@ const faqForJsonLd =
               </Button>
             </div>
           )}
+          {props.entry.data.hero.image && (
+            <Image
+              src={props.entry.data.hero.image}
+              alt={props.entry.data.hero.imageAlt ?? ''}
+              class="mx-auto mt-10 rounded-[var(--radius)]"
+            />
+          )}
         </Container>
       </Section>
 
@@ -96,7 +124,13 @@ const faqForJsonLd =
       </Container>
     </BaseLayout>
   ) : (
-    <BaseLayout meta={meta} type="page" faq={faqForJsonLd} breadcrumbs={breadcrumbs}>
+    <BaseLayout
+      meta={meta}
+      type="page"
+      updatedDate={props.entry.data.updatedDate}
+      faq={faqForJsonLd}
+      breadcrumbs={breadcrumbs}
+    >
       <Container prose class="py-12">
         <article>
           <h1 class="mb-6 text-3xl font-bold tracking-tight">

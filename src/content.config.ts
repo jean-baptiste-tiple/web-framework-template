@@ -35,10 +35,15 @@ const blog = defineCollection({
       tags: z.array(z.string()).default([]),
       topics: z.array(z.string()).default([]), // entités/sujets explicites (GEO)
       heroImage: image().optional(),
+      heroImageAlt: z.string().optional(), // obligatoire dès que heroImage est fourni (a11y/GEO)
       draft: z.boolean().default(false),
       tldr: z.string().optional(), // résumé citable par un LLM (GEO)
       faq: faqSchema,
       seo: seoSchema,
+    })
+    .refine((d) => !d.heroImage || !!d.heroImageAlt, {
+      message: 'heroImageAlt est requis quand heroImage est défini',
+      path: ['heroImageAlt'],
     }),
 });
 
@@ -62,15 +67,22 @@ const landings = defineCollection({
     z.object({
       title: z.string(),
       description: z.string(),
+      updatedDate: z.coerce.date().optional(), // bump à chaque MAJ → lastmod sitemap
       tldr: z.string().optional(),
       topics: z.array(z.string()).default([]),
-      hero: z.object({
-        eyebrow: z.string().optional(),
-        headline: z.string(),
-        subheadline: z.string().optional(),
-        cta: z.object({ label: z.string(), href: z.string() }).optional(),
-        image: image().optional(),
-      }),
+      hero: z
+        .object({
+          eyebrow: z.string().optional(),
+          headline: z.string(),
+          subheadline: z.string().optional(),
+          cta: z.object({ label: z.string(), href: z.string() }).optional(),
+          image: image().optional(),
+          imageAlt: z.string().optional(), // obligatoire dès que image est fournie
+        })
+        .refine((h) => !h.image || !!h.imageAlt, {
+          message: 'hero.imageAlt est requis quand hero.image est défini',
+          path: ['imageAlt'],
+        }),
       // Page-builder léger : chaque section est mappée à un composant.
       sections: z
         .array(

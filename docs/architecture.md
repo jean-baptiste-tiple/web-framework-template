@@ -8,16 +8,16 @@
 5. Interactivité = par défaut AUCUNE (statique) ; sinon <script> vanilla dans le .astro. Îlots Solid = starter opt-in, seulement si nécessaire.
 
 ## Arbre
-- src/pages : routes (index, blog/, blog/[...slug], [...slug], rss.xml, 404)
+- src/pages : routes (index, blog/, blog/[...slug], [...slug], contact, 404) + routes générées (rss.xml, sitemap.xml, robots.txt, llms.txt)
 - src/content : blog/ pages/ landings/ settings/ + content.config.ts
 - src/layouts : BaseLayout
 - src/components : ui/ seo/ landing/
-- src/lib : site.ts, seo.ts, authors.ts
+- src/lib : site.ts (valide settings/site.json par Zod, URL depuis astro.config), seo.ts, authors.ts
 - src/styles : global.css (tokens Tailwind 4)
-- public : robots.txt, llms.txt, favicon
+- public : favicon, og-default.png, logo.png (placeholders à remplacer)
 
 ## Intégrations Astro installées
-mdx, sitemap. (+ @astrojs/rss en dépendance pour la route /rss.xml ; @tailwindcss/vite côté Vite.)
+mdx. (+ @astrojs/rss en dépendance pour la route /rss.xml ; @tailwindcss/vite côté Vite. sitemap/robots/llms = routes custom src/pages/*.ts.)
 
 ## Inclus dans le socle
 blog, pages, landings, SEO/JSON-LD, sitemap, RSS, formulaire contact vanilla, réglages globaux (settings/site.json).

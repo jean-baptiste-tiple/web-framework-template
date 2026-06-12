@@ -43,7 +43,7 @@ Principe : **1 fichier markdown par page** pour le texte de la page ; **1 fichie
 Deux tiers de texte :
 - Texte DE PAGE (titre, corps, FAQ propre) -> dans le .md/.mdx de la page.
 - Texte GLOBAL/partagé (nom du site, nav, footer, organisation, réseaux, FAQ globale) -> src/content/settings/site.json, édité directement dans le fichier, lu par src/lib/site.ts (SITE). NE JAMAIS dupliquer ce texte dans une page.
-- Config TECHNIQUE (URL prod, locale, logo, sameAs) -> src/lib/site.ts, dev uniquement.
+- Config TECHNIQUE -> URL prod dans astro.config.mjs (`site:`, source unique) ; locale, logo, sameAs dans src/lib/site.ts. Dev uniquement.
 
 Où va chaque contenu :
 - Article de blog -> Markdown dans src/content/blog/ (collection blog). URL /blog/<slug>.
@@ -73,7 +73,7 @@ Le nom du fichier = l'URL (slug). Penser à bumper `updatedDate`.
 Une seule modif ici → répercutée partout. Ne PAS recopier ces textes dans les pages.
 
 ### Réglages TECHNIQUES (rares, plutôt dev)
-`src/lib/site.ts` : URL de prod (`url`), `locale`/`lang`, image OG par défaut, logo et `sameAs` de l'organisation. Penser à aligner `site:` dans `astro.config.mjs`.
+URL de prod : UNE seule fois dans `astro.config.mjs` (`site:`) — canonical, sitemap, robots.txt, llms.txt et RSS en dérivent (site.ts la lit via `import.meta.env.SITE`). `src/lib/site.ts` : `locale`/`lang`, image OG par défaut, logo et `sameAs` de l'organisation. Remplacer les placeholders `public/og-default.png` et `public/logo.png` au bootstrap.
 
 ### Créer une nouvelle page
 - Nouvel article : créer `src/content/blog/<slug>.md`. Frontmatter minimum : `title`, `description`, `pubDate` (sinon le build échoue). Optionnels utiles : `updatedDate`, `author` (clé de `src/lib/authors.ts`, défaut `jb`), `tags`, `tldr`, `faq`.
@@ -94,7 +94,7 @@ Déposer l'image et la référencer via `heroImage:` (frontmatter) ; `alt` + dim
 4. Renseigner faq dès que pertinent -> rendu visuel + JSON-LD FAQPage (rich results + GEO).
 5. Titres Markdown sémantiques (un seul H1 = title, puis H2/H3). Phrases factuelles autonomes.
 6. Images via astro:assets (heroImage dans le frontmatter, <Image/> dans les composants) : width/height (anti-CLS) + alt obligatoire.
-7. Mettre à jour public/llms.txt quand on ajoute une page importante.
+7. llms.txt est GÉNÉRÉ au build depuis les collections (src/pages/llms.txt.ts) : une page de contenu y apparaît seule ; une nouvelle page .astro bespoke s'ajoute à la main dans cette route ET dans BESPOKE de src/pages/sitemap.xml.ts.
 8. Vérifier le rendu du JSON-LD (Rich Results Test) sur tout nouveau type de page.
 
 ## Règles Astro

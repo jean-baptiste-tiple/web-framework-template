@@ -7,7 +7,7 @@ Vérifier ICI avant de créer un composant. Réutiliser si existant.
 | --- | --- | --- |
 | Container.astro | class?, prose? | Largeur max + padding (prose = colonne de lecture) |
 | Section.astro | class? | Espacement vertical de section |
-| Button.astro | href?, variant(primary/outline)?, class? | Bouton/lien |
+| Button.astro | href?, variant(primary/outline)?, type(button/submit)?, class? | Bouton/lien (type pour usage formulaire) |
 | Card.astro | class? | Carte surface + bordure |
 | Header.astro | — | Nav principale (depuis SITE.nav) |
 | Footer.astro | — | Pied de page |

@@ -7,4 +7,5 @@
 | Premier article | article (md) | /blog/premier-article | Exemple de structure | — | "structure article blog" |
 | À propos | page (md) | /a-propos | Présenter l org | — | "à propos <marque>" |
 | Mentions légales | page (md) | /mentions-legales | Légal | — | noindex |
+| Contact | bespoke (.astro) | /contact | Recevoir des demandes | Envoyer | "contact <marque>" |
 | Audit énergétique | landing (mdx) | /audit-energetique | Conversion service | Demander un audit | "audit énergétique PME" |

@@ -31,10 +31,9 @@ export function resolveSeo(input: SeoInput, pathname: string): ResolvedSeo {
   const description =
     input.seo?.description ?? input.description ?? SITE.description;
 
-  const path =
-    pathname.endsWith('/') && pathname !== '/'
-      ? pathname.slice(0, -1)
-      : pathname;
+  // Slash final systématique : c'est l'URL réellement servie (build format
+  // "directory") et celle du sitemap. Une seule forme déclarée partout.
+  const path = pathname.endsWith('/') ? pathname : `${pathname}/`;
   const canonical = input.seo?.canonical ?? new URL(path, SITE.url).href;
 
   const rawOg = input.seo?.ogImage ?? input.ogImage ?? SITE.defaultOgImage;

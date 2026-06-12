@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Container from '@/components/ui/Container.astro';
 import Faq from '@/components/ui/Faq.astro';
@@ -16,16 +17,22 @@ const { Content } = await render(post);
 const d = post.data;
 const author = getAuthor(d.author);
 
+// heroImage alimente la page, l'og:image et l'image du JSON-LD.
+const heroAbsoluteUrl = d.heroImage
+  ? new URL(d.heroImage.src, SITE.url).href
+  : undefined;
+
 const meta = {
   title: d.title,
   description: d.description,
+  ogImage: d.heroImage?.src,
   seo: d.seo,
 };
 
 const breadcrumbs = [
   { name: 'Accueil', url: new URL('/', SITE.url).href },
-  { name: 'Blog', url: new URL('/blog', SITE.url).href },
-  { name: d.title, url: new URL(`/blog/${post.id}`, SITE.url).href },
+  { name: 'Blog', url: new URL('/blog/', SITE.url).href },
+  { name: d.title, url: new URL(`/blog/${post.id}/`, SITE.url).href },
 ];
 
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' });
@@ -37,6 +44,7 @@ const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' });
   authorKey={d.author}
   pubDate={d.pubDate}
   updatedDate={d.updatedDate}
+  image={heroAbsoluteUrl}
   faq={d.faq}
   breadcrumbs={breadcrumbs}
 >
@@ -49,6 +57,16 @@ const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' });
           {d.updatedDate && ` · mis à jour le ${dateFmt.format(d.updatedDate)}`}
         </p>
       </header>
+
+      {
+        d.heroImage && (
+          <Image
+            src={d.heroImage}
+            alt={d.heroImageAlt ?? ''}
+            class="mb-8 rounded-[var(--radius)]"
+          />
+        )
+      }
 
       {
         d.tldr && (

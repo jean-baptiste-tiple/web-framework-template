@@ -1,17 +1,26 @@
 ---
 import { SITE } from '@/lib/site';
 import Container from './Container.astro';
+
+// Lien actif : comparaison des chemins normalisés (sans slash final).
+const norm = (p: string) => (p !== '/' && p.endsWith('/') ? p.slice(0, -1) : p);
+const current = norm(Astro.url.pathname);
 ---
 
 <header class="border-b border-[var(--color-border)]">
-  <Container class="flex h-16 items-center justify-between">
+  <Container class="flex min-h-16 flex-wrap items-center justify-between gap-y-2 py-3">
     <a href="/" class="font-semibold tracking-tight">{SITE.name}</a>
-    <nav class="flex items-center gap-6 text-sm">
+    <nav class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm" aria-label="Navigation principale">
       {
         SITE.nav.map((item) => (
           <a
             href={item.href}
-            class="text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
+            aria-current={norm(item.href) === current ? 'page' : undefined}
+            class={
+              norm(item.href) === current
+                ? 'font-medium text-[var(--color-fg)]'
+                : 'text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]'
+            }
           >
             {item.label}
           </a>

@@ -2,12 +2,13 @@
 interface Props {
   href?: string;
   variant?: 'primary' | 'outline';
+  type?: 'button' | 'submit';
   class?: string;
 }
-const { href, variant = 'primary', class: cls = '' } = Astro.props;
+const { href, variant = 'primary', type = 'button', class: cls = '' } = Astro.props;
 
 const base =
-  'inline-flex items-center justify-center rounded-[var(--radius)] px-5 py-2.5 text-sm font-medium transition-colors';
+  'inline-flex items-center justify-center rounded-[var(--radius)] px-5 py-2.5 text-sm font-medium transition-colors disabled:opacity-50';
 const styles =
   variant === 'primary'
     ? 'bg-[var(--color-accent)] text-[var(--color-accent-fg)] hover:opacity-90'
@@ -20,7 +21,7 @@ const styles =
       <slot />
     </a>
   ) : (
-    <button class={`${base} ${styles} ${cls}`}>
+    <button type={type} class={`${base} ${styles} ${cls}`}>
       <slot />
     </button>
   )

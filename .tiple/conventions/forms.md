@@ -1,6 +1,6 @@
 # Formulaires (statique)
 
-- Pas de backend : un formulaire poste vers un service tiers (Formspree, Web3Forms) via PUBLIC_FORM_ENDPOINT.
+- Pas de backend : un formulaire poste vers un service tiers (Formspree, Web3Forms) via PUBLIC_FORM_ENDPOINT — variable inlinée AU BUILD : à définir dans l'env de build de l'hébergeur.
 - Validation côté client minimale (HTML required/type) + validation côté service.
 - Anti-spam : honeypot. Pas de secret côté client.
 - Intégré au socle (ContactForm.astro + /contact). Vanilla, aucune hydratation.

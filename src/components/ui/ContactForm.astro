@@ -1,7 +1,10 @@
 ---
 // [starter forms] Formulaire de contact statique, sans îlot ni framework.
 // Poste vers un service tiers (Formspree, Web3Forms…) défini par
-// PUBLIC_FORM_ENDPOINT dans .env. Aucun backend, aucune hydratation.
+// PUBLIC_FORM_ENDPOINT — inliné AU BUILD : définir la variable dans
+// l'environnement de build de l'hébergeur, pas seulement en local.
+import Button from './Button.astro';
+
 const field =
   'w-full rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm';
 ---
@@ -23,15 +26,12 @@ const field =
     <textarea id="message" name="message" required rows={5} class={field}></textarea>
   </div>
 
-  <button
-    type="submit"
-    class="inline-flex items-center justify-center rounded-[var(--radius)] bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-[var(--color-accent-fg)] transition-colors hover:opacity-90 disabled:opacity-50"
-  >
-    Envoyer
-  </button>
+  <Button type="submit">Envoyer</Button>
 
-  <p data-status="ok" hidden class="text-sm text-green-600">Message envoyé, merci.</p>
-  <p data-status="error" hidden class="text-sm text-red-600"></p>
+  <p data-status="ok" role="status" hidden class="text-sm text-green-600">
+    Message envoyé, merci.
+  </p>
+  <p data-status="error" role="alert" hidden class="text-sm text-red-600"></p>
 </form>
 
 <script>

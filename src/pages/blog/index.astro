@@ -11,7 +11,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 
 const meta = {
   title: 'Blog',
-  description: 'Tous les articles.',
+  description:
+    'Tous les articles et guides du site, du plus récent au plus ancien : annonces, tutoriels et retours d’expérience publiés par l’équipe éditoriale.',
 };
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' });
 ---
