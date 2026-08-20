@@ -1,6 +1,14 @@
 # Component registry
 
-Vérifier ICI avant de créer un composant. Réutiliser si existant.
+Vérifier ICI + la galerie **/styleguide** (src/pages/styleguide.astro, noindex) AVANT de créer un
+composant OU d'écrire du markup de section. Tout nouveau composant/variante → l'ajouter ici ET à
+/styleguide dans le même commit.
+
+## Normes transverses
+- Préférer UN composant à variantes à N composants quasi identiques. Quand une famille grandit, marquer son CANONIQUE ici (« Canonique hero », « Canonique CTA »…) ; les composants gardés séparés portent un ⛔ avec la raison en une ligne (sinon chaque review rejoue le débat de fusion).
+- Largeur : toute section passe par <Container>. Aucune surcharge de largeur en px ; exceptions de LECTURE (prose) listées ici.
+- Surface de carte : Card.astro. Un wrapper ne pose pas une surface que son slot porte déjà (anti double-carte).
+- Ne pas créer de composant sans usage. Une donnée déclarée (settings, schéma) mais rendue par aucun composant est annotée « dormante » ici, pas présentée comme branchée.
 
 ## UI (src/components/ui/)
 | Composant | Props | Rôle |
@@ -34,3 +42,16 @@ installé @astrojs/solid-js et seulement si le natif (<details>, <script>) ne su
 | Layout | Rôle |
 | --- | --- |
 | BaseLayout.astro | Head SEO + JSON-LD + Header/Footer. Utilisé par TOUTES les pages. |
+
+## Pages bespoke (markup inline déclaré)
+Chaque bloc resté en markup inline (hors composant) est listé ici avec sa raison en une ligne.
+Un bloc inline non listé est réputé duplication à corriger.
+| Page | Bloc | Raison |
+| --- | --- | --- |
+| index.astro | hero + grille d'articles | design unique de la home (règle DRY : bespoke réservé à l'unique) |
+
+## Doublons & consolidation (roadmap)
+Dette de duplication tracée ici : datée, priorisée valeur/risque, avec fait / reste à faire.
+Fusion : jamais en aveugle — inspecter la divergence réelle avant (gabarit
+.tiple/templates/fusion-a-trancher.md), puis décision datée avec sa raison.
+_(vide au bootstrap)_

@@ -20,11 +20,11 @@ const meta = {
 <BaseLayout meta={meta} type="website">
   <Section>
     <Container class="text-center">
-      <p class="mb-3 text-sm font-medium text-[var(--color-accent)]">Template Astro statique</p>
+      <p class="mb-3 text-sm font-medium text-accent">Template Astro statique</p>
       <h1 class="mx-auto max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
         Titre principal de la home
       </h1>
-      <p class="mx-auto mt-4 max-w-xl text-[var(--color-muted)]">
+      <p class="mx-auto mt-4 max-w-xl text-muted">
         Sous-titre. Cette page est en <code>.astro</code> (sur-mesure). Le blog et les pages
         éditoriales viennent de collections Markdown.
       </p>
@@ -43,9 +43,9 @@ const meta = {
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <a href={`/blog/${post.id}`}>
-                <Card class="h-full transition-colors hover:border-[var(--color-accent)]">
+                <Card class="h-full transition-colors hover:border-accent">
                   <h3 class="font-semibold">{post.data.title}</h3>
-                  <p class="mt-1 text-sm text-[var(--color-muted)]">
+                  <p class="mt-1 text-sm text-muted">
                     {post.data.description}
                   </p>
                 </Card>

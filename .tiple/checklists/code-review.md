@@ -21,5 +21,10 @@
 - [ ] Images : alt + width/height
 - [ ] HTML sémantique, navigable clavier
 - [ ] Composants réutilisés (registry vérifié), pas de couleur en dur
+- [ ] Aucun composant forcé (surcharge inline, `!important`, valeur arbitraire, prop détournée, wrapper qui écrase son style) : besoin non couvert = prop/variante additive OU scission, jamais un hack au call-site
 - [ ] DRY, edits chirurgicaux
-- [ ] npm run build vert
+- [ ] Gate complet vert : lint + astro check + build (pas build seul)
+
+## Documentation
+- [ ] Un ADR qui révise une règle de CLAUDE.md ou d'une convention met à jour ce texte dans le même commit (l'ADR trace la décision, il ne la remplace pas)
+- [ ] Erreur corrigée pendant le chantier = boucle « Après une erreur » passée (garde écrite ou observation dans docs/learnings.md)

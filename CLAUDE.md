@@ -11,6 +11,22 @@
 - Critères de succès vérifiables avant d implémenter.
 - Push back quand une approche plus simple existe.
 
+## Après une erreur (apprentissage automatique)
+- **Corriger l'instance ne solde pas l'erreur** — qu'elle soit commise par l'agent, repérée dans le code ou signalée par l'utilisateur. Après le fix, s'arrêter avant de reprendre le fil : qu'est-ce qui a rendu l'erreur possible, et qu'est-ce qui l'empêchera de revenir ? Tant que la réponse n'est pas **écrite**, la récidive est garantie — sous une autre forme, dans un contexte où personne ne fera le lien.
+- **L'apprentissage s'écrit immédiatement et automatiquement, sans demander validation** — à une condition : passer TOUS les points du gate `.tiple/checklists/apprentissage.md` (généralisable, contrôlable, non dupliqué, bien routé, pérenne, sobre, journalisé, vérifié). Une règle qui échoue au gate ne s'écrit pas : elle va en observation dans `docs/learnings.md`, rien d'autre.
+- **Toute écriture laisse une entrée datée dans `docs/learnings.md`** (erreur → règle → emplacement). C'est la contrepartie de l'absence de validation : l'humain peut auditer et révoquer après coup.
+
+| Apprentissage | Emplacement |
+|---|---|
+| Règle technique manquante ou fausse | Fichier du tag dans `.tiple/conventions/` (routage : `_index.md`) |
+| Point de contrôle absent de la review | `.tiple/checklists/code-review.md` |
+| Composant recréé au lieu de réutilisé | `.tiple/conventions/component-registry.md` |
+| Règle de travail globale / gotcha projet | `CLAUDE.md` (section concernée) |
+| Observation trop spécifique pour une règle | `docs/learnings.md` seulement (2 occurrences = candidate à généralisation) |
+| Invariant d'architecture absent, flou ou violé | **Exception : jamais automatique.** Proposer un ADR `docs/decisions/` et attendre l'accord (règle absolue 7) |
+
+- **Trois écueils :** 1. Ne rien écrire parce que « ça ne se reproduira pas » — la bonne foi n'est pas un mécanisme. 2. Reporter l'écriture à « la fin » — la boucle est immédiate, avant de reprendre la tâche. 3. Écrire une règle qui décrit l'erreur au lieu de la rendre détectable — « faire attention à X » ne vaut rien ; une règle se contrôle par une machine (lint/check/build) ou une citation en review.
+
 ## Projet
 <!-- Nom + description du site à remplir au bootstrap -->
 
@@ -32,7 +48,7 @@ Site neuf depuis le template : dérouler .tiple/checklists/bootstrap.md (URL de 
 3. Le contenu éditorial vit en Markdown/MDX dans src/content/, JAMAIS en dur dans des composants. Présentation (composants/tokens) et contenu (.md) restent séparés.
 4. Tout nouveau champ de contenu passe par un schéma Zod dans src/content.config.ts. Le typage du contenu EST le filet de sécurité (pas de tests).
 5. SEO/JSON-LD passent TOUJOURS par BaseLayout. Ne pas dupliquer de balises meta dans une page.
-6. Réutiliser les composants de src/components/ui/ avant d en créer un nouveau (voir component-registry).
+6. Réutiliser avant de créer : consulter component-registry ET la galerie /styleguide AVANT tout composant ou markup de section. **Jamais forcer un composant hors de son usage prévu** (surcharge inline, `!important`, valeur arbitraire, prop détournée, wrapper qui écrase son style) : si l'existant ne couvre pas le besoin, soit l'étendre proprement (prop/variante typée, additive — les call-sites existants ne bougent pas), soit le scinder si fusionner alourdirait le canonique. Nouveau composant, variante ou scission = registre mis à jour dans le même commit.
 7. Ne JAMAIS modifier un invariant d archi sans ADR dans docs/decisions/.
 8. Mode cadrage (auto-détecté) = documentation uniquement. Aucune install, aucun fichier de code, aucun build pendant un cadrage.
 9. DRY structurel (CRITIQUE) : tout archétype de page qui se répète avec la MÊME forme (cas clients, fiches produit, secteurs…) = UNE collection Zod + UN seul template/route, JAMAIS N pages .astro bespoke. Si tu écris deux fois la même structure, c est une collection. Le bespoke (.astro) est réservé à un design réellement unique (home).
@@ -102,7 +118,7 @@ Déposer l'image et la référencer via `heroImage:` (frontmatter) ; `alt` + dim
 1. Tout est statique. AUCUN JS hydraté par défaut. Interactivité simple = <script> vanilla dans le .astro (cf. ContactForm.astro). Îlot Solid SEULEMENT après avoir installé le starter solid, et seulement si le natif/vanilla ne suffit pas.
 2. Préférer le natif au JS : un accordéon = <details> (cf. Faq.astro), pas un composant hydraté.
 3. Liens internes en chemins absolus (/blog/...). Slugs = nom de fichier (kebab-case).
-4. Pas de couleurs en dur : utiliser les tokens CSS (var(--color-*)) / classes Tailwind sémantiques.
+4. Pas de couleurs en dur. En markup : classes Tailwind sémantiques générées depuis `@theme` (`bg-primary`, `text-fg`…), PAS la forme arbitraire `[var(--color-*)]`. Les tokens `var(--color-*)` ne servent QUE dans les blocs `<style>` scoped (où Tailwind ne s'applique pas). Radius/espacements : utilitaires générés (`rounded-sm`…) quand le token existe dans `@theme`, pas `[var(--radius*)]`.
 5. Un bloc visuel réutilisé = UN composant dans src/components/ui/ (ou landing/ pour les sections). Pas de copier-coller de markup entre pages.
 
 ## Avant push
@@ -130,7 +146,7 @@ Déclencheurs : ajoute/implémente/corrige/refacto/explore. Sous-modes auto (si 
 Le push passe TOUJOURS par `/commit-push` (lint + astro check + build = validation TS et frontmatter MD/MDX, puis commit + push). C'est le seul gate et la seule commande. Détail : .claude/commands/commit-push.md.
 
 ## Design System
-Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design system viendra plus tard : ne pas sur-investir le style. Réutiliser les composants src/components/ui/. Registry : .tiple/conventions/component-registry.md.
+Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design system viendra plus tard : ne pas sur-investir le style. Réutiliser les composants src/components/ui/. Registry : .tiple/conventions/component-registry.md + galerie /styleguide (noindex) — tenir les deux à jour dans le même commit.
 
 ## Conventions par tags
 Index : .tiple/conventions/_index.md. Base toujours lues : coding-standards.md, tech-stack.md, component-registry.md.

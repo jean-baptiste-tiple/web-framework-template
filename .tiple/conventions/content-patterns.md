@@ -9,10 +9,13 @@ Tout archétype de page qui se répète avec la même forme = UNE collection + U
 - 1 fichier markdown par page. heroImage/hero.image via image() (validation + optimisation).
 - Frontmatter minimal commun : title, description. Plus : tldr, faq, updatedDate (SEO/GEO).
 - Slug = nom de fichier (kebab-case).
+- Tout champ sur lequel une route générée filtre (RSS par rubrique, index, sitemap, llms.txt) doit être REQUIS dans le schéma Zod : optionnel = flux silencieusement vide dès qu'un fichier l'omet.
+- Une donnée déclarée (settings, champ de schéma) mais rendue par aucun composant est une donnée DORMANTE : l'annoter comme telle au registre, ne pas la présenter comme branchée.
 
 ## Collections du socle
 - Blog : Markdown, src/content/blog/. Pages : Markdown, src/content/pages/. Landings : MDX, src/content/landings/.
 - Landing = page-builder léger : sections[] (union discriminée par type) + corps MDX optionnel. Ajouter un type de section = l'ajouter au schéma ET à SectionRenderer.astro (un seul endroit pour le markup de chaque section).
+- Alternative documentée (option, pas remplacement) : sections = composants importés directement dans le corps MDX (`template: sections`). Critère de choix : union discriminée si le contenu est piloté par des non-devs (validation Zod forte) ; import MDX si les sections évoluent vite (pas de schéma à maintenir en double, composition libre). Choisir UNE approche par projet et s'y tenir.
 
 ## Texte global vs texte de page
 - Texte partagé (nom, nav, footer, organisation, réseaux, FAQ globale) = src/content/settings/site.json, lu par src/lib/site.ts (SITE). Édité directement dans le fichier. NE PAS dupliquer dans les pages ; consommer SITE.

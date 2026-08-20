@@ -19,7 +19,9 @@
     Arial, sans-serif;
 
   --radius: 0.5rem;
-  --container-prose: 42rem;
+  /* Colonne de lecture. Pas "--container-prose" : max-w-prose est un utilitaire
+     statique de Tailwind (65ch) que le token n'écrase pas. */
+  --container-reading: 42rem;
 }
 
 html {

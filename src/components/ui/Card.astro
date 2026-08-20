@@ -6,7 +6,7 @@ const { class: cls = '' } = Astro.props;
 ---
 
 <div
-  class={`rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 ${cls}`}
+  class={`rounded border border-border bg-surface p-6 ${cls}`}
 >
   <slot />
 </div>

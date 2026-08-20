@@ -25,12 +25,12 @@ const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' });
         {
           posts.map((post) => (
             <a href={`/blog/${post.id}`}>
-              <Card class="h-full transition-colors hover:border-[var(--color-accent)]">
-                <p class="text-xs text-[var(--color-muted)]">
+              <Card class="h-full transition-colors hover:border-accent">
+                <p class="text-xs text-muted">
                   {dateFmt.format(post.data.pubDate)}
                 </p>
                 <h2 class="mt-1 font-semibold">{post.data.title}</h2>
-                <p class="mt-1 text-sm text-[var(--color-muted)]">
+                <p class="mt-1 text-sm text-muted">
                   {post.data.description}
                 </p>
               </Card>

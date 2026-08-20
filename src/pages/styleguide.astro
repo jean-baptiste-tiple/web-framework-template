@@ -1,0 +1,72 @@
+---
+// Galerie des composants UI — contrepartie exécutable du component-registry.
+// noindex : page outil, ni sitemap ni llms.txt (ne pas l'ajouter aux BESPOKE).
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/ui/Container.astro';
+import Section from '@/components/ui/Section.astro';
+import Button from '@/components/ui/Button.astro';
+import Card from '@/components/ui/Card.astro';
+import Faq from '@/components/ui/Faq.astro';
+
+const meta = {
+  title: 'Styleguide',
+  description:
+    'Galerie interne des composants UI du socle : boutons, cartes, FAQ, tokens. Page outil non indexée, réservée au développement.',
+  seo: { noindex: true },
+};
+
+const tokens = ['bg', 'fg', 'muted', 'border', 'surface', 'accent'];
+---
+
+<BaseLayout meta={meta}>
+  <Section>
+    <Container>
+      <h1 class="text-3xl font-semibold">Styleguide</h1>
+      <p class="mt-2 text-muted">
+        Vérifier ici (et dans .tiple/conventions/component-registry.md) avant de créer un
+        composant. Tout nouveau composant ou variante s'ajoute à cette page dans le même commit.
+      </p>
+
+      <h2 class="mt-10 text-xl font-semibold">Tokens couleur</h2>
+      <div class="mt-4 flex flex-wrap gap-3">
+        {
+          tokens.map((t) => (
+            <div class="rounded border border-border p-2 text-xs">
+              <div class="h-10 w-24 rounded border border-border" style={`background: var(--color-${t})`} />
+              <p class="mt-1 text-muted">--color-{t}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 class="mt-10 text-xl font-semibold">Button</h2>
+      <div class="mt-4 flex flex-wrap items-center gap-3">
+        <Button href="#">primary</Button>
+        <Button href="#" variant="outline">outline</Button>
+        <Button type="submit">submit</Button>
+      </div>
+
+      <h2 class="mt-10 text-xl font-semibold">Card</h2>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <Card>
+          <h3 class="font-medium">Carte simple</h3>
+          <p class="mt-1 text-sm text-muted">Surface canonique : fond, bordure, radius.</p>
+        </Card>
+        <Card class="hover:border-accent">
+          <h3 class="font-medium">Carte cliquable</h3>
+          <p class="mt-1 text-sm text-muted">Variante hover utilisée par les listes (blog, home).</p>
+        </Card>
+      </div>
+
+      <h2 class="mt-10 text-xl font-semibold">Faq</h2>
+      <div class="mt-4">
+        <Faq
+          items={[
+            { q: 'Pourquoi cette page ?', a: 'Rendre le registre vérifiable d’un coup d’œil avant de créer un composant.' },
+            { q: 'Est-elle indexée ?', a: 'Non : noindex, absente du sitemap et de llms.txt.' },
+          ]}
+        />
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

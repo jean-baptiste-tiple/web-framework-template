@@ -8,6 +8,8 @@
 - rss.xml + robots.txt (généré, URL depuis astro.config).
 - Un seul H1 par page (= title). H2/H3 sémantiques.
 - Bumper updatedDate à chaque MAJ (fraîcheur).
+- Préprod : canonical vers la prod (même build, voulu) + noindex posé côté host (X-Robots-Tag) — jamais laissée indexable (duplicate content). Voir deploy.md.
+- Renommage/suppression d'URL : redirection déclarée dans la source unique (bloc redirects d'astro.config) + vraie 301 côté host/CDN si le référencement compte — les stubs meta-refresh du statique ne transmettent pas le jus.
 
 ## GEO (moteurs génératifs)
 - tldr : 1-2 phrases factuelles autonomes, citables hors contexte. Rendu visuel + sert de résumé.

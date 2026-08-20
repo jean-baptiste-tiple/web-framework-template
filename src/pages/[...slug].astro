@@ -86,7 +86,7 @@ const faqForJsonLd =
       <Section>
         <Container class="text-center">
           {props.entry.data.hero.eyebrow && (
-            <p class="mb-3 text-sm font-medium text-[var(--color-accent)]">
+            <p class="mb-3 text-sm font-medium text-accent">
               {props.entry.data.hero.eyebrow}
             </p>
           )}
@@ -94,7 +94,7 @@ const faqForJsonLd =
             {props.entry.data.hero.headline}
           </h1>
           {props.entry.data.hero.subheadline && (
-            <p class="mx-auto mt-4 max-w-xl text-[var(--color-muted)]">
+            <p class="mx-auto mt-4 max-w-xl text-muted">
               {props.entry.data.hero.subheadline}
             </p>
           )}
@@ -109,7 +109,7 @@ const faqForJsonLd =
             <Image
               src={props.entry.data.hero.image}
               alt={props.entry.data.hero.imageAlt ?? ''}
-              class="mx-auto mt-10 rounded-[var(--radius)]"
+              class="mx-auto mt-10 rounded"
             />
           )}
         </Container>
@@ -137,8 +137,8 @@ const faqForJsonLd =
             {props.entry.data.title}
           </h1>
           {props.entry.data.tldr && (
-            <p class="mb-8 rounded-[var(--radius)] border-l-4 border-[var(--color-accent)] bg-[var(--color-surface)] p-4 text-[var(--color-muted)]">
-              <strong class="text-[var(--color-fg)]">En bref :</strong>{' '}
+            <p class="mb-8 rounded border-l-4 border-accent bg-surface p-4 text-muted">
+              <strong class="text-fg">En bref :</strong>{' '}
               {props.entry.data.tldr}
             </p>
           )}
