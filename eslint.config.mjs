@@ -15,5 +15,15 @@ export default [
       parserOptions: { parser: tseslint.parser },
     },
   },
-  { ignores: ["dist/", ".astro/", "node_modules/"] },
+  {
+    ignores: [
+      "dist/",
+      ".astro/",
+      "node_modules/",
+      // Script Workflow (DSL Claude Code) : le runtime enveloppe le corps dans une
+      // fonction (return top-level, globals phase/agent/pipeline) → non parsable
+      // comme module standard. Ignore ciblé, le reste de scripts/ est linté.
+      "scripts/parity/vision.workflow.js",
+    ],
+  },
 ];

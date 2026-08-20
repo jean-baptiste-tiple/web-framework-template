@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-20 — Playbook migration Webflow + outillage porté
+- `.tiple/playbooks/migration-webflow.md` : méthode complète de duplication d'un site Webflow (phases 0→cutover avec gates : carte des baselines, ADRs de cadrage, gel du socle prouvé, conversion, 6 couches de vérif, parité par mesure, audit vision adversarial, formulaires end-to-end, cutover). Distillé d'une migration réelle (~430 pages).
+- `scripts/migration/` (25 scripts) + `scripts/parity/` (10) portés depuis cette migration et généricisés : toute la config site-spécifique dans `scripts/migration/config.mjs`, dépendances installables au début du chantier seulement (voir `scripts/README.md`).
+- (Même jour, commit précédent) CLAUDE.md § Après une erreur : apprentissage auto-écrit sous gate d'auto-contrôle + journal `docs/learnings.md` ; conventions renforcées depuis le vécu du site enfant ; code du socle migré vers les utilitaires générés `@theme` ; galerie `/styleguide`.
+
 ## 2026-06-12 — Correctifs audit du socle
 - Assets OG/logo placeholders ajoutés (og-default.png, logo.png) : plus de 404 sur og:image et le logo JSON-LD.
 - JSON-LD landings : schema.type (Service/Product) et schema.provider honorés ; dateModified sur les WebPage (updatedDate).
