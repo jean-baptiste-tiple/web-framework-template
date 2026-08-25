@@ -1,7 +1,13 @@
 # Changelog
 
+## 2026-08-25 — Débranding + règles de méthode (anti-over-engineering, pilotage Fable/Opus)
+- `.tiple/` déplacé dans `.claude/` (checklists, conventions, playbooks, starters, templates) ; toutes les références de chemins mises à jour ; mentions de la marque retirées (CLAUDE.md, docs/design/system.md, global.css).
+- CLAUDE.md § Anti-over-engineering : deux obligations contrôlables (justification au présent de toute surface nouvelle ; récap qui nomme l'option plus simple écartée) — relayées dans coding-standards.md et code-review.md § Sobriété.
+- CLAUDE.md § Qui exécute : session Fable = pilotage (lots + `Agent model: "opus"`), session Opus = écriture directe.
+- Invariants d'archi : l'ADR reste obligatoire mais s'écrit sans attendre d'accord (table § Après une erreur, checklist apprentissage) — révocable a posteriori via ADR + journal.
+
 ## 2026-08-20 — Playbook migration Webflow + outillage porté
-- `.tiple/playbooks/migration-webflow.md` : méthode complète de duplication d'un site Webflow (phases 0→cutover avec gates : carte des baselines, ADRs de cadrage, gel du socle prouvé, conversion, 6 couches de vérif, parité par mesure, audit vision adversarial, formulaires end-to-end, cutover). Distillé d'une migration réelle (~430 pages).
+- `.claude/playbooks/migration-webflow.md` : méthode complète de duplication d'un site Webflow (phases 0→cutover avec gates : carte des baselines, ADRs de cadrage, gel du socle prouvé, conversion, 6 couches de vérif, parité par mesure, audit vision adversarial, formulaires end-to-end, cutover). Distillé d'une migration réelle (~430 pages).
 - `scripts/migration/` (25 scripts) + `scripts/parity/` (10) portés depuis cette migration et généricisés : toute la config site-spécifique dans `scripts/migration/config.mjs`, dépendances installables au début du chantier seulement (voir `scripts/README.md`).
 - (Même jour, commit précédent) CLAUDE.md § Après une erreur : apprentissage auto-écrit sous gate d'auto-contrôle + journal `docs/learnings.md` ; conventions renforcées depuis le vécu du site enfant ; code du socle migré vers les utilitaires générés `@theme` ; galerie `/styleguide`.
 
@@ -16,4 +22,4 @@
 - Garde anti-collision de slugs (pages vs landings vs routes réservées) : build cassé avec message explicite.
 - ESLint couvre désormais les .ts (typescript-eslint) ; Button avec prop type réutilisé par ContactForm ; aria-current sur la nav, role=status/alert sur les états du formulaire ; header wrap sur mobile.
 - Descriptions des pages bespoke mises au format 140-160 caractères.
-- Checklist de bootstrap (.tiple/checklists/bootstrap.md) : personnalisation technique d'un site neuf, référencée dans README et CLAUDE.md.
+- Checklist de bootstrap (.claude/checklists/bootstrap.md) : personnalisation technique d'un site neuf, référencée dans README et CLAUDE.md.

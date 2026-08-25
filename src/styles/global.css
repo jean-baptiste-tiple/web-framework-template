@@ -2,7 +2,7 @@
 
 /*
   Design tokens — volontairement neutres et légers.
-  Ils seront remplacés par le design system Tiple plus tard.
+  Ils seront remplacés par le design system définitif plus tard.
   Tailwind 4 : configuration CSS-first via @theme (pas de tailwind.config.js).
 */
 @theme {

@@ -11,7 +11,7 @@ Le formulaire de contact (vanilla, sans framework) est intégré au socle.
 
 ## Démarrer un nouveau site
 
-Dérouler **`.tiple/checklists/bootstrap.md`** avant mise en ligne. Les 4 indispensables :
+Dérouler **`.claude/checklists/bootstrap.md`** avant mise en ligne. Les 4 indispensables :
 1. `site` dans `astro.config.mjs` = URL de prod (source unique : canonical, sitemap, robots, llms.txt, RSS en dérivent).
 2. `src/content/settings/site.json` : identité, nav, organisation.
 3. Remplacer les placeholders `public/og-default.png` (1200×630) et `public/logo.png`.

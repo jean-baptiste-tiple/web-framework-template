@@ -11,8 +11,9 @@
 ## DRY & réutilisation (CRITIQUE)
 - Avant de créer un composant : vérifier component-registry ET la galerie /styleguide, réutiliser/étendre l'existant.
 - Besoin non couvert par l'existant → l'étendre ou le scinder, JAMAIS le forcer. Interdit : surcharge inline, `!important`, valeur arbitraire, prop détournée, wrapper parent qui écrase le style du composant. À la place : une prop/variante typée additive et rétrocompatible (les call-sites existants ne changent pas), OU scinder en deux composants si la divergence est réelle et que fusionner alourdirait le canonique (« bloat »).
-- Fusion de doublons : ne PAS fusionner en aveugle — inspecter la divergence réelle avant (gabarit .tiple/templates/fusion-a-trancher.md), puis décision datée au registre.
+- Fusion de doublons : ne PAS fusionner en aveugle — inspecter la divergence réelle avant (gabarit .claude/templates/fusion-a-trancher.md), puis décision datée au registre.
 - Markup répété 2+ fois ⇒ composant. Données répétées 2+ fois ⇒ collection (content) ou SITE (global). Jamais de copier-coller.
 - Un seul endroit par responsabilité : SEO/JSON-LD = BaseLayout ; texte global = site.json ; markup d'une section landing = SectionRenderer.
 - Composants petits, props minimales et typées. Pas de variante codée en dur : paramétrer par prop/token.
 - Structure : pages = orchestration (data + layout) uniquement ; présentation dans components/ ; data/derivations dans lib/.
+- Toute surface nouvelle (fichier, composant, variante, prop optionnelle, util, champ Zod, token, option, dépendance) doit pouvoir citer ce qui casse sans elle AUJOURD'HUI ; un besoin au futur = la retirer, pas la documenter (détail et contrôle : CLAUDE.md § Anti-over-engineering + code-review § Sobriété).

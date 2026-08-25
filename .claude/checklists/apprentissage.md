@@ -27,5 +27,6 @@ l'accord : une règle qui ne passe pas TOUS les points ne s'écrit pas (elle va 
 - [ ] **Vérifiée.** Si la règle cite du code ou un exemple : lint + build encore verts après
       l'écriture. Une règle qui casse le build est pire que l'erreur qu'elle prévient.
 
-**Hors périmètre du gate** : un invariant d'architecture (règles absolues de CLAUDE.md) ne se
-change JAMAIS automatiquement — proposer un ADR (`docs/decisions/`) et attendre l'accord.
+**Cas particulier** : un invariant d'architecture (règles absolues de CLAUDE.md) ne passe pas par
+ce gate — il se change via un ADR daté dans `docs/decisions/` + mise à jour du texte de la règle
+dans le même commit, sans attendre d'accord. L'ADR est la trace qui permet de révoquer a posteriori.

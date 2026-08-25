@@ -53,5 +53,5 @@ Un bloc inline non listé est réputé duplication à corriger.
 ## Doublons & consolidation (roadmap)
 Dette de duplication tracée ici : datée, priorisée valeur/risque, avec fait / reste à faire.
 Fusion : jamais en aveugle — inspecter la divergence réelle avant (gabarit
-.tiple/templates/fusion-a-trancher.md), puis décision datée avec sa raison.
+.claude/templates/fusion-a-trancher.md), puis décision datée avec sa raison.
 _(vide au bootstrap)_

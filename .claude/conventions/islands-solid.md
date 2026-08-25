@@ -1,6 +1,6 @@
 # Îlots SolidJS
 
-> Starter OPT-IN : SolidJS n'est PAS installé par défaut. Installer le starter solid (.tiple/starters/solid) avant d'écrire un îlot. Convention chargée seulement si le starter est activé.
+> Starter OPT-IN : SolidJS n'est PAS installé par défaut. Installer le starter solid (.claude/starters/solid) avant d'écrire un îlot. Convention chargée seulement si le starter est activé.
 
 - Un îlot UNIQUEMENT si interactivité réelle (state, events, fetch client). Sinon : composant .astro statique, natif (<details>), ou <script> vanilla.
 - Fichiers dans src/components/islands/ (.tsx), default export.

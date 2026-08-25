@@ -137,7 +137,7 @@ bruit n'est pas un faux positif à ignorer : **il faut comparer le RENDU**.
 ## Phase 7 — Formulaires : un chantier à part, testé en réel
 
 Le poste le plus coûteux de la mission de référence (7 passes de correctifs, tous découverts en
-production). Règles (détail : `.tiple/conventions/forms.md`) :
+production). Règles (détail : `.claude/conventions/forms.md`) :
 - Relever le **schéma serveur** de chaque form par l'API du fournisseur (champs requis, noms
   exacts — `email` ≠ `work_email`) ; jamais le déduire du rendu. Un form qui n'affiche qu'un
   champ fait peut-être du **progressive profiling** : reproduire le mécanisme, pas le schéma
@@ -153,7 +153,7 @@ production). Règles (détail : `.tiple/conventions/forms.md`) :
 ## Phase 8 — Cutover
 
 - Redirections : source unique + vraies 301 côté host/CDN ; noindex préprod ; purge cache CDN ;
-  suppression de la config de l'ancien host (voir `.tiple/conventions/deploy.md`).
+  suppression de la config de l'ancien host (voir `.claude/conventions/deploy.md`).
 - **Une passe NAVIGATEUR sur l'environnement déployé** : les bugs `%2B`, lazy-load, hydratation
   n'existent qu'en réel.
 - Surveiller les soumissions de forms les premiers jours (quarantaine anti-spam du fournisseur).

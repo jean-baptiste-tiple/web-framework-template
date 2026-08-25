@@ -1,4 +1,4 @@
-# CLAUDE.md — Tiple Method (sites statiques)
+# CLAUDE.md — Méthode sites statiques
 
 ## Style de réponse (CRITIQUE)
 - Réponses courtes, droit au but. Le minimum de mots possibles.
@@ -11,21 +11,34 @@
 - Critères de succès vérifiables avant d implémenter.
 - Push back quand une approche plus simple existe.
 
+### Anti-over-engineering (deux obligations contrôlables)
+Ce qui se contrôle n'est pas l'intention (« rester simple »), c'est la trace de l'arbitrage :
+1. Toute surface nouvelle — fichier, composant, variante, prop optionnelle, util dans src/lib/, champ Zod, token @theme, option de config, starter activé, dépendance — porte CE QUI CASSE SANS ELLE AUJOURD'HUI. Un besoin au futur (« on pourrait vouloir », « pour rester générique », « ce sera utile quand ») n'est pas une justification : la surface se retire, elle ne se documente pas. (La réutilisation avant création est déjà réglée ailleurs : règle absolue 6 + coding-standards § DRY — s'y référer, ne pas la redire.)
+2. Au-delà d'un edit trivial, le récap de fin de tâche nomme l'option d'un cran plus simple qui a été écartée, et la raison de l'écarter. Une seule solution présentée = aucun arbitrage rendu.
+Contrôle en review : .claude/checklists/code-review.md § Sobriété.
+
 ## Après une erreur (apprentissage automatique)
 - **Corriger l'instance ne solde pas l'erreur** — qu'elle soit commise par l'agent, repérée dans le code ou signalée par l'utilisateur. Après le fix, s'arrêter avant de reprendre le fil : qu'est-ce qui a rendu l'erreur possible, et qu'est-ce qui l'empêchera de revenir ? Tant que la réponse n'est pas **écrite**, la récidive est garantie — sous une autre forme, dans un contexte où personne ne fera le lien.
-- **L'apprentissage s'écrit immédiatement et automatiquement, sans demander validation** — à une condition : passer TOUS les points du gate `.tiple/checklists/apprentissage.md` (généralisable, contrôlable, non dupliqué, bien routé, pérenne, sobre, journalisé, vérifié). Une règle qui échoue au gate ne s'écrit pas : elle va en observation dans `docs/learnings.md`, rien d'autre.
+- **L'apprentissage s'écrit immédiatement et automatiquement, sans demander validation** — à une condition : passer TOUS les points du gate `.claude/checklists/apprentissage.md` (généralisable, contrôlable, non dupliqué, bien routé, pérenne, sobre, journalisé, vérifié). Une règle qui échoue au gate ne s'écrit pas : elle va en observation dans `docs/learnings.md`, rien d'autre.
 - **Toute écriture laisse une entrée datée dans `docs/learnings.md`** (erreur → règle → emplacement). C'est la contrepartie de l'absence de validation : l'humain peut auditer et révoquer après coup.
 
 | Apprentissage | Emplacement |
 |---|---|
-| Règle technique manquante ou fausse | Fichier du tag dans `.tiple/conventions/` (routage : `_index.md`) |
-| Point de contrôle absent de la review | `.tiple/checklists/code-review.md` |
-| Composant recréé au lieu de réutilisé | `.tiple/conventions/component-registry.md` |
+| Règle technique manquante ou fausse | Fichier du tag dans `.claude/conventions/` (routage : `_index.md`) |
+| Point de contrôle absent de la review | `.claude/checklists/code-review.md` |
+| Composant recréé au lieu de réutilisé | `.claude/conventions/component-registry.md` |
 | Règle de travail globale / gotcha projet | `CLAUDE.md` (section concernée) |
 | Observation trop spécifique pour une règle | `docs/learnings.md` seulement (2 occurrences = candidate à généralisation) |
-| Invariant d'architecture absent, flou ou violé | **Exception : jamais automatique.** Proposer un ADR `docs/decisions/` et attendre l'accord (règle absolue 7) |
+| Invariant d'architecture absent, flou ou violé | ADR daté dans `docs/decisions/` + texte de la règle mis à jour dans le même commit (règle absolue 7). Écrit dans la foulée, sans attendre d'accord — l'ADR et le journal permettent de révoquer a posteriori |
 
 - **Trois écueils :** 1. Ne rien écrire parce que « ça ne se reproduira pas » — la bonne foi n'est pas un mécanisme. 2. Reporter l'écriture à « la fin » — la boucle est immédiate, avant de reprendre la tâche. 3. Écrire une règle qui décrit l'erreur au lieu de la rendre détectable — « faire attention à X » ne vaut rien ; une règle se contrôle par une machine (lint/check/build) ou une citation en review.
+
+## Qui exécute : Fable pilote, Opus écrit
+Le **modèle de la session** décide du rôle, pas la taille de la demande.
+- **Session Fable** — Fable ne modifie **jamais** `src/` ni `scripts/` lui-même. Il découpe le travail en lots indépendants, écrit pour chacun les critères vérifiables, lance des `Agent` avec `model: "opus"` — tous dans le même message quand les lots ne se touchent pas, pour qu'ils tournent en parallèle — puis relit les diffs, arbitre, et porte la finalisation : review (code-review.md), changelog, component-registry, `/commit-push`. Restent à sa main : `docs/`, `.claude/`, les vérifications, les décisions.
+- **Session Opus** — pas de délégation imposée : Opus écrit lui-même, et délègue quand un lot est réellement parallélisable, pas par principe.
+- **`model: "opus"` s'écrit explicitement** sur chaque `Agent` lancé depuis une session Fable : sans ce champ le sous-agent hérite du modèle du parent, et le pilotage ne sert à rien.
+- **Un sous-agent reçoit la méthode, pas seulement la tâche** : mode/échelle annoncés, conventions .claude/conventions/ routées à charger, critères de succès, interdiction de commiter. Le commit reste au pilote, via `/commit-push`.
 
 ## Projet
 <!-- Nom + description du site à remplir au bootstrap -->
@@ -34,14 +47,14 @@
 Astro 5 (output: static, AUCUN adapter serveur) + TypeScript strict + Tailwind CSS 4 (via @tailwindcss/vite).
 Contenu : Content Collections (Markdown/MDX) typées par Zod.
 Interactivité : par défaut AUCUN framework JS. Préférer le natif (<details>, <script> vanilla). SolidJS est un starter OPT-IN non installé par défaut : ne l'ajouter (`pnpm add @astrojs/solid-js solid-js` + intégration dans astro.config) qu'en cas de besoin réel d'interactivité riche.
-Mono-langue par défaut : pas d'i18n dans le socle. L'i18n est un starter à réactiver si besoin (voir .tiple/conventions/i18n.md).
-Voir .tiple/conventions/tech-stack.md pour les versions exactes.
+Mono-langue par défaut : pas d'i18n dans le socle. L'i18n est un starter à réactiver si besoin (voir .claude/conventions/i18n.md).
+Voir .claude/conventions/tech-stack.md pour les versions exactes.
 
 ## Méthode
-Le projet suit la Tiple Method (variante sites). La doc dans docs/ est la source de vérité.
+Le projet suit la méthode du template (variante sites), portée par .claude/. La doc dans docs/ est la source de vérité.
 Lire les fichiers pertinents avant chaque action.
-Site neuf depuis le template : dérouler .tiple/checklists/bootstrap.md (URL de prod, site.json, placeholders og/logo, contenus d'exemple, PUBLIC_FORM_ENDPOINT) en plus du cadrage.
-Migration d'un site Webflow existant : dérouler .tiple/playbooks/migration-webflow.md (phases + gates) avec l'outillage scripts/migration/ + scripts/parity/ (config : scripts/migration/config.mjs).
+Site neuf depuis le template : dérouler .claude/checklists/bootstrap.md (URL de prod, site.json, placeholders og/logo, contenus d'exemple, PUBLIC_FORM_ENDPOINT) en plus du cadrage.
+Migration d'un site Webflow existant : dérouler .claude/playbooks/migration-webflow.md (phases + gates) avec l'outillage scripts/migration/ + scripts/parity/ (config : scripts/migration/config.mjs).
 
 ## Règles absolues
 1. output: static. Ne JAMAIS introduire d adapter, de SSR, d API route dynamique, de Server Action ou de dépendance serveur. Tout doit être généré au build.
@@ -132,23 +145,23 @@ Détecter l'intention de la demande et appliquer le bon mode automatiquement. En
 Déclencheurs : cadre/planifie/sitemap/content-model/architecture/structure/V2/refonte, ou site neuf sans docs.
 **Documentation UNIQUEMENT** : modifier seulement docs/. JAMAIS installer, créer du code ni builder.
 - Initial (docs/sitemap.md absent) : créer from scratch. Évolution (docs existants + V2/refonte) : éditer l'existant, ADR par invariant touché. Annoncer le mode.
-- Déroulé : brief → sitemap (par page : type/URL/objectif/CTA/intention SEO ; trancher landing MDX vs .astro) → content-model (collections, champs Zod, taxonomie ; règle DRY : archétype répété = collection) → architecture (invariants + starters à activer) → design (tokens légers) → gate .tiple/checklists/site-ready.md. Templates : .tiple/templates/.
+- Déroulé : brief → sitemap (par page : type/URL/objectif/CTA/intention SEO ; trancher landing MDX vs .astro) → content-model (collections, champs Zod, taxonomie ; règle DRY : archétype répété = collection) → architecture (invariants + starters à activer) → design (tokens légers) → gate .claude/checklists/site-ready.md. Templates : .claude/templates/.
 
 ### Développement (code)
 Déclencheurs : ajoute/implémente/corrige/refacto/explore. Sous-modes auto (si ambigu, priorité Explore > Refacto > Fix > Feature) :
 - Fix (reproduire avant, diff minimal) · Feature (si non-trivial → cadrer d'abord) · Refacto (pas de changement de comportement) · **Explore (comprends/explique/analyse/audit = READ-ONLY, aucune écriture)**.
-- Flow : lire refs + conventions pertinentes → implémenter (schéma Zod si nouveau type → composant ui/ → contenu .md/.mdx → route) → review (.tiple/checklists/code-review.md) → finaliser (component-registry, llms.txt, changelog) → `/commit-push`.
+- Flow : lire refs + conventions pertinentes → implémenter (schéma Zod si nouveau type → composant ui/ → contenu .md/.mdx → route) → review (.claude/checklists/code-review.md) → finaliser (component-registry, llms.txt, changelog) → `/commit-push`.
 
 ### Activation live des conventions & skills
-- **Conventions** : toujours lire coding-standards + tech-stack + component-registry. En plus, charger AUTOMATIQUEMENT les conventions .tiple/conventions/ dont les tags matchent la demande ou les fichiers touchés (mapping dans .tiple/conventions/_index.md). Ne pas attendre qu'on le demande.
+- **Conventions** : toujours lire coding-standards + tech-stack + component-registry. En plus, charger AUTOMATIQUEMENT les conventions .claude/conventions/ dont les tags matchent la demande ou les fichiers touchés (mapping dans .claude/conventions/_index.md). Ne pas attendre qu'on le demande.
 - **Skills** : invoquer le skill pertinent au bon moment, sans qu'on le nomme — ex. frontend-design quand on crée/peaufine de l'UI ; code-review avant un push important ; verify/run pour vérifier un rendu. Annoncer brièvement le skill utilisé.
 
 ## Seule commande : /commit-push
 Le push passe TOUJOURS par `/commit-push` (lint + astro check + build = validation TS et frontmatter MD/MDX, puis commit + push). C'est le seul gate et la seule commande. Détail : .claude/commands/commit-push.md.
 
 ## Design System
-Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design system viendra plus tard : ne pas sur-investir le style. Réutiliser les composants src/components/ui/. Registry : .tiple/conventions/component-registry.md + galerie /styleguide (noindex) — tenir les deux à jour dans le même commit.
+Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design system viendra plus tard : ne pas sur-investir le style. Réutiliser les composants src/components/ui/. Registry : .claude/conventions/component-registry.md + galerie /styleguide (noindex) — tenir les deux à jour dans le même commit.
 
 ## Conventions par tags
-Index : .tiple/conventions/_index.md. Base toujours lues : coding-standards.md, tech-stack.md, component-registry.md.
+Index : .claude/conventions/_index.md. Base toujours lues : coding-standards.md, tech-stack.md, component-registry.md.
 Tags : astro, content-collections, mdx, islands-solid, styling-tailwind, images, seo, geo, a11y, performance, i18n, forms, deploy.

@@ -7,7 +7,7 @@ Outillage d'une migration de site (Webflow ou similaire) vers ce template Astro.
 lancent **depuis la racine du repo** : `node scripts/migration/<script>.mjs`.
 
 Le mode d'emploi complet de la migration (phases, checklists, critères de sortie)
-est dans le playbook : **`.tiple/playbooks/migration-webflow.md`**.
+est dans le playbook : **`.claude/playbooks/migration-webflow.md`**.
 
 ## Dépendances (début de migration uniquement)
 

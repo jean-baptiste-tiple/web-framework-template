@@ -23,5 +23,5 @@ mdx. (+ @astrojs/rss en dépendance pour la route /rss.xml ; @tailwindcss/vite c
 blog, pages, landings, SEO/JSON-LD, sitemap, RSS, formulaire contact vanilla, réglages globaux (settings/site.json).
 
 ## Starters opt-in (non installés)
-solid (îlots), i18n (multilingue). Voir .tiple/starters/.
+solid (îlots), i18n (multilingue). Voir .claude/starters/.
 Édition de contenu : directe dans les fichiers (pas d'interface d'admin).
