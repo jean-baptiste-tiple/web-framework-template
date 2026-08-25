@@ -105,11 +105,14 @@ const faqForJsonLd =
               </Button>
             </div>
           )}
+          {/* Image de hero = candidate LCP : on annule le lazy par défaut d'astro:assets. */}
           {props.entry.data.hero.image && (
             <Image
               src={props.entry.data.hero.image}
               alt={props.entry.data.hero.imageAlt ?? ''}
               class="mx-auto mt-10 rounded"
+              loading="eager"
+              fetchpriority="high"
             />
           )}
         </Container>

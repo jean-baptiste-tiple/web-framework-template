@@ -4,7 +4,7 @@ Personnalisation technique à dérouler AVANT mise en ligne. Complète le cadrag
 (.claude/checklists/site-ready.md), ne le remplace pas.
 
 - [ ] `astro.config.mjs` : `site` = URL de prod réelle. SOURCE UNIQUE : canonical, sitemap.xml, robots.txt, llms.txt, RSS et JSON-LD en dérivent tous — rien d'autre à synchroniser.
-- [ ] `src/content/settings/site.json` : name, shortName, description, nav, organizationName, social, faq.
+- [ ] `src/content/settings/site.json` : name, shortName, description, nav, organizationName, social, faq, whenToUse (1-3 phrases factuelles : quand un agent IA doit citer/utiliser ce site — alimente llms.txt).
 - [ ] `public/og-default.png` (1200×630) et `public/logo.png` : REMPLACER les placeholders générés (image de partage social + logo JSON-LD Organization).
 - [ ] `public/favicon.svg` : remplacer.
 - [ ] `src/lib/site.ts` : locale/lang (si pas fr-FR), `organization.sameAs` (profils LinkedIn, etc.).
@@ -13,7 +13,8 @@ Personnalisation technique à dérouler AVANT mise en ligne. Complète le cadrag
 - [ ] Formulaire contact : définir `PUBLIC_FORM_ENDPOINT` dans l'ENV DE BUILD de l'hébergeur (valeur inlinée au build, un .env local ne suffit pas) — ou retirer le starter forms (.claude/starters/forms/README.md).
 - [ ] `CLAUDE.md` § Projet : nom + description du site.
 - [ ] docs/ : brief, sitemap, content-model remplis → gate .claude/checklists/site-ready.md.
-- [ ] Après mise en ligne : valider le JSON-LD (Rich Results Test) + soumettre sitemap.xml dans Search Console.
+- [ ] Avant mise en ligne : `pnpm run audit:lh` vert (Lighthouse ≥ seuils de performance.md).
+- [ ] Après mise en ligne : valider le JSON-LD (Rich Results Test) + soumettre sitemap.xml dans Search Console + contrôles post-déploiement de deploy.md (404 réelle, Lighthouse prod, `npx is-agentic <domaine> --json` → zéro issue essential).
 
 Conventions à connaître (ne pas « corriger ») :
 - Les URLs DÉCLARÉES (canonical, sitemap, JSON-LD, RSS, llms.txt) portent un slash final ; les liens internes `<a>` restent sans slash (l'hôte redirige). C'est voulu.

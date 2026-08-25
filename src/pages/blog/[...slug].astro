@@ -58,12 +58,15 @@ const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' });
         </p>
       </header>
 
+      {/* Image de hero = candidate LCP : on annule le lazy par défaut d'astro:assets. */}
       {
         d.heroImage && (
           <Image
             src={d.heroImage}
             alt={d.heroImageAlt ?? ''}
             class="mb-8 rounded"
+            loading="eager"
+            fetchpriority="high"
           />
         )
       }

@@ -19,6 +19,7 @@
 
 ## A11y / perf / qualité
 - [ ] Images : alt + width/height
+- [ ] Image LCP (hero au-dessus de la ligne de flottaison) : `loading="eager"` + `fetchpriority="high"` ; toutes les autres lazy (une seule eager par page)
 - [ ] HTML sémantique, navigable clavier
 - [ ] Composants réutilisés (registry vérifié), pas de couleur en dur
 - [ ] Aucun composant forcé (surcharge inline, `!important`, valeur arbitraire, prop détournée, wrapper qui écrase son style) : besoin non couvert = prop/variante additive OU scission, jamais un hack au call-site

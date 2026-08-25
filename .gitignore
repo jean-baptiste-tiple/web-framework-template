@@ -1,5 +1,6 @@
 dist/
 .astro/
+.lighthouseci/
 node_modules/
 .env
 .env.production

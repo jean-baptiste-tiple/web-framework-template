@@ -7,6 +7,9 @@ const settingsSchema = z.object({
   name: z.string().min(1),
   shortName: z.string().min(1),
   description: z.string().min(1),
+  // Optionnel : 1 à 3 phrases disant pour quels besoins/questions ce site est
+  // la bonne source (exposé dans llms.txt pour les agents).
+  whenToUse: z.string().optional(),
   nav: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })),
   organizationName: z.string().min(1),
   social: z.object({ twitter: z.string(), linkedin: z.string() }),
@@ -39,6 +42,8 @@ export const SITE = {
   shortName: SETTINGS.shortName,
   url: TECHNICAL.url,
   description: SETTINGS.description,
+  // Cas d'usage concrets du site (GEO/agentic) : rendu dans llms.txt si renseigné.
+  whenToUse: SETTINGS.whenToUse,
   locale: TECHNICAL.locale,
   lang: TECHNICAL.lang,
   defaultOgImage: TECHNICAL.defaultOgImage,

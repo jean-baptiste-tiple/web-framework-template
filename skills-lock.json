@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "skills": {
+    "is-agentic": {
+      "source": "is-agentic.com",
+      "sourceUrl": "https://is-agentic.com",
+      "sourceType": "well-known",
+      "computedHash": "7200bb974ca377169be98a008eee142da6ae329a72f1926bc95ea86c3d58b40c",
+      "wellKnownDigest": "sha256:41cacbc952a0d9b8336773d531abd573e0916092deb1fb6c1e468b03451b997d"
+    }
+  }
+}

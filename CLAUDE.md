@@ -97,6 +97,7 @@ Le nom du fichier = l'URL (slug). Penser à bumper `updatedDate`.
 ### Changer le TEXTE GLOBAL (présent sur tout le site)
 Éditer `src/content/settings/site.json` :
 - `name`, `shortName`, `description` : identité du site (titre, meta par défaut).
+- `whenToUse` (optionnel) : 1-3 phrases factuelles disant pour quels besoins/questions ce site est la bonne source — rendu dans llms.txt sous « Quand utiliser ce site » (GEO/agentic). Cas d'usage concrets, pas de marketing.
 - `nav` : liens du menu (header) — liste de `{ "label", "href" }`.
 - `organizationName` : nom affiché dans le footer + JSON-LD.
 - `social` : `twitter`, `linkedin`.

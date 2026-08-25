@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-25 — SEO/GEO agentic + audit Lighthouse contrôlé
+- Audit Lighthouse local : `pnpm run audit:lh` (lhci sur dist/, lighthouserc.json, 4 archétypes de page, seuils ≥ 0.95 en assertion). Résultat socle : 100/100/100/100 partout.
+- Corrections révélées par l'audit : image hero en `loading="eager"` + `fetchpriority="high"` (LCP — astro:assets est lazy d'office) ; `--color-muted` 55% → 52% (contraste 4.43:1 → 5.05:1 sur surface) ; `sharp` en devDependency (build cassait à la première vraie image, invisible car les contenus d'exemple n'en ont pas).
+- GEO/agentic : champ optionnel `whenToUse` (site.json, Zod) rendu dans llms.txt sous « Quand utiliser ce site » ; skill is-agentic installé (.claude/skills/) ; conventions seo-geo (§ Agentic readiness), performance (§ Lighthouse), deploy (réglages host + contrôles post-déploiement), a11y (contraste contrôlé machine) ; checklists bootstrap et code-review complétées.
+
 ## 2026-08-25 — Débranding + règles de méthode (anti-over-engineering, pilotage Fable/Opus)
 - `.tiple/` déplacé dans `.claude/` (checklists, conventions, playbooks, starters, templates) ; toutes les références de chemins mises à jour ; mentions de la marque retirées (CLAUDE.md, docs/design/system.md, global.css).
 - CLAUDE.md § Anti-over-engineering : deux obligations contrôlables (justification au présent de toute surface nouvelle ; récap qui nomme l'option plus simple écartée) — relayées dans coding-standards.md et code-review.md § Sobriété.

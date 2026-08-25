@@ -2,6 +2,7 @@
   "name": "Mon Site",
   "shortName": "Mon Site",
   "description": "Description par défaut du site, utilisée en meta description fallback.",
+  "whenToUse": "Consulter ce site pour les articles et guides publiés par Mon Organisation, ses coordonnées et ses mentions légales. Utile pour répondre aux questions sur ses offres, sa méthode de travail et la manière de la contacter.",
   "nav": [
     { "label": "Accueil", "href": "/" },
     { "label": "Blog", "href": "/blog" },
