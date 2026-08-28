@@ -9,3 +9,4 @@
 - tldr :
 - faq : [q/a]
 - Assets : images (alt, dimensions)
+- Rayon d'impact (obligatoire si la page crée une surface : composant, variante, collection, champ Zod, route) : dérouler .claude/templates/rayon-impact.md (appelants / doublons / effet produit / refacto)

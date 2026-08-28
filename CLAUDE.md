@@ -6,10 +6,21 @@
 - Pas de "voici ce que j ai fait", pas de phrases d intro/transition. État du résultat seulement.
 
 ## Avant de coder (CRITIQUE)
-- Surfacer les hypothèses, pas les masquer. Si ambigu : nommer le doute, proposer, demander.
-- Edits chirurgicaux. Chaque ligne tracée à la demande. Pas de cleanup ni refacto non demandé.
+- Surfacer les hypothèses, pas les masquer. Si ambigu : nommer le doute, proposer, demander — via `AskUserQuestion` (§ Arbitrages ci-dessous), jamais en prose.
+- Edits chirurgicaux. Chaque ligne tracée à la demande. Pas de cleanup ni refacto non demandé. Un refacto repéré n'est pas un refacto fait : il se nomme dans le rayon d'impact et devient une question, pas un silence.
 - Critères de succès vérifiables avant d implémenter.
 - Push back quand une approche plus simple existe.
+
+### Rayon d'impact (Demande JB 2026-08-28)
+Dès qu'un changement dépasse 1-2 fichiers OU crée une surface (composant, variante, util src/lib/, champ Zod, collection, route, token), quatre items observables sont écrits AVANT la première ligne — dans le plan proposé en live, gabarit `.claude/templates/rayon-impact.md` :
+1. **Appelants** : pour chaque composant, fonction, champ, collection, route modifié — la commande de recherche citée (chemin absolu), les usages trouvés, ce qui change pour chacun. « Aucun autre appelant » se prouve par la commande, jamais par affirmation.
+2. **Doublons** : ce qui fait déjà la même chose (component-registry + galerie /styleguide + recherche sur le concept) ; verdict réutiliser / fusionner / laisser, et pourquoi.
+3. **Effet produit** : quel parcours voit une différence hors du fichier modifié — autres pages qui rendent le composant, fichiers générés (sitemap.xml, llms.txt, rss.xml, robots.txt, JSON-LD), formulaire (PUBLIC_FORM_ENDPOINT), redirections, galerie /styleguide, et les sites dérivés du template (tout changement du socle leur est hérité).
+4. **Refacto** : proposé ou écarté, écrit. Proposé ⇒ question posée via `AskUserQuestion` avec coût et conséquence de ne pas le faire. Le refacto reste non fait sans accord, mais il n'est jamais tu.
+Contrôlable : un plan de cette échelle sans ces quatre items, ou un item 1 sans commande citée, est une violation. Les changements micro (1-2 fichiers, aucune surface) en sont exempts. Contrôle en review : code-review.md § Sobriété.
+
+### Arbitrages : `AskUserQuestion`, jamais une phrase dans un récap (Demande JB 2026-08-28)
+Toute décision qui revient à l'utilisateur — demande à plusieurs lectures, arbitrage produit ou éditorial, refacto proposé, option écartée qui coûterait à rattraper — est posée avec l'outil `AskUserQuestion`. La question porte le contexte pour trancher : par option, conséquence et coût ; recommandation en premier. Filtre : « des lectures différentes mènent à un travail matériellement différent » ; le reste se tranche seul et s'écrit dans le récap. Contrôlable sur la trace : un arbitrage rendu en prose (« j'ai choisi X », « à toi de voir ») sans appel à l'outil est une violation. Un sous-agent ne tranche pas : il s'arrête et remonte l'arbitrage au pilote, qui pose la question (§ Qui exécute).
 
 ### Anti-over-engineering (deux obligations contrôlables)
 Ce qui se contrôle n'est pas l'intention (« rester simple »), c'est la trace de l'arbitrage :
@@ -38,7 +49,7 @@ Le **modèle de la session** décide du rôle, pas la taille de la demande.
 - **Session Fable** — Fable ne modifie **jamais** `src/` ni `scripts/` lui-même. Il découpe le travail en lots indépendants, écrit pour chacun les critères vérifiables, lance des `Agent` avec `model: "opus"` — tous dans le même message quand les lots ne se touchent pas, pour qu'ils tournent en parallèle — puis relit les diffs, arbitre, et porte la finalisation : review (code-review.md), changelog, component-registry, `/commit-push`. Restent à sa main : `docs/`, `.claude/`, les vérifications, les décisions.
 - **Session Opus** — pas de délégation imposée : Opus écrit lui-même, et délègue quand un lot est réellement parallélisable, pas par principe.
 - **`model: "opus"` s'écrit explicitement** sur chaque `Agent` lancé depuis une session Fable : sans ce champ le sous-agent hérite du modèle du parent, et le pilotage ne sert à rien.
-- **Un sous-agent reçoit la méthode, pas seulement la tâche** : mode/échelle annoncés, conventions .claude/conventions/ routées à charger, critères de succès, interdiction de commiter. Le commit reste au pilote, via `/commit-push`.
+- **Un sous-agent reçoit la méthode, pas seulement la tâche** : mode/échelle annoncés, conventions .claude/conventions/ routées à charger, critères de succès, interdiction de commiter, **interdiction de trancher un arbitrage** (il s'arrête et remonte les options au pilote, qui pose la question via `AskUserQuestion`). Ces deux interdictions figurent dans le prompt de chaque sous-agent. Le commit reste au pilote, via `/commit-push`.
 
 ## Projet
 <!-- Nom + description du site à remplir au bootstrap -->
@@ -140,18 +151,18 @@ Déposer l'image et la référencer via `heroImage:` (frontmatter) ; `alt` + dim
 Le push passe TOUJOURS par `/commit-push` (lint + astro check + build, puis commit + push). C'est le seul gate. Ne jamais committer .env, dist/, node_modules.
 
 ## Modes de travail (auto-détectés — AUCUNE commande à taper)
-Détecter l'intention de la demande et appliquer le bon mode automatiquement. En cas d'ambiguïté : nommer le doute et demander.
+Détecter l'intention de la demande et appliquer le bon mode automatiquement. En cas d'ambiguïté : nommer le doute et demander via `AskUserQuestion` (§ Arbitrages).
 
 ### Cadrage (planification)
 Déclencheurs : cadre/planifie/sitemap/content-model/architecture/structure/V2/refonte, ou site neuf sans docs.
 **Documentation UNIQUEMENT** : modifier seulement docs/. JAMAIS installer, créer du code ni builder.
 - Initial (docs/sitemap.md absent) : créer from scratch. Évolution (docs existants + V2/refonte) : éditer l'existant, ADR par invariant touché. Annoncer le mode.
-- Déroulé : brief → sitemap (par page : type/URL/objectif/CTA/intention SEO ; trancher landing MDX vs .astro) → content-model (collections, champs Zod, taxonomie ; règle DRY : archétype répété = collection) → architecture (invariants + starters à activer) → design (tokens légers) → gate .claude/checklists/site-ready.md. Templates : .claude/templates/.
+- Déroulé : brief → sitemap (par page : type/URL/objectif/CTA/intention SEO ; trancher landing MDX vs .astro) → content-model (collections, champs Zod, taxonomie ; règle DRY : archétype répété = collection) → architecture (invariants + starters à activer) → design (tokens légers) → gate .claude/checklists/site-ready.md. Templates : .claude/templates/. En évolution, chaque page ou collection touchée porte son rayon d'impact (page-spec.md renvoie au gabarit rayon-impact.md) ; les arbitrages de cadrage (landing MDX vs .astro, collection vs page, invariant touché) passent par `AskUserQuestion`, pas par une note dans le doc.
 
 ### Développement (code)
 Déclencheurs : ajoute/implémente/corrige/refacto/explore. Sous-modes auto (si ambigu, priorité Explore > Refacto > Fix > Feature) :
 - Fix (reproduire avant, diff minimal) · Feature (si non-trivial → cadrer d'abord) · Refacto (pas de changement de comportement) · **Explore (comprends/explique/analyse/audit = READ-ONLY, aucune écriture)**.
-- Flow : lire refs + conventions pertinentes → implémenter (schéma Zod si nouveau type → composant ui/ → contenu .md/.mdx → route) → review (.claude/checklists/code-review.md) → finaliser (component-registry, llms.txt, changelog) → `/commit-push`.
+- Flow : lire refs + conventions pertinentes → rayon d'impact (§ Avant de coder ; obligatoire au-delà de 1-2 fichiers ou dès qu'une surface est créée — gabarit .claude/templates/rayon-impact.md ; refacto proposé = `AskUserQuestion`) → implémenter (schéma Zod si nouveau type → composant ui/ → contenu .md/.mdx → route) → review (.claude/checklists/code-review.md) → finaliser (component-registry, llms.txt, changelog) → `/commit-push`.
 
 ### Activation live des conventions & skills
 - **Conventions** : toujours lire coding-standards + tech-stack + component-registry. En plus, charger AUTOMATIQUEMENT les conventions .claude/conventions/ dont les tags matchent la demande ou les fichiers touchés (mapping dans .claude/conventions/_index.md). Ne pas attendre qu'on le demande.

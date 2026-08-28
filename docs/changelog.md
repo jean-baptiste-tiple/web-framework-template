@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-28 — Rayon d'impact + arbitrages via AskUserQuestion (portés depuis app-pmo-luciole)
+- Ce qui change pour le lecteur : au-delà de 1-2 fichiers ou dès qu'une surface est créée, le plan cite AVANT le code quatre items vérifiables (appelants avec commande citée, doublons, effet produit, refacto proposé/écarté) — gabarit `.claude/templates/rayon-impact.md`. Un refacto repéré devient une question, jamais un silence ni un refacto fait sans accord.
+- Toute décision qui revient à l'utilisateur passe par l'outil `AskUserQuestion` (contexte par option, recommandation en premier) ; une phrase « j'ai choisi X » dans un récap est une violation. Un sous-agent ne tranche pas : il remonte au pilote.
+- Emplacements : CLAUDE.md § Avant de coder (2 sous-sections datées), § Modes (flow dev + cadrage), § Qui exécute (consigne sous-agents) ; page-spec.md (renvoi) ; code-review.md § Sobriété et prd-evolution.md (points de contrôle).
+
 ## 2026-08-25 — SEO/GEO agentic + audit Lighthouse contrôlé
 - Audit Lighthouse local : `pnpm run audit:lh` (lhci sur dist/, lighthouserc.json, 4 archétypes de page, seuils ≥ 0.95 en assertion). Résultat socle : 100/100/100/100 partout.
 - Corrections révélées par l'audit : image hero en `loading="eager"` + `fetchpriority="high"` (LCP — astro:assets est lazy d'office) ; `--color-muted` 55% → 52% (contraste 4.43:1 → 5.05:1 sur surface) ; `sharp` en devDependency (build cassait à la première vraie image, invisible car les contenus d'exemple n'en ont pas).
