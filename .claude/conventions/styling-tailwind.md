@@ -8,4 +8,5 @@
 - Contenu Markdown rendu : classe .prose-content sur le conteneur.
 - Surface de carte : Card.astro est LA surface canonique (fond + bordure + radius). Un wrapper ne pose jamais une surface que son slot porte déjà (anti double-carte). Une carte dont la bordure/teinte encode une information garde son identité et ne reçoit que la surface neutre.
 - Largeur : toute section passe par <Container> (gouttière + boîte centrée unique). Aucune surcharge de largeur de section en px ; seules exceptions : colonnes de LECTURE (prose, corps d'article), listées au registre.
-- Design system léger et évolutif : affiner les tokens au fil de l'eau plutôt que multiplier des valeurs custom en dur.
+- Design system léger et évolutif : affiner les tokens au fil de l'eau plutôt que multiplier des valeurs custom en dur. Monde visuel engagé = documenté via .claude/templates/design-system.md.
+- Surfaces navigateur thématisées depuis la palette : `::selection`, focus ring, `text-underline-offset`, chiffres tabulaires (`font-variant-numeric`) — le signal le moins cher qu'une page a été dessinée. Détail craft (rythme des titres, échelle base 4, verrous) : skill design-craft, chargé avant toute édition UI.

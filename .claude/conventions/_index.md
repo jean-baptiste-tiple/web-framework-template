@@ -2,6 +2,8 @@
 
 Base (toujours lues) : coding-standards.md, tech-stack.md, component-registry.md.
 
+Chaque convention a un wrapper skill homonyme dans `.claude/skills/` (frontmatter descriptif = déclencheur harness). Le contenu vit ICI, jamais dans le wrapper ; nouvelle convention = nouveau wrapper + ligne dans cette table, même commit.
+
 Chargées par tag (déduites de la demande ou des fichiers touchés) :
 
 | Tag | Fichier | Déclencheurs (fichiers) |

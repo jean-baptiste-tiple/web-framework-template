@@ -1,0 +1,28 @@
+---
+import Container from '@/components/ui/Container.astro';
+import type { TestimonialsGridSection } from './TestimonialsGrid.schema';
+
+interface Props {
+  section: TestimonialsGridSection;
+}
+const { section } = Astro.props;
+---
+
+<section class="py-12">
+  <Container>
+    {section.title && <h2 class="mb-8 text-2xl font-semibold">{section.title}</h2>}
+    <div class="grid gap-6 sm:grid-cols-2">
+      {
+        section.items.map((it) => (
+          <figure class="rounded border border-border p-6">
+            <blockquote class="text-fg">“{it.quote}”</blockquote>
+            <figcaption class="mt-3 text-sm text-muted">
+              {it.author}
+              {it.role ? ` — ${it.role}` : ''}
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </Container>
+</section>

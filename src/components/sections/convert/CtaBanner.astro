@@ -1,0 +1,17 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Button from '@/components/ui/Button.astro';
+import type { CtaBannerSection } from './CtaBanner.schema';
+
+interface Props {
+  section: CtaBannerSection;
+}
+const { section } = Astro.props;
+---
+
+<section class="py-16">
+  <Container class="text-center">
+    {section.title && <h2 class="mb-6 text-2xl font-semibold">{section.title}</h2>}
+    <Button href={section.href}>{section.label}</Button>
+  </Container>
+</section>

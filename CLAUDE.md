@@ -66,6 +66,7 @@ Le projet suit la méthode du template (variante sites), portée par .claude/. L
 Lire les fichiers pertinents avant chaque action.
 Site neuf depuis le template : dérouler .claude/checklists/bootstrap.md (URL de prod, site.json, placeholders og/logo, contenus d'exemple, PUBLIC_FORM_ENDPOINT) en plus du cadrage.
 Migration d'un site Webflow existant : dérouler .claude/playbooks/migration-webflow.md (phases + gates) avec l'outillage scripts/migration/ + scripts/parity/ (config : scripts/migration/config.mjs).
+Site complet depuis un brief client : dérouler .claude/playbooks/website-builder.md (P0 intake → P8 apprentissage, gates par phase) avec le kit C:\apps\web-kit (skills section-catalog, copywriting, design-craft). Plan et décisions : docs/website-builder.md.
 
 ## Règles absolues
 1. output: static. Ne JAMAIS introduire d adapter, de SSR, d API route dynamique, de Server Action ou de dépendance serveur. Tout doit être généré au build.
@@ -77,7 +78,6 @@ Migration d'un site Webflow existant : dérouler .claude/playbooks/migration-web
 7. Ne JAMAIS modifier un invariant d archi sans ADR dans docs/decisions/.
 8. Mode cadrage (auto-détecté) = documentation uniquement. Aucune install, aucun fichier de code, aucun build pendant un cadrage.
 9. DRY structurel (CRITIQUE) : tout archétype de page qui se répète avec la MÊME forme (cas clients, fiches produit, secteurs…) = UNE collection Zod + UN seul template/route, JAMAIS N pages .astro bespoke. Si tu écris deux fois la même structure, c est une collection. Le bespoke (.astro) est réservé à un design réellement unique (home).
-10. Un seul framework JS par défaut : AUCUN. Préférer natif (<details>, <script> vanilla). Solid = starter opt-in.
 
 ## Modèle de contenu (décision structurante)
 Principe : **1 fichier markdown par page** pour le texte de la page ; **1 fichier de réglages** pour le texte partagé entre pages. Éditer du texte = éditer ce seul fichier ; le design vit dans les composants + tokens.
@@ -121,7 +121,7 @@ URL de prod : UNE seule fois dans `astro.config.mjs` (`site:`) — canonical, si
 ### Créer une nouvelle page
 - Nouvel article : créer `src/content/blog/<slug>.md`. Frontmatter minimum : `title`, `description`, `pubDate` (sinon le build échoue). Optionnels utiles : `updatedDate`, `author` (clé de `src/lib/authors.ts`, défaut `jb`), `tags`, `tldr`, `faq`.
 - Nouvelle page éditoriale : créer `src/content/pages/<slug>.md`. Minimum : `title`, `description`.
-- Nouvelle landing : créer `src/content/landings/<slug>.mdx`. Minimum : `title`, `description`, `hero.headline`. Sections via `sections:` (types : features/proof/faq/cta).
+- Nouvelle landing : créer `src/content/landings/<slug>.mdx`. Minimum : `title`, `description`, `hero.headline`. Sections via `sections:` (types disponibles : voir le registre `src/lib/sections.ts` et la galerie /styleguide).
 - Ajouter un lien vers la nouvelle page dans `nav` (site.json) si besoin.
 
 ### Auteurs
@@ -147,9 +147,6 @@ Déposer l'image et la référencer via `heroImage:` (frontmatter) ; `alt` + dim
 4. Pas de couleurs en dur. En markup : classes Tailwind sémantiques générées depuis `@theme` (`bg-primary`, `text-fg`…), PAS la forme arbitraire `[var(--color-*)]`. Les tokens `var(--color-*)` ne servent QUE dans les blocs `<style>` scoped (où Tailwind ne s'applique pas). Radius/espacements : utilitaires générés (`rounded-sm`…) quand le token existe dans `@theme`, pas `[var(--radius*)]`.
 5. Un bloc visuel réutilisé = UN composant dans src/components/ui/ (ou landing/ pour les sections). Pas de copier-coller de markup entre pages.
 
-## Avant push
-Le push passe TOUJOURS par `/commit-push` (lint + astro check + build, puis commit + push). C'est le seul gate. Ne jamais committer .env, dist/, node_modules.
-
 ## Modes de travail (auto-détectés — AUCUNE commande à taper)
 Détecter l'intention de la demande et appliquer le bon mode automatiquement. En cas d'ambiguïté : nommer le doute et demander via `AskUserQuestion` (§ Arbitrages).
 
@@ -157,7 +154,7 @@ Détecter l'intention de la demande et appliquer le bon mode automatiquement. En
 Déclencheurs : cadre/planifie/sitemap/content-model/architecture/structure/V2/refonte, ou site neuf sans docs.
 **Documentation UNIQUEMENT** : modifier seulement docs/. JAMAIS installer, créer du code ni builder.
 - Initial (docs/sitemap.md absent) : créer from scratch. Évolution (docs existants + V2/refonte) : éditer l'existant, ADR par invariant touché. Annoncer le mode.
-- Déroulé : brief → sitemap (par page : type/URL/objectif/CTA/intention SEO ; trancher landing MDX vs .astro) → content-model (collections, champs Zod, taxonomie ; règle DRY : archétype répété = collection) → architecture (invariants + starters à activer) → design (tokens légers) → gate .claude/checklists/site-ready.md. Templates : .claude/templates/. En évolution, chaque page ou collection touchée porte son rayon d'impact (page-spec.md renvoie au gabarit rayon-impact.md) ; les arbitrages de cadrage (landing MDX vs .astro, collection vs page, invariant touché) passent par `AskUserQuestion`, pas par une note dans le doc.
+- Déroulé : brief → sitemap (par page : type/URL/objectif/CTA/intention SEO ; trancher landing MDX vs .astro) → content-model (collections, champs Zod, taxonomie ; règle DRY : archétype répété = collection) → architecture (invariants + starters à activer) → design (tokens légers ; gabarit .claude/templates/design-system.md dès qu'un monde visuel est engagé) → gate .claude/checklists/site-ready.md. Templates : .claude/templates/. En évolution, chaque page ou collection touchée porte son rayon d'impact (page-spec.md renvoie au gabarit rayon-impact.md) ; les arbitrages de cadrage (landing MDX vs .astro, collection vs page, invariant touché) passent par `AskUserQuestion`, pas par une note dans le doc.
 
 ### Développement (code)
 Déclencheurs : ajoute/implémente/corrige/refacto/explore. Sous-modes auto (si ambigu, priorité Explore > Refacto > Fix > Feature) :
@@ -165,11 +162,11 @@ Déclencheurs : ajoute/implémente/corrige/refacto/explore. Sous-modes auto (si 
 - Flow : lire refs + conventions pertinentes → rayon d'impact (§ Avant de coder ; obligatoire au-delà de 1-2 fichiers ou dès qu'une surface est créée — gabarit .claude/templates/rayon-impact.md ; refacto proposé = `AskUserQuestion`) → implémenter (schéma Zod si nouveau type → composant ui/ → contenu .md/.mdx → route) → review (.claude/checklists/code-review.md) → finaliser (component-registry, llms.txt, changelog) → `/commit-push`.
 
 ### Activation live des conventions & skills
-- **Conventions** : toujours lire coding-standards + tech-stack + component-registry. En plus, charger AUTOMATIQUEMENT les conventions .claude/conventions/ dont les tags matchent la demande ou les fichiers touchés (mapping dans .claude/conventions/_index.md). Ne pas attendre qu'on le demande.
-- **Skills** : invoquer le skill pertinent au bon moment, sans qu'on le nomme — ex. frontend-design quand on crée/peaufine de l'UI ; code-review avant un push important ; verify/run pour vérifier un rendu. Annoncer brièvement le skill utilisé.
+- **Conventions** : toujours lire coding-standards + tech-stack + component-registry avant de coder. Chaque convention a un **wrapper skill homonyme** (.claude/skills/<nom>/) : c'est le déclencheur harness — l'invoquer dès que sa description matche la demande ou les fichiers touchés, sans attendre qu'on le demande. Le CONTENU vit uniquement dans .claude/conventions/ (source unique) ; _index.md reste la table de référence tags → fichiers.
+- **Skills** : invoquer le skill pertinent au bon moment, sans qu'on le nomme — ex. **design-craft (.claude/skills/design-craft/) avant TOUTE création ou retouche d'UI** (son SKILL.md route vers craft-floor/composition/typo-couleur/motion selon le travail ; audit-redesign.md pour reprendre un existant) ; frontend-design en complément pour la direction ; code-review avant un push important ; verify/run pour vérifier un rendu. Annoncer brièvement le skill utilisé.
 
 ## Seule commande : /commit-push
-Le push passe TOUJOURS par `/commit-push` (lint + astro check + build = validation TS et frontmatter MD/MDX, puis commit + push). C'est le seul gate et la seule commande. Détail : .claude/commands/commit-push.md.
+Le push passe TOUJOURS par `/commit-push` (lint + astro check + build = validation TS et frontmatter MD/MDX, puis commit + push). C'est le seul gate et la seule commande. Ne jamais committer .env, dist/, node_modules. Détail : .claude/commands/commit-push.md.
 
 ## Design System
 Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design system viendra plus tard : ne pas sur-investir le style. Réutiliser les composants src/components/ui/. Registry : .claude/conventions/component-registry.md + galerie /styleguide (noindex) — tenir les deux à jour dans le même commit.
@@ -177,3 +174,4 @@ Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design
 ## Conventions par tags
 Index : .claude/conventions/_index.md. Base toujours lues : coding-standards.md, tech-stack.md, component-registry.md.
 Tags : astro, content-collections, mdx, islands-solid, styling-tailwind, images, seo, geo, a11y, performance, i18n, forms, deploy.
+Déclenchement : un wrapper skill par convention dans .claude/skills/ (source du contenu : la convention, jamais le wrapper).

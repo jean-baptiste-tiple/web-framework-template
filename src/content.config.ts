@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { sectionSchema } from '@/lib/sections';
 
 // --- Blocs réutilisables -------------------------------------------------
 
@@ -56,6 +57,8 @@ const pages = defineCollection({
     updatedDate: z.coerce.date().optional(),
     tldr: z.string().optional(),
     faq: faqSchema,
+    // Page-builder optionnel : mêmes sections que les landings (même registre).
+    sections: z.array(sectionSchema).default([]),
     seo: seoSchema,
   }),
 });
@@ -83,46 +86,9 @@ const landings = defineCollection({
           message: 'hero.imageAlt est requis quand hero.image est défini',
           path: ['imageAlt'],
         }),
-      // Page-builder léger : chaque section est mappée à un composant.
-      sections: z
-        .array(
-          z.discriminatedUnion('type', [
-            z.object({
-              type: z.literal('features'),
-              title: z.string().optional(),
-              items: z.array(
-                z.object({
-                  title: z.string(),
-                  body: z.string(),
-                  icon: z.string().optional(),
-                }),
-              ),
-            }),
-            z.object({
-              type: z.literal('proof'),
-              title: z.string().optional(),
-              items: z.array(
-                z.object({
-                  quote: z.string(),
-                  author: z.string(),
-                  role: z.string().optional(),
-                }),
-              ),
-            }),
-            z.object({
-              type: z.literal('faq'),
-              title: z.string().optional(),
-              items: z.array(z.object({ q: z.string(), a: z.string() })),
-            }),
-            z.object({
-              type: z.literal('cta'),
-              title: z.string().optional(),
-              label: z.string(),
-              href: z.string(),
-            }),
-          ]),
-        )
-        .default([]),
+      // Page-builder léger : chaque section est mappée à un composant par le
+      // registre src/lib/sections.ts (source unique schéma + composant).
+      sections: z.array(sectionSchema).default([]),
       // Données pour le JSON-LD (Service ou Product).
       schema: z
         .object({

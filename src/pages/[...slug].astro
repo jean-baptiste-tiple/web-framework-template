@@ -67,7 +67,8 @@ const breadcrumbs = [
 // pour une page, au top-level du frontmatter.
 const faqForJsonLd =
   props.kind === 'landing'
-    ? props.entry.data.sections.find((s) => s.type === 'faq')?.items
+    ? props.entry.data.sections.find((s) => s.type === 'content.faq-accordion')
+        ?.items
     : props.entry.data.faq;
 ---
 
@@ -155,6 +156,10 @@ const faqForJsonLd =
           )}
         </article>
       </Container>
+
+      {props.entry.data.sections.map((section) => (
+        <SectionRenderer section={section} />
+      ))}
     </BaseLayout>
   )
 }

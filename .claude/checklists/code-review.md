@@ -32,6 +32,16 @@
 - [ ] Changement > 1-2 fichiers ou surface créée : rayon d'impact rempli (4 items, item Appelants avec commande citée), et tout refacto proposé a été posé via `AskUserQuestion`, pas laissé en note
 - [ ] Aucun arbitrage rendu en prose dans le récap (« j'ai choisi », « à toi de voir ») : chaque décision qui revenait à l'utilisateur a un appel `AskUserQuestion` dans la trace
 
+## Craft (si de l'UI a été touchée — réf. : skill design-craft)
+- [ ] Zéro `—` / `–` dans le texte visible (grep) ; zéro faux screenshot en div ; zéro carte imbriquée
+- [ ] Hero : ≤ 4 éléments texte, titre ≤ 2 lignes desktop, 1 CTA primaire
+- [ ] Une famille de layout max 1×/page ; max 2 splits image+texte consécutifs ; bento : N items = N cellules
+- [ ] CTA : un label par intention, identique partout ; aucun label de bouton sur 2 lignes
+- [ ] Verrous tenus : 1 accent, 1 système de rayons, 1 thème par page
+- [ ] Contrôles : 7 états présents ; contenu visible au repos (sans JS/animation) ; reduced-motion = alternative, pas un kill
+- [ ] Surfaces navigateur thématisées (::selection, focus ring, underline-offset)
+- [ ] Copy self-audit passé ; chiffres précis sourcés ou marqués mock
+
 ## Documentation
 - [ ] Un ADR qui révise une règle de CLAUDE.md ou d'une convention met à jour ce texte dans le même commit (l'ADR trace la décision, il ne la remplace pas)
 - [ ] Erreur corrigée pendant le chantier = boucle « Après une erreur » passée (garde écrite ou observation dans docs/learnings.md)

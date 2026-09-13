@@ -1,0 +1,26 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Card from '@/components/ui/Card.astro';
+import type { FeaturesGridSection } from './FeaturesGrid.schema';
+
+interface Props {
+  section: FeaturesGridSection;
+}
+const { section } = Astro.props;
+---
+
+<section class="py-12">
+  <Container>
+    {section.title && <h2 class="mb-8 text-2xl font-semibold">{section.title}</h2>}
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        section.items.map((it) => (
+          <Card>
+            <h3 class="mb-1 font-semibold">{it.title}</h3>
+            <p class="text-sm text-muted">{it.body}</p>
+          </Card>
+        ))
+      }
+    </div>
+  </Container>
+</section>

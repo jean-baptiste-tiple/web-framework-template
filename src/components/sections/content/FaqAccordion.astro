@@ -1,0 +1,16 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Faq from '@/components/ui/Faq.astro';
+import type { FaqAccordionSection } from './FaqAccordion.schema';
+
+interface Props {
+  section: FaqAccordionSection;
+}
+const { section } = Astro.props;
+---
+
+<section class="py-12">
+  <Container prose>
+    <Faq title={section.title} items={section.items} />
+  </Container>
+</section>

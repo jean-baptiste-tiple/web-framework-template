@@ -7,6 +7,8 @@ import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import Card from '@/components/ui/Card.astro';
 import Faq from '@/components/ui/Faq.astro';
+import SectionRenderer from '@/components/landing/SectionRenderer.astro';
+import { SECTION_REGISTRY, type Section as SectionData } from '@/lib/sections';
 
 const meta = {
   title: 'Styleguide',
@@ -16,6 +18,36 @@ const meta = {
 };
 
 const tokens = ['bg', 'fg', 'muted', 'border', 'surface', 'accent'];
+
+// Un exemple par variante du registre de sections : la galerie casse tant qu'une
+// variante ajoutée n'a pas son exemple ici (Record indexé sur SectionType).
+const sectionSamples: Record<keyof typeof SECTION_REGISTRY, SectionData> = {
+  'offer.features-grid': {
+    type: 'offer.features-grid',
+    title: 'Features (grille)',
+    items: [
+      { title: 'Feature A', body: 'Une phrase de bénéfice.' },
+      { title: 'Feature B', body: 'Une phrase de bénéfice.' },
+      { title: 'Feature C', body: 'Une phrase de bénéfice.' },
+    ],
+  },
+  'proof.testimonials-grid': {
+    type: 'proof.testimonials-grid',
+    title: 'Témoignages (grille)',
+    items: [{ quote: 'Une citation courte.', author: 'Prénom Nom', role: 'Fonction' }],
+  },
+  'content.faq-accordion': {
+    type: 'content.faq-accordion',
+    title: 'FAQ (accordéon)',
+    items: [{ q: 'Une question ?', a: 'Une réponse factuelle.' }],
+  },
+  'convert.cta-banner': {
+    type: 'convert.cta-banner',
+    title: 'Bandeau CTA',
+    label: 'Appel à l’action',
+    href: '#',
+  },
+};
 ---
 
 <BaseLayout meta={meta}>
@@ -67,6 +99,24 @@ const tokens = ['bg', 'fg', 'muted', 'border', 'surface', 'accent'];
           ]}
         />
       </div>
+
+      <h2 class="mt-10 text-xl font-semibold">Sections (registre)</h2>
+      <p class="mt-2 text-muted">
+        Variantes disponibles dans <code>sections:</code> (frontmatter des landings et des pages).
+        Une variante = un dossier src/components/sections/&lt;famille&gt;/ + une entrée dans
+        src/lib/sections.ts.
+      </p>
     </Container>
+
+    {
+      Object.entries(sectionSamples).map(([type, sample]) => (
+        <div class="mt-6 border-t border-border pt-2">
+          <Container>
+            <p class="text-xs text-muted">{type}</p>
+          </Container>
+          <SectionRenderer section={sample} />
+        </div>
+      ))
+    }
   </Section>
 </BaseLayout>

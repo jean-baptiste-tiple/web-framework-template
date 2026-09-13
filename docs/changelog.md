@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-13 — Sections extensibles par variante (registre unique)
+- Les 4 sections jusque-là en markup inline dans `SectionRenderer.astro` deviennent des composants autonomes `src/components/sections/<famille>/<Variante>.astro` + `<Variante>.schema.ts` (fragment Zod), au format de type `<famille>.<variante>` de la taxonomie du kit : `offer.features-grid`, `proof.testimonials-grid`, `content.faq-accordion`, `convert.cta-banner`.
+- `src/lib/sections.ts` : registre unique `{ [type]: { schema, component } }`. `content.config.ts` en DÉRIVE l'union discriminée `sections` (plus de types redéclarés) ; `SectionRenderer.astro` n'est plus qu'une table type → composant (zéro markup, zéro chaîne de `section.type === …`). Ajouter une section du kit = un dossier + une entrée.
+- La collection `pages` gagne le même `sections:` optionnel, rendu sous le corps Markdown par `src/pages/[...slug].astro`. Landing inchangée.
+- `/styleguide` rend un exemple par variante ; son `Record<SectionType, …>` casse `astro check` si une variante ajoutée n'a pas d'exemple. Registry et content-patterns mis à jour.
+- Vérifié : HTML de `/audit-energetique` identique au pré-refacto (hors espaces) ; lint + astro check + build verts ; un `type` absent du registre casse `astro check` en listant les types acceptés.
+
+## 2026-09-13 — Plan website builder (cadrage)
+- `docs/website-builder.md` : plan validé — découpage monde/sections/contenu (un template n'est jamais une page entière), kit dans un repo séparé `web-kit`, portage par couverture (taxonomie complète des familles, familles orphelines créées), pipeline P0→P8 avec gates, 5 chantiers, pilote sur un vrai client.
+
+## 2026-09-13 — Wrapper skills pour les conventions + dédoublonnage CLAUDE.md
+- 14 wrapper skills (.claude/skills/<nom>/SKILL.md), un par convention : le harness liste leurs descriptions en permanence et les charge à la demande — déclenchement mécanique au lieu de la seule obéissance à CLAUDE.md. Le contenu reste UNIQUEMENT dans .claude/conventions/ (le wrapper est un pointeur) ; nouvelle convention = wrapper + ligne _index.md dans le même commit.
+- CLAUDE.md : § Activation et § Conventions par tags mis à jour ; doublons supprimés (§ Avant push fusionné dans § Seule commande ; règle absolue 10 fusionnée dans la 2/Stack).
+
+## 2026-09-13 — Skill design-craft (distillé de impeccable + taste-skill)
+- Nouveau skill repo-local `.claude/skills/design-craft/` : routeur (modes visiteur Persuade/Read/Operate, plancher ≠ plafond, le brief gagne, passes bornées) + 5 références : craft-floor (plancher mécanique avant toute édition UI : contrastes, mesures, rythme des titres, états, surfaces navigateur, interdits durs dont zéro tiret cadratin, défauts-par-réflexe), composition (règles comptables : hero ≤ 4 éléments/2 lignes, familles de layout, bento N=N, CTA une intention = un label, verrous couleur/forme/thème), typo-couleur (échelles par surface, fontes « training-data », OKLCH, stratégies), motion-css (0 JS : contenu visible au repos, reduced-motion intentionnel, durées), audit-redesign (5 dimensions /20, verdicts ship/fix/rebuild/recapture, symptôme→correctif).
+- Gabarit `.claude/templates/design-system.md` (tokens + rôles + named rules) référencé par docs/design/system.md et le cadrage.
+- Ancrage : CLAUDE.md § Skills (chargement avant toute UI), code-review.md § Craft (checks mécaniques), styling-tailwind (surfaces navigateur), a11y (nav ≤ 5). Distillé de pbakaus/impeccable (Apache-2.0) et Leonxlnx/taste-skill (MIT), attribution en tête des fichiers ; aucune dépendance ni outillage importé. Décisions : ban total du tiret cadratin ; pas de règle eyebrow (choix JB).
+
 ## 2026-08-28 — Rayon d'impact + arbitrages via AskUserQuestion (portés depuis app-pmo-luciole)
 - Ce qui change pour le lecteur : au-delà de 1-2 fichiers ou dès qu'une surface est créée, le plan cite AVANT le code quatre items vérifiables (appelants avec commande citée, doublons, effet produit, refacto proposé/écarté) — gabarit `.claude/templates/rayon-impact.md`. Un refacto repéré devient une question, jamais un silence ni un refacto fait sans accord.
 - Toute décision qui revient à l'utilisateur passe par l'outil `AskUserQuestion` (contexte par option, recommandation en premier) ; une phrase « j'ai choisi X » dans un récap est une violation. Un sous-agent ne tranche pas : il remonte au pilote.

@@ -14,7 +14,7 @@ Tout archétype de page qui se répète avec la même forme = UNE collection + U
 
 ## Collections du socle
 - Blog : Markdown, src/content/blog/. Pages : Markdown, src/content/pages/. Landings : MDX, src/content/landings/.
-- Landing = page-builder léger : sections[] (union discriminée par type) + corps MDX optionnel. Ajouter un type de section = l'ajouter au schéma ET à SectionRenderer.astro (un seul endroit pour le markup de chaque section).
+- Landing = page-builder léger : sections[] (union discriminée par `type`) + corps MDX optionnel. Les pages éditoriales ont le MÊME `sections:` (optionnel, rendu sous le corps Markdown). Ajouter un type de section = un dossier `src/components/sections/<famille>/` (`<Variante>.astro` + `<Variante>.schema.ts`) et UNE entrée dans `src/lib/sections.ts` : le registre est la source unique dont content.config.ts dérive l'union et SectionRenderer la table de rendu. Ne jamais redéclarer un type de section dans content.config.ts.
 - Alternative documentée (option, pas remplacement) : sections = composants importés directement dans le corps MDX (`template: sections`). Critère de choix : union discriminée si le contenu est piloté par des non-devs (validation Zod forte) ; import MDX si les sections évoluent vite (pas de schéma à maintenir en double, composition libre). Choisir UNE approche par projet et s'y tenir.
 
 ## Texte global vs texte de page

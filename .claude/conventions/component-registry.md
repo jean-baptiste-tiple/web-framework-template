@@ -32,7 +32,22 @@ composant OU d'écrire du markup de section. Tout nouveau composant/variante →
 ## Landing (src/components/landing/)
 | Composant | Rôle |
 | --- | --- |
-| SectionRenderer.astro | Mappe sections[].type (features/proof/faq/cta) -> rendu |
+| SectionRenderer.astro | Lit `SECTION_REGISTRY[section.type].component` (src/lib/sections.ts) et le rend. Ne contient AUCUN markup : ajouter une section ne le touche pas. |
+
+## Sections (src/components/sections/&lt;famille&gt;/)
+Une variante = `<Variante>.astro` + `<Variante>.schema.ts` à côté (fragment Zod dont le `type` vaut
+`<famille>.<variante>`, taxonomie : C:\apps\web-kit\catalog\taxonomy.md), + UNE entrée dans
+`src/lib/sections.ts`. Le registre est la source unique : `content.config.ts` en dérive l'union
+discriminée `sections` (landings ET pages), SectionRenderer y lit le composant, /styleguide en rend
+un exemple par variante (le `Record<SectionType, …>` de la galerie casse `astro check` si l'exemple
+manque). Props : un seul prop `section`, typé depuis le schéma.
+
+| Type (discriminant) | Composant | Rôle |
+| --- | --- | --- |
+| offer.features-grid | offer/FeaturesGrid.astro | Grille de features en Card (3 colonnes) |
+| proof.testimonials-grid | proof/TestimonialsGrid.astro | Témoignages en figure/blockquote (2 colonnes) |
+| content.faq-accordion | content/FaqAccordion.astro | FAQ en colonne de lecture (réutilise Faq.astro) |
+| convert.cta-banner | convert/CtaBanner.astro | Bandeau CTA centré (titre + Button) |
 
 ## Islands (src/components/islands/)
 SolidJS = starter opt-in, non installé par défaut. Créer un îlot ici UNIQUEMENT après avoir
