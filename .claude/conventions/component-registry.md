@@ -17,8 +17,6 @@ composant OU d'écrire du markup de section. Tout nouveau composant/variante →
 | Section.astro | class? | Espacement vertical de section |
 | Button.astro | href?, variant(primary/outline)?, type(button/submit)?, class? | Bouton/lien (type pour usage formulaire) |
 | Card.astro | class? | Carte surface + bordure |
-| Header.astro | — | Nav principale (depuis SITE.nav) |
-| Footer.astro | — | Pied de page |
 | Faq.astro | title?, items[] | Accordéon natif <details> (0 JS), crawlable |
 | GlobalFaq.astro | title? | FAQ globale partagée (SITE.faq, éditée dans site.json) |
 | ContactForm.astro | — | Formulaire contact statique vanilla (0 framework) vers PUBLIC_FORM_ENDPOINT |
@@ -42,8 +40,18 @@ discriminée `sections` (landings ET pages), SectionRenderer y lit le composant,
 un exemple par variante (le `Record<SectionType, …>` de la galerie casse `astro check` si l'exemple
 manque). Props : un seul prop `section`, typé depuis le schéma.
 
+**Chrome (`chrome: true` au registre)** : header, footer et barre d'annonce sont des variantes de
+section comme les autres (schéma + prop `section` + exemple en galerie), mais rendues UNE fois par
+`BaseLayout` depuis `src/lib/chrome.ts` (qui traduit `SITE` ← site.json vers la forme de la variante).
+Le marqueur `chrome: true` les EXCLUT de `sectionSchema`, l'union offerte au frontmatter des
+collections : un `type: nav.header-simple` dans un `sections:` casse `astro check` (discriminant
+refusé). Changer de variante = changer l'import dans BaseLayout + l'objet dans chrome.ts. Ne jamais
+rendre une variante chrome depuis une page.
+
 | Type (discriminant) | Composant | Rôle |
 | --- | --- | --- |
+| nav.header-simple (chrome) | nav/HeaderSimple.astro | Header : marque + nav principale (brand, nav[]) |
+| nav.footer-simple (chrome) | nav/FooterSimple.astro | Footer : copyright + liens de service (organizationName, links[]) |
 | offer.features-grid | offer/FeaturesGrid.astro | Grille de features en Card (3 colonnes) |
 | proof.testimonials-grid | proof/TestimonialsGrid.astro | Témoignages en figure/blockquote (2 colonnes) |
 | content.faq-accordion | content/FaqAccordion.astro | FAQ en colonne de lecture (réutilise Faq.astro) |
@@ -56,7 +64,7 @@ installé @astrojs/solid-js et seulement si le natif (<details>, <script>) ne su
 ## Layouts (src/layouts/)
 | Layout | Rôle |
 | --- | --- |
-| BaseLayout.astro | Head SEO + JSON-LD + Header/Footer. Utilisé par TOUTES les pages. |
+| BaseLayout.astro | Head SEO + JSON-LD + chrome (variantes nav.*, alimentées par src/lib/chrome.ts). Utilisé par TOUTES les pages. |
 
 ## Pages bespoke (markup inline déclaré)
 Chaque bloc resté en markup inline (hors composant) est listé ici avec sa raison en une ligne.

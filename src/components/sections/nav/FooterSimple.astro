@@ -1,0 +1,23 @@
+---
+import Container from '@/components/ui/Container.astro';
+import type { FooterSimpleSection } from './FooterSimple.schema';
+
+interface Props {
+  section: FooterSimpleSection;
+}
+const { section } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-border py-8 text-sm text-muted">
+  <Container class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <p>© {year} {section.organizationName}</p>
+    <nav class="flex gap-4">
+      {
+        section.links.map((link) => (
+          <a href={link.href} class="hover:text-fg">{link.label}</a>
+        ))
+      }
+    </nav>
+  </Container>
+</footer>

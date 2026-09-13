@@ -4,8 +4,12 @@ import { SITE } from '@/lib/site';
 import { resolveSeo, type SeoInput } from '@/lib/seo';
 import BaseHead from '@/components/seo/BaseHead.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
-import Header from '@/components/ui/Header.astro';
-import Footer from '@/components/ui/Footer.astro';
+// Chrome : une ligne d'import par variante (famille nav du registre de sections).
+// Changer de variante = changer ces deux imports + l'objet correspondant dans
+// src/lib/chrome.ts.
+import HeaderSimple from '@/components/sections/nav/HeaderSimple.astro';
+import FooterSimple from '@/components/sections/nav/FooterSimple.astro';
+import { SITE_HEADER, SITE_FOOTER } from '@/lib/chrome';
 
 type PageType = 'website' | 'article' | 'page' | 'service';
 
@@ -64,10 +68,10 @@ const ogType = type === 'article' ? 'article' : 'website';
     />
   </head>
   <body class="flex min-h-screen flex-col">
-    <Header />
+    <HeaderSimple section={SITE_HEADER} />
     <main class="flex-1">
       <slot />
     </main>
-    <Footer />
+    <FooterSimple section={SITE_FOOTER} />
   </body>
 </html>

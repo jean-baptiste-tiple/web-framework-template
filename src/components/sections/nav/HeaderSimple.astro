@@ -1,6 +1,11 @@
 ---
-import { SITE } from '@/lib/site';
-import Container from './Container.astro';
+import Container from '@/components/ui/Container.astro';
+import type { HeaderSimpleSection } from './HeaderSimple.schema';
+
+interface Props {
+  section: HeaderSimpleSection;
+}
+const { section } = Astro.props;
 
 // Lien actif : comparaison des chemins normalisés (sans slash final).
 const norm = (p: string) => (p !== '/' && p.endsWith('/') ? p.slice(0, -1) : p);
@@ -9,10 +14,10 @@ const current = norm(Astro.url.pathname);
 
 <header class="border-b border-border">
   <Container class="flex min-h-16 flex-wrap items-center justify-between gap-y-2 py-3">
-    <a href="/" class="font-semibold tracking-tight">{SITE.name}</a>
+    <a href="/" class="font-semibold tracking-tight">{section.brand}</a>
     <nav class="flex flex-wrap items-center gap-x-6 gap-y-1 text-sm" aria-label="Navigation principale">
       {
-        SITE.nav.map((item) => (
+        section.nav.map((item) => (
           <a
             href={item.href}
             aria-current={norm(item.href) === current ? 'page' : undefined}

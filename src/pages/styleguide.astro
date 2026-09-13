@@ -8,7 +8,7 @@ import Button from '@/components/ui/Button.astro';
 import Card from '@/components/ui/Card.astro';
 import Faq from '@/components/ui/Faq.astro';
 import SectionRenderer from '@/components/landing/SectionRenderer.astro';
-import { SECTION_REGISTRY, type Section as SectionData } from '@/lib/sections';
+import { SECTION_REGISTRY, type AnySection } from '@/lib/sections';
 
 const meta = {
   title: 'Styleguide',
@@ -21,7 +21,24 @@ const tokens = ['bg', 'fg', 'muted', 'border', 'surface', 'accent'];
 
 // Un exemple par variante du registre de sections : la galerie casse tant qu'une
 // variante ajoutée n'a pas son exemple ici (Record indexé sur SectionType).
-const sectionSamples: Record<keyof typeof SECTION_REGISTRY, SectionData> = {
+const sectionSamples: Record<keyof typeof SECTION_REGISTRY, AnySection> = {
+  'nav.header-simple': {
+    type: 'nav.header-simple',
+    brand: 'Marque',
+    nav: [
+      { label: 'Accueil', href: '/' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Contact', href: '/contact' },
+    ],
+  },
+  'nav.footer-simple': {
+    type: 'nav.footer-simple',
+    organizationName: 'Mon Organisation',
+    links: [
+      { label: 'Mentions légales', href: '/mentions-legales' },
+      { label: 'RSS', href: '/rss.xml' },
+    ],
+  },
   'offer.features-grid': {
     type: 'offer.features-grid',
     title: 'Features (grille)',
@@ -104,7 +121,9 @@ const sectionSamples: Record<keyof typeof SECTION_REGISTRY, SectionData> = {
       <p class="mt-2 text-muted">
         Variantes disponibles dans <code>sections:</code> (frontmatter des landings et des pages).
         Une variante = un dossier src/components/sections/&lt;famille&gt;/ + une entrée dans
-        src/lib/sections.ts.
+        src/lib/sections.ts. Les variantes marquées <strong>chrome</strong> (header, footer) sont
+        rendues une fois par BaseLayout depuis src/lib/chrome.ts : elles ne sont PAS proposées
+        dans <code>sections:</code>.
       </p>
     </Container>
 
@@ -112,7 +131,10 @@ const sectionSamples: Record<keyof typeof SECTION_REGISTRY, SectionData> = {
       Object.entries(sectionSamples).map(([type, sample]) => (
         <div class="mt-6 border-t border-border pt-2">
           <Container>
-            <p class="text-xs text-muted">{type}</p>
+            <p class="text-xs text-muted">
+              {type}
+              {'chrome' in SECTION_REGISTRY[type as keyof typeof SECTION_REGISTRY] && ' — chrome'}
+            </p>
           </Container>
           <SectionRenderer section={sample} />
         </div>

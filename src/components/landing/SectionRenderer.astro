@@ -1,8 +1,11 @@
 ---
-import { SECTION_REGISTRY, type Section } from '@/lib/sections';
+import { SECTION_REGISTRY, type AnySection } from '@/lib/sections';
 
 interface Props {
-  section: Section;
+  // Toutes les variantes du registre, chrome compris (la galerie /styleguide les
+  // prévisualise ici). Ce qu'une PAGE peut demander est borné en amont par
+  // l'union Zod `sectionSchema`, qui exclut le chrome.
+  section: AnySection;
 }
 const { section } = Astro.props;
 

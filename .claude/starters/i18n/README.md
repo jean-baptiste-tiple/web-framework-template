@@ -4,7 +4,7 @@ Routing multilingue Astro : fr par défaut à la racine, /en préfixé. Retiré 
 À ajouter/créer :
 - astro.config.mjs : bloc `i18n: { defaultLocale: 'fr', locales: ['fr','en'], routing: { prefixDefaultLocale: false } }`.
 - src/i18n/ui.ts : dictionnaire des chaînes UI + helpers (useTranslations, getLangFromUrl).
-- src/components/ui/LanguagePicker.astro : bascule FR/EN (à intégrer dans Header.astro).
+- src/components/ui/LanguagePicker.astro : bascule FR/EN (à intégrer dans la variante de header en service, src/components/sections/nav/).
 - src/pages/en/ : pages localisées.
 - prop `alternates` (hreflang) sur BaseLayout + BaseHead, et `<link rel="alternate" hreflang>` dans BaseHead.
 
