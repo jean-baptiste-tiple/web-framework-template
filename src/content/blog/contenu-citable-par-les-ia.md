@@ -6,6 +6,8 @@ author: "jb"
 category: "guides"
 tags: ["geo", "contenu"]
 topics: ["GEO", "structure de contenu", "données structurées"]
+heroImage: "./contenu-citable-par-les-ia.png"
+heroImageAlt: "Six barres horizontales évoquant les lignes d'un document, dont deux encadrées par un rectangle bleu, sur fond gris clair."
 draft: false
 tldr: "Un moteur génératif reprend des passages courts et autonomes, pas des pages entières. Les champs tldr et faq du frontmatter produisent ces passages et alimentent au passage le JSON-LD et le fichier llms.txt."
 faq:

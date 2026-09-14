@@ -42,7 +42,7 @@ export function resolveSeo(input: SeoInput, pathname: string): ResolvedSeo {
     : new URL(rawOg, SITE.url).href;
 
   return {
-    title: baseTitle === SITE.name ? baseTitle : `${baseTitle} — ${SITE.name}`,
+    title: baseTitle === SITE.name ? baseTitle : `${baseTitle} | ${SITE.name}`,
     description,
     canonical,
     ogImage,
