@@ -9,5 +9,5 @@
 
 ## Lighthouse (seuils contrôlés)
 - LCP : l'image hero (au-dessus de la ligne de flottaison) porte `loading="eager"` + `fetchpriority="high"` — `<Image>` d'astro:assets est lazy par défaut, ce défaut est FAUX pour le hero. Toutes les autres images restent lazy. Une seule image eager par page.
-- Audit local : `pnpm run audit:lh` (Lighthouse CI sur dist/, config lighthouserc.json). Seuils en assertion : performance, accessibility, best-practices, seo ≥ 0.95 — l'audit échoue sinon. À lancer avant toute mise en prod (deploy.md) et après tout changement de layout/îlot/hero ; pas dans le gate /commit-push (trop lent pour chaque push, arbitrage assumé).
+- Audit local : `pnpm run audit:lh` (`scripts/audit-lh.mjs` : sert `dist/`, lance et ferme son propre Chrome, lit URL et seuils dans `lighthouserc.json` — seule source à éditer). Seuils : performance, accessibility, best-practices, seo ≥ 0.95 — tableau page × catégorie et code de sortie 1 sinon. À lancer avant toute mise en prod (deploy.md) et après tout changement de layout/îlot/hero ; pas dans le gate /commit-push (trop lent pour chaque push, arbitrage assumé).
 - Ce que Lighthouse mesure en local ne couvre pas le host : compression (brotli/gzip), cache immutable sur /_astro/*, HTTP/2+ et redirections sans chaîne se vérifient sur l'URL déployée (deploy.md).

@@ -10,7 +10,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
-    "audit:lh": "npx --yes @lhci/cli autorun",
+    "audit:lh": "node scripts/audit-lh.mjs",
     "astro": "astro"
   },
   "dependencies": {
