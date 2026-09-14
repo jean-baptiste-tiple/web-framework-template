@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-14 — Le harnais Lighthouse sert en gzip (le score mesuré était celui d'un site non compressé)
+- **`scripts/audit-lh.mjs`** : le serveur statique du harnais compresse les types texte (HTML, CSS, JS, JSON, XML, SVG) quand le client l'accepte, avec `Vary: Accept-Encoding`, au-dessus de 1 Ko. Lighthouse simule le réseau à partir des octets réellement transférés : sans compression, la feuille de style d'un site pilote comptait pour 190 Ko au lieu des 28 Ko qu'un hébergeur envoie, soit environ 0,9 s de premier rendu fictif.
+- **Effet mesuré** (site pilote, 8 pages) : performance 89 à 94 avant, **98 à 100** après, sans toucher une ligne de rendu. Les autres catégories étaient déjà à 100. Le diagnostic d'avant était incohérent (TBT 0 ms, CLS 0, seuls FCP et LCP en cause) : c'était la signature de l'instrument.
+- **Règles écrites** : `.claude/conventions/performance.md § Lighthouse` (le harnais sert ce que le host sert ; vérifier l'instrument avant de corriger un score bas). Journalisé dans `docs/learnings.md`.
+
 ## 2026-09-14 — Deux manques agentiques fermés dans le socle (Organization.description, libellé de llms.txt)
 Scan `is-agentic` d'un site dérivé : 2 constats qui relevaient du socle, donc hérités par tous ses sites.
 - **`seo/JsonLd.astro`** : le nœud `Organization` gagne `description` (= `SITE.description`), placée entre `name` et `url`. Le scanner comptait le nœud comme incomplet (« has Organization type but missing key fields »), `name` étant le seul champ descriptif émis. Contrôlé sur le build : les **11 pages** sortent `name` + `description` + `url` + `logo`, JSON reparsé sans erreur.

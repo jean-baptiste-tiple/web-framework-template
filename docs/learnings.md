@@ -18,6 +18,12 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-14 — L'audit Lighthouse mesurait un site non compressé, donc un score qui n'existe pas
+- **Erreur** : le serveur statique de `scripts/audit-lh.mjs` servait `dist/` sans compression. Lighthouse simule le réseau à partir des octets réellement transférés : la feuille de style du pilote passait pour 190 Ko au lieu des 28 Ko qu'un hébergeur envoie, soit environ 0,9 s de premier rendu fictif. Verdict rendu : performance 89 à 94 sur huit pages, « sous le seuil », avec TBT à 0 ms et CLS à 0 — un diagnostic incohérent que j'ai failli traiter en dégradant le site (élaguer la feuille, retirer les mouvements du hero). Après correction : 98 à 100, seuils tenus, aucune ligne de rendu touchée.
+- **Règle** : un harnais de mesure doit servir ce que l'hébergeur sert (compression des types texte, `Vary: Accept-Encoding`) ; sinon il ne mesure pas le site. Écrit dans `scripts/audit-lh.mjs` (commentaire sur la branche de compression) et contrôlable : `curl -sI -H 'Accept-Encoding: gzip' <url du harnais>/…css | grep content-encoding` doit répondre `gzip`.
+- **Écueil plus général, à retenir** : devant un score en dessous du seuil, vérifier D'ABORD que l'instrument mesure la bonne chose. Les métriques de terrain étaient toutes parfaites sauf celles qui dépendent du transfert : c'était la signature de l'instrument, pas du site.
+- **Emplacement** : `scripts/audit-lh.mjs`, `.claude/conventions/performance.md` § Lighthouse, ce journal.
+
 ## 2026-09-14 — Un fichier de collection supprimé survit dans le cache de contenu
 - **Erreur** : `src/content/landings/methode.mdx` supprimé (page passée en bespoke) ; le build suivant a continué de rendre `/methode` depuis `node_modules/.astro/data-store.json` et a fini en `UnknownContentCollectionError` dans `[...slug].astro`. Deux lots parallèles ont perdu un build chacun à comprendre que la source n'était plus la source.
 - **Règle** : après suppression ou renommage d'un fichier de collection, le gate commence par `rm -rf node_modules/.astro dist`. Contrôlable : un build lancé après une suppression de contenu sans purge du cache est une violation. Emplacement : `.claude/conventions/content-patterns.md` (à la fin), `.claude/commands/commit-push.md` (étape 2).

@@ -21,6 +21,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
+import { gzipSync } from 'node:zlib';
 import { tmpdir } from 'node:os';
 import { delimiter, dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -75,8 +76,25 @@ const server = createServer((req, res) => {
       res.end(existsSync(fallback) ? readFileSync(fallback) : '404');
       return;
     }
-    res.writeHead(200, { 'content-type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream' });
-    res.end(readFileSync(file));
+    // Compression des types texte, comme le fait tout hébergeur statique
+    // (Vercel, Netlify, Cloudflare servent HTML/CSS/JS/SVG en gzip ou brotli).
+    // Sans elle l'audit mesure la feuille de style NON compressée : Lighthouse
+    // simule le réseau à partir des octets réellement transférés, et une feuille
+    // de 190 Ko au lieu de 28 Ko coûte ~0,9 s de premier rendu qui n'existe pas
+    // en production. On sert donc ce que le host servira, sinon le score mesuré
+    // n'est pas celui du site (2026-09-14, pilote Open Kairos).
+    const type = MIME[extname(file).toLowerCase()] ?? 'application/octet-stream';
+    const body = readFileSync(file);
+    const compressible = /^(text\/|application\/(javascript|json|xml)|image\/svg)/.test(type);
+    const acceptsGzip = /\bgzip\b/.test(req.headers['accept-encoding'] ?? '');
+    if (compressible && acceptsGzip && body.length > 1024) {
+      const gz = gzipSync(body);
+      res.writeHead(200, { 'content-type': type, 'content-encoding': 'gzip', vary: 'Accept-Encoding' });
+      res.end(gz);
+      return;
+    }
+    res.writeHead(200, { 'content-type': type });
+    res.end(body);
   } catch { res.writeHead(500).end('500'); }
 });
 await new Promise((ok, ko) => { server.once('error', ko); server.listen(0, '127.0.0.1', ok); });
