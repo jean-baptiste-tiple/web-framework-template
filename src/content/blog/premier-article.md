@@ -1,12 +1,14 @@
 ---
 title: "Premier article : structure d un post de blog"
-description: "Exemple d article de blog montrant le frontmatter complet, le résumé GEO et la FAQ structurée."
+description: "Exemple d article de blog montrant le frontmatter complet : champs obligatoires validés par Zod, résumé citable tldr, FAQ structurée et image de hero."
 pubDate: 2026-05-20
-updatedDate: 2026-05-28
+updatedDate: 2026-09-14
 author: "jb"
 category: "guides"
 tags: ["astro", "contenu"]
 topics: ["structure de contenu", "SEO", "GEO"]
+heroImage: "./premier-article.png"
+heroImageAlt: "Cinq barres horizontales évoquant les lignes d un document, la première en bleu, sur fond gris clair."
 draft: false
 tldr: "Un article = un fichier Markdown avec un frontmatter typé. Le champ tldr alimente le résumé citable, faq génère le JSON-LD FAQPage."
 faq:
@@ -19,7 +21,7 @@ faq:
 ## Pourquoi un frontmatter typé
 
 Chaque champ du frontmatter est validé par un schéma Zod défini dans `src/content.config.ts`.
-Un article sans `description` ou sans `pubDate` casse le build — volontairement.
+Un article sans `description` ou sans `pubDate` casse le build, volontairement.
 
 ## Rédiger le corps
 

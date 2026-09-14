@@ -8,6 +8,8 @@ composant OU d'écrire du markup de section. Tout nouveau composant/variante →
 - Préférer UN composant à variantes à N composants quasi identiques. Quand une famille grandit, marquer son CANONIQUE ici (« Canonique hero », « Canonique CTA »…) ; les composants gardés séparés portent un ⛔ avec la raison en une ligne (sinon chaque review rejoue le débat de fusion).
 - Largeur : toute section passe par <Container>. Aucune surcharge de largeur en px ; exceptions de LECTURE (prose) listées ici.
 - Surface de carte : Card.astro. Un wrapper ne pose pas une surface que son slot porte déjà (anti double-carte).
+- Squelette d'accordéon : Accordion.astro. Une section qui a besoin d'un `<details>` le consomme (comme Faq.astro) au lieu de réécrire summary + marqueur + bascule.
+- Icônes : jeu FERMÉ d'Icon.astro. Un tracé dessiné dans une section (au lieu d'être ajouté à icons.ts) est une duplication à corriger ; emoji et police d'icônes sont interdits (craft-floor § Refuse).
 - Ne pas créer de composant sans usage. Une donnée déclarée (settings, schéma) mais rendue par aucun composant est annotée « dormante » ici, pas présentée comme branchée.
 
 ## UI (src/components/ui/)
@@ -15,11 +17,15 @@ composant OU d'écrire du markup de section. Tout nouveau composant/variante →
 | --- | --- | --- |
 | Container.astro | class?, prose? | Largeur max + padding (prose = colonne de lecture) |
 | Section.astro | class? | Espacement vertical de section |
-| Button.astro | href?, variant(primary/outline)?, type(button/submit)?, class? | Bouton/lien (type pour usage formulaire) |
-| Card.astro | class? | Carte surface + bordure |
-| Faq.astro | title?, items[] | Accordéon natif <details> (0 JS), crawlable |
+| Button.astro | href?, variant(primary/outline)?, tone(default/inverse)?, type(button/submit)?, class? | Bouton/lien (type pour usage formulaire ; tone = surface qui le porte) |
+| Card.astro | padding(default/none)?, class? | **Canonique surface de carte** : fond + bordure + radius. `padding="none"` = contenu bord à bord (rogné au radius), pas de surcharge de gouttière depuis un parent |
+| Accordion.astro | summary, name?, class? | **Canonique accordéon** : `<details>/<summary>` + slot, chevron Icon en bascule CSS, reduced-motion, focus visible. `name` partagé = exclusivité native. Ne PAS réécrire ce markup dans une section |
+| Badge.astro | tone(accent/neutral/inverse)?, class? | Pilule de kicker (sur-titre court, étiquette de section). Slot libre |
+| Icon.astro | name, size?, label?, class? | Icône inlinée du jeu FERMÉ `./icons.ts` (sous-ensemble Lucide, ISC). `label` = porteuse de sens, sinon `aria-hidden`. Jamais d'emoji ni de police d'icônes |
+| icons.ts | — | Table des tracés + `IconName` + `ICON_NAMES`. Séparée du .astro : les `export` du frontmatter Astro sont hissés au-dessus du corps et ne peuvent pas dériver d'une const locale |
+| Faq.astro | title?, items[] | Titre + paires q/a, rendues par Accordion (aucun markup `<details>` propre) |
 | GlobalFaq.astro | title? | FAQ globale partagée (SITE.faq, éditée dans site.json) |
-| ContactForm.astro | — | Formulaire contact statique vanilla (0 framework) vers PUBLIC_FORM_ENDPOINT |
+| ContactForm.astro | idPrefix? | Formulaire contact statique vanilla (0 framework) vers PUBLIC_FORM_ENDPOINT. `idPrefix` (défaut `contact`) préfixe id/for : deux formulaires sur une page ne dupliquent pas `id="name"` |
 
 ## SEO (src/components/seo/)
 | Composant | Rôle |

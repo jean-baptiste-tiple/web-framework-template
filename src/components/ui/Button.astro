@@ -2,26 +2,52 @@
 interface Props {
   href?: string;
   variant?: 'primary' | 'outline';
+  /** Surface qui PORTE le bouton : `inverse` = bande sombre (tokens --color-inverse*). */
+  tone?: 'default' | 'inverse';
   type?: 'button' | 'submit';
   class?: string;
 }
-const { href, variant = 'primary', type = 'button', class: cls = '' } = Astro.props;
+const {
+  href,
+  variant = 'primary',
+  tone = 'default',
+  type = 'button',
+  class: cls = '',
+} = Astro.props;
 
+// Anneau de focus explicite (thématisé, pas celui de l'UA) : craft-floor § États.
+// L'offset pose le gap sur la surface, d'où un anneau différent par `tone`.
 const base =
-  'inline-flex items-center justify-center rounded px-5 py-2.5 text-sm font-medium transition-colors disabled:opacity-50';
-const styles =
-  variant === 'primary'
-    ? 'bg-accent text-accent-fg hover:opacity-90'
-    : 'border border-border text-fg hover:bg-surface';
+  'inline-flex items-center justify-center rounded px-5 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2';
+
+// Ratios mesurés (OKLCH → sRGB → WCAG), seuil 3:1 pour la bordure et l'anneau
+// (composant d'interface), 4.5:1 pour le libellé :
+//   default/outline  bordure muted/bg 5.35:1 (border/bg ne donnait que 1.23:1),
+//                    libellé fg/bg 17.59:1, anneau accent/bg 4.72:1
+//   inverse/outline  bordure inverse-muted/inverse 7.58:1, libellé 17.25:1
+//   inverse/primary  surface accent/inverse 3.88:1, anneau inverse-fg 17.25:1
+const styles = {
+  default: {
+    primary: 'bg-accent text-accent-fg hover:opacity-90 focus-visible:outline-accent',
+    outline: 'border border-muted text-fg hover:bg-surface focus-visible:outline-accent',
+  },
+  inverse: {
+    primary: 'bg-accent text-accent-fg hover:opacity-90 focus-visible:outline-inverse-fg',
+    outline:
+      'border border-inverse-muted text-inverse-fg hover:bg-inverse-fg/10 focus-visible:outline-inverse-fg',
+  },
+} as const;
+
+const style = styles[tone][variant];
 ---
 
 {
   href ? (
-    <a href={href} class={`${base} ${styles} ${cls}`}>
+    <a href={href} class={`${base} ${style} ${cls}`}>
       <slot />
     </a>
   ) : (
-    <button type={type} class={`${base} ${styles} ${cls}`}>
+    <button type={type} class={`${base} ${style} ${cls}`}>
       <slot />
     </button>
   )

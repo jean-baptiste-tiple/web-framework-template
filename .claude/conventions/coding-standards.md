@@ -6,6 +6,7 @@
 - Nommage : composants PascalCase, fichiers de contenu kebab-case (= slug).
 - Pas de logique métier dans les pages : extraire dans src/lib/.
 - Commentaires en français, concis, sur le pourquoi.
+- Un `export` dans le frontmatter d'un `.astro` est HISSÉ au-dessus du corps du composant : il ne peut pas dériver d'une const locale (build : `X is not defined`). Toute table + type + liste dérivée vit dans un `.ts` voisin (ex. `ui/icons.ts` pour `Icon.astro`) ; le `.astro` ne fait que rendre.
 - Pas de couleur/espacement en dur : classes Tailwind sémantiques générées par @theme (var(--color-*) réservé aux blocs <style> scoped — voir styling-tailwind.md).
 
 ## DRY & réutilisation (CRITIQUE)

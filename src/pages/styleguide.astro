@@ -7,6 +7,10 @@ import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import Card from '@/components/ui/Card.astro';
 import Faq from '@/components/ui/Faq.astro';
+import Accordion from '@/components/ui/Accordion.astro';
+import Badge from '@/components/ui/Badge.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { ICON_NAMES } from '@/components/ui/icons';
 import SectionRenderer from '@/components/landing/SectionRenderer.astro';
 import { SECTION_REGISTRY, type AnySection } from '@/lib/sections';
 
@@ -17,7 +21,17 @@ const meta = {
   seo: { noindex: true },
 };
 
-const tokens = ['bg', 'fg', 'muted', 'border', 'surface', 'accent'];
+const tokens = [
+  'bg',
+  'fg',
+  'muted',
+  'border',
+  'surface',
+  'accent',
+  'inverse',
+  'inverse-fg',
+  'inverse-muted',
+];
 
 // Un exemple par variante du registre de sections : la galerie casse tant qu'une
 // variante ajoutée n'a pas son exemple ici (Record indexé sur SectionType).
@@ -89,10 +103,18 @@ const sectionSamples: Record<keyof typeof SECTION_REGISTRY, AnySection> = {
       </div>
 
       <h2 class="mt-10 text-xl font-semibold">Button</h2>
+      <p class="mt-2 text-sm text-muted">
+        Tabuler jusqu'aux boutons : l'anneau de focus est explicite (accent sur page claire,
+        inverse-fg sur bande sombre), jamais celui du navigateur.
+      </p>
       <div class="mt-4 flex flex-wrap items-center gap-3">
         <Button href="#">primary</Button>
         <Button href="#" variant="outline">outline</Button>
         <Button type="submit">submit</Button>
+      </div>
+      <div class="mt-4 flex flex-wrap items-center gap-3 rounded bg-inverse p-6">
+        <Button href="#" tone="inverse">primary · tone inverse</Button>
+        <Button href="#" variant="outline" tone="inverse">outline · tone inverse</Button>
       </div>
 
       <h2 class="mt-10 text-xl font-semibold">Card</h2>
@@ -105,6 +127,64 @@ const sectionSamples: Record<keyof typeof SECTION_REGISTRY, AnySection> = {
           <h3 class="font-medium">Carte cliquable</h3>
           <p class="mt-1 text-sm text-muted">Variante hover utilisée par les listes (blog, home).</p>
         </Card>
+        <Card padding="none">
+          <div class="h-24 bg-border"></div>
+          <div class="p-6">
+            <h3 class="font-medium">padding="none"</h3>
+            <p class="mt-1 text-sm text-muted">
+              Surface sans gouttière : le contenu touche les bords et la carte rogne au radius.
+            </p>
+          </div>
+        </Card>
+      </div>
+
+      <h2 class="mt-10 text-xl font-semibold">Icon</h2>
+      <p class="mt-2 text-muted">
+        Jeu FERMÉ, inliné (0 requête). <code>name</code> est une union littérale : un nom absent
+        casse <code>astro check</code>. Décoratif par défaut (<code>aria-hidden</code>), porteur de
+        sens avec <code>label</code>.
+      </p>
+      <div class="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
+        {
+          ICON_NAMES.map((name) => (
+            <div class="flex flex-col items-center gap-2 rounded border border-border p-3">
+              <Icon name={name} size={24} />
+              <code class="text-center text-xs text-muted">{name}</code>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 class="mt-10 text-xl font-semibold">Badge</h2>
+      <div class="mt-4 flex flex-wrap items-center gap-3">
+        <Badge>neutral</Badge>
+        <Badge tone="accent">accent</Badge>
+        <Badge tone="accent"><Icon name="sparkles" size={14} />avec icône</Badge>
+      </div>
+      <div class="mt-4 rounded bg-inverse p-6">
+        <Badge tone="inverse">inverse</Badge>
+      </div>
+
+      <h2 class="mt-10 text-xl font-semibold">Accordion</h2>
+      <p class="mt-2 text-muted">
+        Squelette <code>&lt;details&gt;</code> canonique (0 JS, contenu dans le DOM au repos).
+        <code>Faq.astro</code> en est le consommateur : ne pas réécrire ce markup dans une section.
+      </p>
+      <div class="mt-4 space-y-3">
+        <Accordion summary="Accordion seul (indépendant)">
+          <p class="mt-2 text-muted">Le contenu est un slot : texte, liste ou markup libre.</p>
+        </Accordion>
+      </div>
+      <p class="mt-4 text-sm text-muted">
+        Avec <code>name</code> partagé : ouvrir l'un referme l'autre (exclusivité native).
+      </p>
+      <div class="mt-2 space-y-3">
+        <Accordion summary="Groupe exclusif, premier volet" name="styleguide-accordion">
+          <p class="mt-2 text-muted">Ouvrir le second referme celui-ci.</p>
+        </Accordion>
+        <Accordion summary="Groupe exclusif, second volet" name="styleguide-accordion">
+          <p class="mt-2 text-muted">Même attribut <code>name</code> que le précédent.</p>
+        </Accordion>
       </div>
 
       <h2 class="mt-10 text-xl font-semibold">Faq</h2>

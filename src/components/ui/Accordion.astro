@@ -1,0 +1,29 @@
+---
+// Accordéon natif : 0 JS, contenu dans le DOM au repos (donc crawlable et
+// trouvable au Ctrl+F même replié). Squelette canonique <details>/<summary> du
+// socle — Faq.astro en est le premier consommateur.
+import Icon from './Icon.astro';
+
+interface Props {
+  summary: string;
+  /** Attribut natif `name` : les <details> qui le partagent s'excluent (un seul ouvert). */
+  name?: string;
+  class?: string;
+}
+const { summary, name, class: cls = '' } = Astro.props;
+---
+
+<details name={name} class={`group rounded border border-border p-4 ${cls}`}>
+  <summary
+    class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden"
+  >
+    {summary}
+    {/* Le triangle natif est remplacé par le chevron du jeu d'icônes :
+        `list-none` + le marqueur WebKit (aucun utilitaire Tailwind ne le cible). */}
+    <Icon
+      name="chevron-down"
+      class="text-muted transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
+    />
+  </summary>
+  <slot />
+</details>

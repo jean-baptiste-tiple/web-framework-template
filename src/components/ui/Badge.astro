@@ -1,0 +1,24 @@
+---
+// Pilule de kicker (sur-titre court au-dessus d'un titre, étiquette de section).
+// `tone` = RÔLE de surface, pas couleur : le monde décide des valeurs via @theme.
+interface Props {
+  tone?: 'accent' | 'neutral' | 'inverse';
+  class?: string;
+}
+const { tone = 'neutral', class: cls = '' } = Astro.props;
+
+// Fonds figés (bg / surface / inverse) et non hérités : le ratio de contraste du
+// libellé reste le même que la pilule soit posée sur la page ou dans une Card.
+// Mesuré : accent/bg 4.72:1, muted/surface 5.05:1, inverse-fg/inverse 13.5:1.
+const tones = {
+  accent: 'border-accent/40 bg-bg text-accent',
+  neutral: 'border-border bg-surface text-muted',
+  inverse: 'border-inverse-fg/30 bg-inverse-fg/10 text-inverse-fg',
+} as const;
+---
+
+<span
+  class={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${tones[tone]} ${cls}`}
+>
+  <slot />
+</span>

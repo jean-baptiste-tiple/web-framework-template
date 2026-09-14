@@ -5,6 +5,13 @@
 // l'environnement de build de l'hébergeur, pas seulement en local.
 import Button from './Button.astro';
 
+interface Props {
+  /** Préfixe des id/for : deux formulaires sur la même page dupliqueraient sinon
+      `id="name"`, et un `<label for>` viserait le mauvais champ. */
+  idPrefix?: string;
+}
+const { idPrefix = 'contact' } = Astro.props;
+
 const field =
   'w-full rounded border border-border bg-bg px-3 py-2 text-sm';
 ---
@@ -14,16 +21,16 @@ const field =
   <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
 
   <div>
-    <label class="mb-1 block text-sm font-medium" for="name">Nom</label>
-    <input id="name" name="name" type="text" required class={field} />
+    <label class="mb-1 block text-sm font-medium" for={`${idPrefix}-name`}>Nom</label>
+    <input id={`${idPrefix}-name`} name="name" type="text" required class={field} />
   </div>
   <div>
-    <label class="mb-1 block text-sm font-medium" for="email">Email</label>
-    <input id="email" name="email" type="email" required class={field} />
+    <label class="mb-1 block text-sm font-medium" for={`${idPrefix}-email`}>Email</label>
+    <input id={`${idPrefix}-email`} name="email" type="email" required class={field} />
   </div>
   <div>
-    <label class="mb-1 block text-sm font-medium" for="message">Message</label>
-    <textarea id="message" name="message" required rows={5} class={field}></textarea>
+    <label class="mb-1 block text-sm font-medium" for={`${idPrefix}-message`}>Message</label>
+    <textarea id={`${idPrefix}-message`} name="message" required rows={5} class={field}></textarea>
   </div>
 
   <Button type="submit">Envoyer</Button>

@@ -34,6 +34,10 @@ d'y chercher. Rien ne se modifie dans le kit pendant un chantier client, sauf ma
   `<famille>.<variante>`, prop unique `section`), enregistrés dans `src/lib/sections.ts`
   (SECTION_REGISTRY) ; exemple ajouté à /styleguide (obligatoire : `astro check` casse sinon) + registry
   dans le même commit ; craft-floor lu avant, vérifié après ; capture `preview.jpg`.
+- Chrome (`nav.header-*`, `nav.footer-*`) : même contrat + `chrome: true` dans le registre ; le site
+  l'active dans `src/layouts/BaseLayout.astro` (import) et `src/lib/chrome.ts` (objet construit depuis
+  SITE) — jamais dans un frontmatter. Archétypes de page (`layouts/<archetype>/<variante>/` du kit) : la
+  route (`src/pages/blog/[...slug].astro`…) importe la variante, contrat `entry` + `<slot />`.
 - La section portée est ensuite COPIÉE dans le kit (`sections/<famille>/<variante>/`) avec README,
   source.jpg, preview.jpg, et la fiche catalogue passe `port_candidate → portée`.
 - Un portage = un lot Opus indépendant (une section, critères : conversions 1-3 contrôlées, build vert,

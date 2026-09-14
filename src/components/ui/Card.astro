@@ -1,12 +1,16 @@
 ---
 interface Props {
+  /** `none` = surface sans gouttière, pour un contenu qui touche les bords (image pleine carte). */
+  padding?: 'default' | 'none';
   class?: string;
 }
-const { class: cls = '' } = Astro.props;
+const { padding = 'default', class: cls = '' } = Astro.props;
+
+// Sans gouttière, le contenu atteint le bord : la carte doit rogner au radius,
+// sinon les angles de l'image dépassent la surface.
+const box = padding === 'none' ? 'overflow-hidden' : 'p-6';
 ---
 
-<div
-  class={`rounded border border-border bg-surface p-6 ${cls}`}
->
+<div class={`rounded border border-border bg-surface ${box} ${cls}`}>
   <slot />
 </div>

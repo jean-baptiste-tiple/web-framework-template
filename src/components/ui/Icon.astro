@@ -1,0 +1,32 @@
+---
+// Icône inlinée (0 requête, 0 police d'icônes). Le jeu FERMÉ et son union de
+// noms vivent dans ./icons.ts (voir le commentaire d'en-tête : les `export` du
+// frontmatter .astro sont hissés et ne peuvent pas dériver d'une const locale).
+import { ICONS, type IconName } from './icons';
+
+interface Props {
+  name: IconName;
+  size?: number;
+  /** Renseigné = icône porteuse de sens (role="img") ; sinon décorative et masquée. */
+  label?: string;
+  class?: string;
+}
+const { name, size = 20, label, class: cls = '' } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={`shrink-0 ${cls}`}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  set:html={ICONS[name]}
+/>

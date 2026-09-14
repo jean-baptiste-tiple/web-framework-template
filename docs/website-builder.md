@@ -60,8 +60,11 @@ famille sans aucun template source se crée).
 - **Kit** (`web-kit`) : `catalog/worlds/` (37 DESIGN.md + screenshot home), `catalog/sections/` (fiche par
   section : id, famille, mode visiteur, secteurs, densité, screenshot, chemin source, slots, JS requis,
   portée oui/non), `sections/` (les portées, prêtes à copier), `scripts/` (inventaire, screenshot).
-- **Socle** (ce repo) : union Zod `sections` extensible par famille ; SectionRenderer route vers les
-  composants ; `pages` gagnent un `sections:` optionnel ; header/footer sélectionnables par variante.
+- **Socle** (ce repo) — FAIT le 2026-09-13 : registre `SECTION_REGISTRY` (composant + fragment Zod par
+  variante, union dérivée), SectionRenderer = table, `pages.sections` optionnel, chrome (header/footer)
+  en variantes `nav.*` marquées `chrome: true` (rendues par BaseLayout depuis `src/lib/chrome.ts`, exclues
+  du frontmatter). Reste : atomes partagés (Badge, Icon, Accordion), tokens inverse, correctifs Button/
+  ContactForm (voir C:\apps\web-kit\TODO.md).
 - **Skills** : `copywriting` (hiérarchie de message, copy par type de section, voix du brief, typo FR,
   self-audit en gate) ; `section-catalog` (chercher, composer selon composition.md, procédure de portage).
 - **Playbook** `.claude/playbooks/website-builder.md` : le pipeline ci-dessous, avec ses gates.

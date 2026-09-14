@@ -1,4 +1,8 @@
 ---
+// FAQ = données (paires q/a) + titre. Le squelette <details>/<summary> n'est PAS
+// réécrit ici : il vient d'Accordion.astro (surface canonique de l'accordéon).
+import Accordion from './Accordion.astro';
+
 interface Props {
   title?: string;
   items: { q: string; a: string }[];
@@ -11,10 +15,9 @@ const { title = 'Questions fréquentes', items } = Astro.props;
     <div class="space-y-3">
       {title && <h2 class="text-xl font-semibold">{title}</h2>}
       {items.map((item) => (
-        <details class="rounded border border-border p-4">
-          <summary class="cursor-pointer font-medium">{item.q}</summary>
+        <Accordion summary={item.q}>
           <p class="mt-2 text-muted">{item.a}</p>
-        </details>
+        </Accordion>
       ))}
     </div>
   )

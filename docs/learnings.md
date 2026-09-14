@@ -18,6 +18,21 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-14 — `export` dans un frontmatter `.astro` hissé : `Icon.astro` cassait le build
+- **Erreur** : `export const ICON_NAMES = Object.keys(ICONS)` écrit dans le frontmatter d'`Icon.astro` — Astro hisse les exports au-dessus du corps, `ICONS` n'existe pas encore → `ICONS is not defined` au build (puis erreur de parse en exportant la table).
+- **Règle écrite** : table + type + liste dérivée dans un `.ts` voisin, le `.astro` ne fait que rendre. Contrôlable : `grep -n "^export const" src/components/**/*.astro` — tout export qui référence une const locale est une violation.
+- **Emplacement** : `.claude/conventions/coding-standards.md`.
+
+## 2026-09-14 — `pnpm run audit:lh` : EPERM de chrome-launcher au nettoyage du profil (Windows)
+- **Erreur** : lhci échoue en fin de run (taskkill ne tue pas Chrome, EPERM sur le profil temporaire), y compris avec TEMP redirigé — les scores étaient bons, l'outil s'effondre après.
+- **Règle écrite** : aucune (observation, environnement). Contournement : Lighthouse piloté directement sur dist/ avec les 4 URL de lighthouserc.json. 2e occurrence = script `audit:lh` à rendre robuste (option chrome-launcher, ou lighthouse direct).
+- **Emplacement** : journal seulement.
+
+## 2026-09-13 — 13 sous-agents Opus en parallèle : plafond de session atteint, tout tué en vol
+- **Erreur** : le pilote a lancé jusqu'à 15 `Agent` simultanés (lots de portage + classifications + outillage) pour maximiser le débit ; le plafond de crédits de la session est tombé pendant la vague, 13 agents ont été interrompus mi-chemin (sections sans preview, classifications non écrites, lot socle à moitié appliqué).
+- **Règle écrite** : ≤ 6 `Agent` en vol simultanément ; une vague se lance, se termine, puis la suivante. Contrôlable : nombre de lancements sans retour dans la trace.
+- **Emplacement** : `CLAUDE.md § Qui exécute`.
+
 ## 2026-08-25 — « Contraste suffisant (tokens prévus pour) » : affirmation fausse et invérifiable
 - **Erreur** : a11y.md garantissait le contraste par construction, mais `text-muted` sur `bg-surface` = 4.43:1 (< 4.5:1) sur les 4 archétypes de page — détecté par le premier audit Lighthouse machine, jamais par la règle relue.
 - **Règle écrite** : toute paire de tokens texte/fond utilisée en markup tient ≥ 4.5:1, contrôlée par `pnpm run audit:lh` (audit `color-contrast`) après tout changement de token couleur. Token `--color-muted` corrigé (oklch 55% → 52%).
