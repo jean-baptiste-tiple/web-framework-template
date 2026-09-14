@@ -39,6 +39,7 @@
 - [ ] CTA : un label par intention, identique partout ; aucun label de bouton sur 2 lignes
 - [ ] Verrous tenus : 1 accent, 1 système de rayons, 1 thème par page
 - [ ] Contrôles : 7 états présents ; contenu visible au repos (sans JS/animation) ; reduced-motion = alternative, pas un kill
+- [ ] Cibles tactiles ≥ 44px mesurées à 390 sur les contrôles d'UNE ligne (summary, liens de nav, marque du header et du footer) : hauteur GARANTIE par une classe de l'échelle (`min-h-11`, ou `py-*` équivalent) dans le `class` du contrôle, jamais déduite du texte ni du padding du parent
 - [ ] Surfaces navigateur thématisées (::selection, focus ring, underline-offset)
 - [ ] Copy self-audit passé ; chiffres précis sourcés ou marqués mock
 

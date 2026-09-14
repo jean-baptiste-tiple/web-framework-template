@@ -2,6 +2,10 @@
 // Accordéon natif : 0 JS, contenu dans le DOM au repos (donc crawlable et
 // trouvable au Ctrl+F même replié). Squelette canonique <details>/<summary> du
 // socle — Faq.astro en est le premier consommateur.
+// `min-h-11` sur le <summary> (2,75rem = 44px, échelle Tailwind) : plancher de
+// cible tactile du craft-floor. Sans lui, un libellé d'UNE ligne ne mesure que
+// 27px de haut (mesuré à 390) ; un libellé de deux lignes dépasse déjà 44px, sa
+// densité ne bouge donc pas. `items-center` recentre libellé et chevron dedans.
 import Icon from './Icon.astro';
 
 interface Props {
@@ -15,7 +19,7 @@ const { summary, name, class: cls = '' } = Astro.props;
 
 <details name={name} class={`group rounded border border-border p-4 ${cls}`}>
   <summary
-    class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden"
+    class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden"
   >
     {summary}
     {/* Le triangle natif est remplacé par le chevron du jeu d'icônes :

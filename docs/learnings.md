@@ -18,6 +18,11 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-14 — Un atome canonique au-dessus du plancher à DEUX lignes de libellé, en dessous à UNE
+- **Erreur** : le `<summary>` d'`Accordion.astro` mesurait **27px** de haut dès que son libellé tenait sur une ligne (« Qui décide ? », relevé à 390 sur un site dérivé), sous le plancher de cible tactile de 44px. Le composant est pourtant le canonique de l'accordéon, consommé par `Faq.astro`, par `content.faq-accordion` et par les sections du kit : le défaut se répliquait partout. Il avait passé la review parce que sa hauteur n'était garantie par RIEN, elle sortait du texte : un libellé sur deux lignes fait 48px et passe le seuil, celui d'une ligne le rate. Une review sur un libellé long valide donc un composant qui échoue sur un libellé court.
+- **Règle écrite** : une cible tactile se mesure à 390 **sur le cas d'UNE ligne** (summary, lien de nav, marque du header et du footer), et sa hauteur est garantie par une classe de l'échelle posée sur le contrôle lui-même, jamais déduite du texte ni du padding du parent. Contrôlable en review : contrôle interactif d'une ligne sans `min-h-*` (ou `py-*` équivalent) dans son propre attribut `class` = violation.
+- **Emplacement** : `.claude/checklists/code-review.md § Craft` (ligne ajoutée) ; correctif dans `src/components/ui/Accordion.astro` (`min-h-11`), noté au registre.
+
 ## 2026-09-14 — Un libellé redit en littéral dans le `<script>` annule la prop qui le paramètre
 - **Erreur** : repérée dans le code en ajoutant `submitLabel` à `ContactForm`. Le libellé d'envoi était écrit DEUX fois — le slot du `Button` et la restauration du `finally` — et seule la première lecture vient de la prop : tout formulaire à libellé propre serait repassé à « Envoyer » après le premier envoi. Invisible au build, invisible à `astro check`, et invisible à un contrôle du rendu (l'écart n'apparaît qu'après une soumission).
 - **Règle écrite** : un `<script>` de .astro ne voit ni les props ni le frontmatter ; toute valeur rendue depuis une prop puis réécrite par le script se lit dans le DOM avant d'être remplacée. Contrôlable en review : même chaîne visible dans le markup et dans le `<script>` d'un fichier = violation.
