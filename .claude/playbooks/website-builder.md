@@ -54,6 +54,13 @@ section-catalog, design-craft (+ wrappers de conventions). Chaque phase a un gat
   essential), Rich Results Test, sitemap soumis.
 - Gate : les 3 contrôles verts, notés dans docs/changelog.md.
 
+### Tirer le socle dans un site dérivé (`git pull socle main`, à chaque correctif hérité)
+Trois conflits reviennent à chaque tirage ; leur résolution est fixée, pas rejouée :
+- `docs/changelog.md` : version du site (`git checkout --ours`), les deux journaux divergent par construction.
+- `.claude/conventions/component-registry.md` : UNION, ligne du site conservée + phrase nouvelle du socle recopiée dedans (jamais un côté entier : le site documente ses écarts au kit, le socle apporte la règle).
+- Atome `ui/` adapté au monde du site (classes de focus, graisse, encre d'accent) : UNION des classes, résolue par un agent Opus (le pilote ne touche pas `src/`) ; `--theirs` efface l'adaptation du monde, `--ours` perd le correctif hérité.
+Le tirage se fait sur un arbre propre (lots commités avant), et le merge est commité seul, avant tout nouveau lot.
+
 ## P8 — Apprentissage
 - Boucle « Après une erreur » sur tout ce qui a frotté ; sections portées ajoutées au kit (README +
   captures) ; catalogue mis à jour ; durée par phase notée dans docs/changelog.md pour calibrer.
