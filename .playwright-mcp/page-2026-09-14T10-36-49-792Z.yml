@@ -1,0 +1,127 @@
+- generic [active] [ref=f6e1]:
+  - banner [ref=f6e2]:
+    - generic [ref=f6e3]:
+      - link "Open Kairos" [ref=f6e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Navigation principale" [ref=f6e5]:
+        - link "Offres" [ref=f6e6] [cursor=pointer]:
+          - /url: /offres
+        - link "Méthode" [ref=f6e7] [cursor=pointer]:
+          - /url: /methode
+        - link "Cas clients" [ref=f6e8] [cursor=pointer]:
+          - /url: /cas-clients
+        - link "Experts" [ref=f6e9] [cursor=pointer]:
+          - /url: /experts
+      - generic [ref=f6e10]:
+        - link "Accéder à la plateforme" [ref=f6e12] [cursor=pointer]:
+          - /url: https://app.heurium.fr
+        - link "Prendre rendez-vous" [ref=f6e13] [cursor=pointer]:
+          - /url: /rendez-vous
+  - main [ref=f6e14]:
+    - generic [ref=f6e16]:
+      - heading "Parlons de votre sujet d'innovation." [level=1] [ref=f6e17]
+      - paragraph [ref=f6e18]: "Un échange de 45 minutes, sans engagement : nous cadrons votre sujet et nous repérons les financements mobilisables."
+    - region [ref=f6e19]:
+      - generic [ref=f6e20]:
+        - heading "Décrivez votre sujet" [level=2] [ref=f6e21]
+        - generic [ref=f6e22]:
+          - generic [ref=f6e23]:
+            - paragraph [ref=f6e24]: Le rendez-vous
+            - list [ref=f6e25]:
+              - listitem [ref=f6e26]:
+                - generic [ref=f6e27]: Durée
+                - generic [ref=f6e28]: 45 minutes, sans engagement.
+              - listitem [ref=f6e29]:
+                - generic [ref=f6e30]: Délai de réponse
+                - generic [ref=f6e31]: Sous 48 heures ouvrées.
+              - listitem [ref=f6e32]:
+                - generic [ref=f6e33]: LinkedIn
+                - generic [ref=f6e34]: à confirmer
+              - listitem [ref=f6e35]:
+                - generic [ref=f6e36]: Les huit offres
+                - generic [ref=f6e37]: Intervention CODIR, Diagnostic BPI, Commando stratégique, Challenger votre stratégie d'innovation, Incubateur interne & Intrapreneuriat, Accélération startup, Financement de l'innovation, Conférences & Formations.
+          - generic [ref=f6e39]:
+            - generic [ref=f6e40]:
+              - generic [ref=f6e41]: Offre concernée
+              - combobox "Offre concernée" [ref=f6e42]:
+                - option "Je ne sais pas encore" [selected]
+                - option "Intervention CODIR"
+                - option "Diagnostic BPI"
+                - option "Commando stratégique"
+                - option "Challenger votre stratégie d'innovation"
+                - option "Incubateur interne & Intrapreneuriat"
+                - option "Accélération startup"
+                - option "Financement de l'innovation"
+                - option "Conférences & Formations"
+            - generic [ref=f6e43]:
+              - generic [ref=f6e44]: Nom
+              - textbox "Nom" [ref=f6e45]
+            - generic [ref=f6e46]:
+              - generic [ref=f6e47]: Email
+              - textbox "Email" [ref=f6e48]
+            - generic [ref=f6e49]:
+              - generic [ref=f6e50]: Entreprise (facultatif)
+              - textbox "Entreprise (facultatif)" [ref=f6e51]
+            - generic [ref=f6e52]:
+              - generic [ref=f6e53]: Message
+              - textbox "Message" [ref=f6e54]
+            - button "Envoyer" [ref=f6e55]
+    - region [ref=f6e56]:
+      - generic [ref=f6e57]:
+        - paragraph [ref=f6e58]: Mention d'information
+        - heading "Ce que deviennent vos données" [level=2] [ref=f6e59]
+        - generic [ref=f6e60]:
+          - paragraph [ref=f6e61]: "Les informations saisies dans ce formulaire servent à une seule chose : répondre à votre demande de rendez-vous et préparer cet échange. La base légale est notre intérêt légitime à répondre à une personne qui nous sollicite. Elles ne servent à aucune prospection non sollicitée."
+          - paragraph [ref=f6e62]: Elles sont adressées par courrier électronique à Arnaud et Cyril, les deux co-fondateurs d'Open Kairos, seuls destinataires du message, et transitent par le prestataire d'envoi du formulaire, à confirmer, qui achemine la demande et vous adresse un accusé de réception. Le site ne dispose d'aucune base de données.
+          - paragraph [ref=f6e63]: "Durée de conservation : à confirmer, 12 mois proposés pour une demande restée sans suite."
+          - paragraph [ref=f6e64]: Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité sur ces données. Ces droits s'exercent auprès d'Open Kairos, à l'adresse à confirmer indiquée dans les mentions légales.
+          - paragraph [ref=f6e65]:
+            - link "Lire la politique de confidentialité" [ref=f6e66] [cursor=pointer]:
+              - /url: /politique-de-confidentialite
+  - contentinfo [ref=f6e67]:
+    - generic [ref=f6e69]:
+      - generic [ref=f6e70]:
+        - generic [ref=f6e71]:
+          - link "Open Kairos" [ref=f6e72] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=f6e73]: Un réseau d'experts entrepreneurs qui structure votre stratégie d'innovation, de l'idée à la commercialisation, et vous aide à la financer.
+          - generic [ref=f6e74]:
+            - paragraph [ref=f6e75]: Nous joindre
+            - list [ref=f6e76]:
+              - listitem [ref=f6e77]:
+                - generic [ref=f6e81]: "Adresse : à confirmer"
+              - listitem [ref=f6e82]:
+                - generic [ref=f6e86]: "Email : à confirmer"
+              - listitem [ref=f6e87]:
+                - generic [ref=f6e91]: "LinkedIn : à confirmer"
+        - generic [ref=f6e92]:
+          - generic [ref=f6e93]:
+            - heading "Le cabinet" [level=2] [ref=f6e94]
+            - list [ref=f6e95]:
+              - listitem [ref=f6e96]:
+                - link "Offres" [ref=f6e97] [cursor=pointer]:
+                  - /url: /offres
+              - listitem [ref=f6e100]:
+                - link "Méthode" [ref=f6e101] [cursor=pointer]:
+                  - /url: /methode
+              - listitem [ref=f6e104]:
+                - link "Cas clients" [ref=f6e105] [cursor=pointer]:
+                  - /url: /cas-clients
+              - listitem [ref=f6e108]:
+                - link "Experts" [ref=f6e109] [cursor=pointer]:
+                  - /url: /experts
+          - generic [ref=f6e112]:
+            - heading "Commencer" [level=2] [ref=f6e113]
+            - list [ref=f6e114]:
+              - listitem [ref=f6e115]:
+                - link "Prendre rendez-vous" [ref=f6e116] [cursor=pointer]:
+                  - /url: /rendez-vous
+      - generic [ref=f6e119]:
+        - paragraph [ref=f6e120]: © 2026 Open Kairos
+        - list [ref=f6e121]:
+          - listitem [ref=f6e122]:
+            - link "Mentions légales" [ref=f6e123] [cursor=pointer]:
+              - /url: /mentions-legales
+          - listitem [ref=f6e124]:
+            - link "Politique de confidentialité" [ref=f6e125] [cursor=pointer]:
+              - /url: /politique-de-confidentialite

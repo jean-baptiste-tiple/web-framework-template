@@ -18,6 +18,11 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-14 — Un libellé redit en littéral dans le `<script>` annule la prop qui le paramètre
+- **Erreur** : repérée dans le code en ajoutant `submitLabel` à `ContactForm`. Le libellé d'envoi était écrit DEUX fois — le slot du `Button` et la restauration du `finally` — et seule la première lecture vient de la prop : tout formulaire à libellé propre serait repassé à « Envoyer » après le premier envoi. Invisible au build, invisible à `astro check`, et invisible à un contrôle du rendu (l'écart n'apparaît qu'après une soumission).
+- **Règle écrite** : un `<script>` de .astro ne voit ni les props ni le frontmatter ; toute valeur rendue depuis une prop puis réécrite par le script se lit dans le DOM avant d'être remplacée. Contrôlable en review : même chaîne visible dans le markup et dans le `<script>` d'un fichier = violation.
+- **Emplacement** : `.claude/conventions/astro-patterns.md` (puce ajoutée).
+
 ## 2026-09-14 — `color-contrast` ne voit pas ce qui est masqué : 3,20:1 en production sur /contact
 - **Erreur** : le message de succès de `ContactForm` était peint par l'échelle Tailwind verte 600 — **3,20:1 sur `bg`**, sous le seuil 4,5. Le défaut a survécu à tous les `pnpm run audit:lh` à 100/100 : les deux `<p>` d'état naissent `hidden`, et Lighthouse n'audite que le visible. Il n'a été trouvé qu'en recalculant les ratios à la main pour tokeniser la couleur.
 - **Règle écrite** : une paire de couleurs portée par un élément masqué au chargement (`hidden`, `<details>` fermé, état de formulaire) n'est PAS couverte par l'audit machine ; elle se calcule à la main et prend une ligne dans la table de `docs/design/system.md § Contrastes tenus`. Contrôlable en review : élément masqué + classe de couleur sans ligne dans la table = violation.

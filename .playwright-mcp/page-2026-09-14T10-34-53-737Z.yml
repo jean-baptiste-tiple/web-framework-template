@@ -1,0 +1,365 @@
+- generic [active] [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - link "Open Kairos" [ref=f4e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f4e5]:
+        - link "Prendre rendez-vous" [ref=f4e6] [cursor=pointer]:
+          - /url: /rendez-vous
+        - group [ref=f4e7]:
+          - generic "Navigation principale" [ref=f4e8] [cursor=pointer]
+  - main [ref=f4e10]:
+    - generic [ref=f4e11]:
+      - generic [ref=f4e12]:
+        - heading "Styleguide" [level=1] [ref=f4e13]
+        - paragraph [ref=f4e14]: Vérifier ici (et dans .claude/conventions/component-registry.md) avant de créer un composant. Tout nouveau composant ou variante s'ajoute à cette page dans le même commit.
+        - heading "Tokens couleur" [level=2] [ref=f4e15]
+        - generic [ref=f4e16]:
+          - paragraph [ref=f4e19]: "--color-bg"
+          - paragraph [ref=f4e22]: "--color-fg"
+          - paragraph [ref=f4e25]: "--color-muted"
+          - paragraph [ref=f4e28]: "--color-border"
+          - paragraph [ref=f4e31]: "--color-surface"
+          - paragraph [ref=f4e34]: "--color-accent"
+          - paragraph [ref=f4e37]: "--color-accent-ink"
+          - paragraph [ref=f4e40]: "--color-inverse"
+          - paragraph [ref=f4e43]: "--color-inverse-fg"
+          - paragraph [ref=f4e46]: "--color-inverse-muted"
+        - heading "Button" [level=2] [ref=f4e47]
+        - paragraph [ref=f4e48]: "Tabuler jusqu'aux boutons : l'anneau de focus est explicite (accent-ink sur page claire, inverse-fg sur bande sombre), jamais celui du navigateur. Le lime ne peut pas servir d'anneau : 1,01:1 sur la page."
+        - generic [ref=f4e49]:
+          - link "primary" [ref=f4e50] [cursor=pointer]:
+            - /url: "#"
+          - link "outline" [ref=f4e51] [cursor=pointer]:
+            - /url: "#"
+          - button "submit" [ref=f4e52]
+        - generic [ref=f4e53]:
+          - link "primary · tone inverse" [ref=f4e54] [cursor=pointer]:
+            - /url: "#"
+          - link "outline · tone inverse" [ref=f4e55] [cursor=pointer]:
+            - /url: "#"
+        - heading "Card" [level=2] [ref=f4e56]
+        - generic [ref=f4e57]:
+          - generic [ref=f4e58]:
+            - heading "Carte simple" [level=3] [ref=f4e59]
+            - paragraph [ref=f4e60]: "Surface canonique : fond, bordure, radius."
+          - generic [ref=f4e61]:
+            - heading "Carte cliquable" [level=3] [ref=f4e62]
+            - paragraph [ref=f4e63]: Variante hover utilisée par les listes (blog, home).
+          - generic [ref=f4e66]:
+            - heading "padding=\"none\"" [level=3] [ref=f4e67]
+            - paragraph [ref=f4e68]: "Surface sans gouttière : le contenu touche les bords et la carte rogne au radius."
+        - generic [ref=f4e70]:
+          - heading "tone=\"inverse\"" [level=3] [ref=f4e71]
+          - paragraph [ref=f4e72]: "Carte sombre : surface, filet et couleur de texte fixés par le ton, jamais hérités. Posée sur la bande, elle se lit au filet ; posée sur une page claire, c'est un encart appuyé."
+        - heading "ContactForm" [level=2] [ref=f4e73]
+        - paragraph [ref=f4e74]:
+          - text: "Sur bande sombre : les libellés héritent de la bande, mais les champs gardent leur propre couleur de texte ("
+          - code [ref=f4e75]: text-fg
+          - text: sur
+          - code [ref=f4e76]: bg-bg
+          - text: ). Sans elle, la saisie serait blanche sur champ blanc.
+          - code [ref=f4e77]: idPrefix
+          - text: évite les
+          - code [ref=f4e78]: id
+          - text: dupliqués quand deux formulaires coexistent sur une page.
+        - generic [ref=f4e80]:
+          - generic [ref=f4e81]:
+            - generic [ref=f4e82]: Nom
+            - textbox "Nom" [ref=f4e83]
+          - generic [ref=f4e84]:
+            - generic [ref=f4e85]: Email
+            - textbox "Email" [ref=f4e86]
+          - generic [ref=f4e87]:
+            - generic [ref=f4e88]: Message
+            - textbox "Message" [ref=f4e89]
+          - button "Envoyer" [ref=f4e90]
+        - heading "Icon" [level=2] [ref=f4e91]
+        - paragraph [ref=f4e92]:
+          - text: Jeu FERMÉ, inliné (0 requête).
+          - code [ref=f4e93]: name
+          - text: "est une union littérale : un nom absent casse"
+          - code [ref=f4e94]: astro check
+          - text: . Décoratif par défaut (
+          - code [ref=f4e95]: aria-hidden
+          - text: ), porteur de sens avec
+          - code [ref=f4e96]: label
+          - text: .
+        - generic [ref=f4e97]:
+          - code [ref=f4e101]: check
+          - code [ref=f4e105]: arrow-right
+          - code [ref=f4e110]: arrow-up-right
+          - code [ref=f4e114]: chevron-down
+          - code [ref=f4e117]: plus
+          - code [ref=f4e122]: mail
+          - code [ref=f4e126]: phone
+          - code [ref=f4e131]: map-pin
+          - code [ref=f4e136]: clock
+          - code [ref=f4e140]: star
+          - code [ref=f4e144]: shield
+          - code [ref=f4e148]: zap
+          - code [ref=f4e155]: users
+          - code [ref=f4e159]: calendar
+          - code [ref=f4e164]: file-text
+          - code [ref=f4e169]: download
+          - code [ref=f4e173]: play
+          - code [ref=f4e178]: quote
+          - code [ref=f4e183]: search
+          - code [ref=f4e186]: menu
+          - code [ref=f4e191]: x
+          - code [ref=f4e197]: external-link
+          - code [ref=f4e202]: globe
+          - code [ref=f4e206]: heart
+          - code [ref=f4e212]: layers
+          - code [ref=f4e217]: sparkles
+        - heading "Badge" [level=2] [ref=f4e218]
+        - generic [ref=f4e219]:
+          - generic [ref=f4e220]: neutral
+          - generic [ref=f4e221]: accent
+          - generic [ref=f4e222]: avec icône
+        - generic [ref=f4e226]: inverse
+        - heading "Accordion" [level=2] [ref=f4e228]
+        - paragraph [ref=f4e229]:
+          - text: Squelette
+          - code [ref=f4e230]: <details>
+          - text: canonique (0 JS, contenu dans le DOM au repos).
+          - code [ref=f4e231]: Faq.astro
+          - text: "en est le consommateur : ne pas réécrire ce markup dans une section."
+        - group [ref=f4e233]:
+          - generic "Accordion seul (indépendant)" [ref=f4e234] [cursor=pointer]
+        - paragraph [ref=f4e237]:
+          - text: Avec
+          - code [ref=f4e238]: name
+          - text: "partagé : ouvrir l'un referme l'autre (exclusivité native)."
+        - generic [ref=f4e239]:
+          - group [ref=f4e240]:
+            - generic "Groupe exclusif, premier volet" [ref=f4e241] [cursor=pointer]
+          - group [ref=f4e244]:
+            - generic "Groupe exclusif, second volet" [ref=f4e245] [cursor=pointer]
+        - heading "Faq" [level=2] [ref=f4e248]
+        - generic [ref=f4e250]:
+          - heading "Questions fréquentes" [level=2] [ref=f4e251]
+          - group [ref=f4e252]:
+            - generic "Pourquoi cette page ?" [ref=f4e253] [cursor=pointer]
+          - group [ref=f4e256]:
+            - generic "Est-elle indexée ?" [ref=f4e257] [cursor=pointer]
+        - heading "Sections (registre)" [level=2] [ref=f4e260]
+        - paragraph [ref=f4e261]:
+          - text: Variantes disponibles dans
+          - code [ref=f4e262]: "sections:"
+          - text: (frontmatter des landings et des pages). Une variante = un dossier src/components/sections/<famille>/ + une entrée dans src/lib/sections.ts. Les variantes marquées
+          - strong [ref=f4e263]: chrome
+          - text: "(header, footer) sont rendues une fois par BaseLayout depuis src/lib/chrome.ts : elles ne sont PAS proposées dans"
+          - code [ref=f4e264]: "sections:"
+          - text: .
+      - generic [ref=f4e265]:
+        - paragraph [ref=f4e267]: nav.header-slim-bar · chrome
+        - generic [ref=f4e269]:
+          - link "Marque" [ref=f4e270] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f4e271]:
+            - link "Prendre rendez-vous" [ref=f4e272] [cursor=pointer]:
+              - /url: /rendez-vous
+            - group [ref=f4e273]:
+              - generic "Navigation principale" [ref=f4e274] [cursor=pointer]
+      - generic [ref=f4e276]:
+        - paragraph [ref=f4e278]: nav.footer-cta-split-columns · chrome
+        - generic [ref=f4e281]:
+          - generic [ref=f4e282]:
+            - generic [ref=f4e283]:
+              - link "Marque" [ref=f4e284] [cursor=pointer]:
+                - /url: /
+              - paragraph [ref=f4e285]: Une phrase de pitch, sous le mot-marque.
+              - generic [ref=f4e286]:
+                - paragraph [ref=f4e287]: Nous joindre
+                - list [ref=f4e288]:
+                  - listitem [ref=f4e289]:
+                    - generic [ref=f4e293]: "Adresse : à confirmer"
+                  - listitem [ref=f4e294]:
+                    - link "bonjour@exemple.fr" [ref=f4e298] [cursor=pointer]:
+                      - /url: mailto:bonjour@exemple.fr
+            - generic [ref=f4e299]:
+              - generic [ref=f4e300]:
+                - heading "Le cabinet" [level=2] [ref=f4e301]
+                - list [ref=f4e302]:
+                  - listitem [ref=f4e303]:
+                    - link "Offres" [ref=f4e304] [cursor=pointer]:
+                      - /url: /offres
+                  - listitem [ref=f4e307]:
+                    - link "Méthode" [ref=f4e308] [cursor=pointer]:
+                      - /url: /methode
+              - generic [ref=f4e311]:
+                - heading "Commencer" [level=2] [ref=f4e312]
+                - list [ref=f4e313]:
+                  - listitem [ref=f4e314]:
+                    - link "Prendre rendez-vous" [ref=f4e315] [cursor=pointer]:
+                      - /url: /rendez-vous
+          - generic [ref=f4e318]:
+            - paragraph [ref=f4e319]: © 2026 Mon Organisation
+            - list [ref=f4e320]:
+              - listitem [ref=f4e321]:
+                - link "Mentions légales" [ref=f4e322] [cursor=pointer]:
+                  - /url: /mentions-legales
+      - generic [ref=f4e323]:
+        - paragraph [ref=f4e325]: offer.features-grid
+        - generic [ref=f4e327]:
+          - heading "Features (grille)" [level=2] [ref=f4e328]
+          - generic [ref=f4e329]:
+            - generic [ref=f4e330]:
+              - heading "Feature A" [level=3] [ref=f4e331]
+              - paragraph [ref=f4e332]: Une phrase de bénéfice.
+            - generic [ref=f4e333]:
+              - heading "Feature B" [level=3] [ref=f4e334]
+              - paragraph [ref=f4e335]: Une phrase de bénéfice.
+            - generic [ref=f4e336]:
+              - heading "Feature C" [level=3] [ref=f4e337]
+              - paragraph [ref=f4e338]: Une phrase de bénéfice.
+      - generic [ref=f4e339]:
+        - paragraph [ref=f4e341]: offer.services-details
+        - region [ref=f4e342]:
+          - generic [ref=f4e343]:
+            - generic [ref=f4e344]:
+              - heading "Nos offres, du format le plus court au plus engageant" [level=2] [ref=f4e345]
+              - paragraph [ref=f4e346]: Une ligne par offre. Ouvrez celle qui ressemble à votre situation.
+            - list [ref=f4e347]:
+              - listitem [ref=f4e348]:
+                - group [ref=f4e349]:
+                  - generic "1. Intervention CODIR" [ref=f4e350] [cursor=pointer]:
+                    - generic [ref=f4e351]: "1."
+                    - heading "Intervention CODIR" [level=3] [ref=f4e352]
+              - listitem [ref=f4e354]:
+                - group [ref=f4e355]:
+                  - generic "2. Diagnostic BPI" [ref=f4e356] [cursor=pointer]:
+                    - generic [ref=f4e357]: "2."
+                    - heading "Diagnostic BPI" [level=3] [ref=f4e358]
+              - listitem [ref=f4e360]:
+                - group [ref=f4e361]:
+                  - generic "3. Commando stratégique" [ref=f4e362] [cursor=pointer]:
+                    - generic [ref=f4e363]: "3."
+                    - heading "Commando stratégique" [level=3] [ref=f4e364]
+              - listitem [ref=f4e366]:
+                - group [ref=f4e367]:
+                  - generic "4. Challenger votre stratégie d'innovation" [ref=f4e368] [cursor=pointer]:
+                    - generic [ref=f4e369]: "4."
+                    - heading "Challenger votre stratégie d'innovation" [level=3] [ref=f4e370]
+              - listitem [ref=f4e372]:
+                - group [ref=f4e373]:
+                  - generic "5. Incubateur interne & Intrapreneuriat" [ref=f4e374] [cursor=pointer]:
+                    - generic [ref=f4e375]: "5."
+                    - heading "Incubateur interne & Intrapreneuriat" [level=3] [ref=f4e376]
+              - listitem [ref=f4e378]:
+                - group [ref=f4e379]:
+                  - generic "6. Accélération startup" [ref=f4e380] [cursor=pointer]:
+                    - generic [ref=f4e381]: "6."
+                    - heading "Accélération startup" [level=3] [ref=f4e382]
+              - listitem [ref=f4e384]:
+                - group [ref=f4e385]:
+                  - generic "7. Financement de l'innovation" [ref=f4e386] [cursor=pointer]:
+                    - generic [ref=f4e387]: "7."
+                    - heading "Financement de l'innovation" [level=3] [ref=f4e388]
+              - listitem [ref=f4e390]:
+                - group [ref=f4e391]:
+                  - generic "8. Conférences & Formations" [ref=f4e392] [cursor=pointer]:
+                    - generic [ref=f4e393]: "8."
+                    - heading "Conférences & Formations" [level=3] [ref=f4e394]
+      - generic [ref=f4e396]:
+        - paragraph [ref=f4e398]: proof.testimonials-grid
+        - generic [ref=f4e400]:
+          - heading "Témoignages (grille)" [level=2] [ref=f4e401]
+          - figure "Prénom Nom, Fonction" [ref=f4e403]:
+            - blockquote [ref=f4e404]: “Une citation courte.”
+      - generic [ref=f4e406]:
+        - paragraph [ref=f4e408]: content.faq-accordion
+        - generic [ref=f4e411]:
+          - heading "FAQ (accordéon)" [level=2] [ref=f4e412]
+          - group [ref=f4e413]:
+            - generic "Une question ?" [ref=f4e414] [cursor=pointer]
+      - generic [ref=f4e417]:
+        - paragraph [ref=f4e419]: content.reading-column
+        - region [ref=f4e420]:
+          - generic [ref=f4e421]:
+            - paragraph [ref=f4e422]: Surtitre
+            - heading "Colonne de lecture" [level=2] [ref=f4e423]
+            - generic [ref=f4e424]:
+              - paragraph [ref=f4e425]: Un paragraphe à la mesure de lecture du socle (max-w-reading), sans image ni encart.
+              - paragraph [ref=f4e426]: "Le corps passe à 18px à partir de sm : sur cette largeur, le pas de base donnerait une ligne hors de la fourchette 65-75 caractères."
+      - generic [ref=f4e427]:
+        - paragraph [ref=f4e429]: convert.cta-banner
+        - generic [ref=f4e431]:
+          - heading "Bandeau CTA" [level=2] [ref=f4e432]
+          - link "Appel à l’action" [ref=f4e433] [cursor=pointer]:
+            - /url: "#"
+      - generic [ref=f4e434]:
+        - paragraph [ref=f4e436]: convert.info-card-plus-form
+        - region [ref=f4e437]:
+          - generic [ref=f4e438]:
+            - heading "Carte d’infos + formulaire" [level=2] [ref=f4e439]
+            - generic [ref=f4e440]:
+              - generic [ref=f4e441]:
+                - paragraph [ref=f4e442]: Nous joindre
+                - list [ref=f4e443]:
+                  - listitem [ref=f4e444]:
+                    - generic [ref=f4e445]: Email
+                    - link "bonjour@exemple.fr" [ref=f4e446] [cursor=pointer]:
+                      - /url: mailto:bonjour@exemple.fr
+                  - listitem [ref=f4e447]:
+                    - generic [ref=f4e448]: Horaires
+                    - generic [ref=f4e449]: Du lundi au vendredi, de 9 h à 18 h
+              - generic [ref=f4e451]:
+                - generic [ref=f4e452]:
+                  - generic [ref=f4e453]: Nom
+                  - textbox "Nom" [ref=f4e454]
+                - generic [ref=f4e455]:
+                  - generic [ref=f4e456]: Email
+                  - textbox "Email" [ref=f4e457]
+                - generic [ref=f4e458]:
+                  - generic [ref=f4e459]: Message
+                  - textbox "Message" [ref=f4e460]
+                - button "Envoyer" [ref=f4e461]
+  - contentinfo [ref=f4e462]:
+    - generic [ref=f4e464]:
+      - generic [ref=f4e465]:
+        - generic [ref=f4e466]:
+          - link "Open Kairos" [ref=f4e467] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=f4e468]: Un réseau d'experts entrepreneurs qui structure votre stratégie d'innovation, de l'idée à la commercialisation, et vous aide à la financer.
+          - generic [ref=f4e469]:
+            - paragraph [ref=f4e470]: Nous joindre
+            - list [ref=f4e471]:
+              - listitem [ref=f4e472]:
+                - generic [ref=f4e476]: "Adresse : à confirmer"
+              - listitem [ref=f4e477]:
+                - generic [ref=f4e481]: "Email : à confirmer"
+              - listitem [ref=f4e482]:
+                - generic [ref=f4e486]: "LinkedIn : à confirmer"
+        - generic [ref=f4e487]:
+          - generic [ref=f4e488]:
+            - heading "Le cabinet" [level=2] [ref=f4e489]
+            - list [ref=f4e490]:
+              - listitem [ref=f4e491]:
+                - link "Offres" [ref=f4e492] [cursor=pointer]:
+                  - /url: /offres
+              - listitem [ref=f4e495]:
+                - link "Méthode" [ref=f4e496] [cursor=pointer]:
+                  - /url: /methode
+              - listitem [ref=f4e499]:
+                - link "Cas clients" [ref=f4e500] [cursor=pointer]:
+                  - /url: /cas-clients
+              - listitem [ref=f4e503]:
+                - link "Experts" [ref=f4e504] [cursor=pointer]:
+                  - /url: /experts
+          - generic [ref=f4e507]:
+            - heading "Commencer" [level=2] [ref=f4e508]
+            - list [ref=f4e509]:
+              - listitem [ref=f4e510]:
+                - link "Prendre rendez-vous" [ref=f4e511] [cursor=pointer]:
+                  - /url: /rendez-vous
+      - generic [ref=f4e514]:
+        - paragraph [ref=f4e515]: © 2026 Open Kairos
+        - list [ref=f4e516]:
+          - listitem [ref=f4e517]:
+            - link "Mentions légales" [ref=f4e518] [cursor=pointer]:
+              - /url: /mentions-legales
+          - listitem [ref=f4e519]:
+            - link "Politique de confidentialité" [ref=f4e520] [cursor=pointer]:
+              - /url: /politique-de-confidentialite

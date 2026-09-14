@@ -15,8 +15,12 @@ interface Props {
       héritent de la bande à dessein, et le Button garde son ton par défaut
       (`accent` sur `inverse` = 3,88:1, seuil 3 tenu — docs/design/system.md). */
   tone?: 'default' | 'inverse';
+  /** Libellé du bouton d'envoi. Demandé par le site pilote Open Kairos, dont le
+      brief impose « Envoyer ma demande » : sans la prop, ce call-site devrait
+      soit recopier le formulaire, soit réécrire le libellé après coup en JS. */
+  submitLabel?: string;
 }
-const { idPrefix = 'contact', tone = 'default' } = Astro.props;
+const { idPrefix = 'contact', tone = 'default', submitLabel = 'Envoyer' } = Astro.props;
 
 // La couleur du texte saisi est POSÉE, pas héritée : un champ `bg-bg` sans couleur
 // propre, posé sous une bande `text-inverse-fg` (Card tone="inverse", hero de page
@@ -53,7 +57,7 @@ const statusTone = status[tone];
     <textarea id={`${idPrefix}-message`} name="message" required rows={5} class={field}></textarea>
   </div>
 
-  <Button type="submit">Envoyer</Button>
+  <Button type="submit">{submitLabel}</Button>
 
   <p data-status="ok" role="status" hidden class={`text-sm ${statusTone.ok}`}>
     Message envoyé, merci.
@@ -87,6 +91,10 @@ const statusTone = status[tone];
         return;
       }
 
+      // Le libellé de repos est LU sur le bouton, jamais redit ici : un <script>
+      // d'Astro ne voit pas les props, et une valeur en dur ramènerait « Envoyer »
+      // après le premier envoi sur un formulaire qui a reçu `submitLabel`.
+      const idleLabel = btn?.textContent ?? '';
       if (btn) {
         btn.disabled = true;
         btn.textContent = 'Envoi…';
@@ -110,7 +118,7 @@ const statusTone = status[tone];
       } finally {
         if (btn) {
           btn.disabled = false;
-          btn.textContent = 'Envoyer';
+          btn.textContent = idleLabel;
         }
       }
     });

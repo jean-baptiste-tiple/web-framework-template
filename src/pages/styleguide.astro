@@ -32,6 +32,13 @@ const tokens = [
   'inverse',
   'inverse-fg',
   'inverse-muted',
+  // États : deux valeurs par état, le suffixe nomme la SURFACE qui porte le texte
+  // (docs/design/system.md). Les jumeaux `-on-inverse` sont clairs : leur pastille
+  // se lit sur le filet, c'est sur bande sombre qu'ils tiennent leur 4,5:1.
+  'error',
+  'success',
+  'error-on-inverse',
+  'success-on-inverse',
 ];
 
 // Un exemple par variante du registre de sections : la galerie casse tant qu'une
@@ -154,13 +161,15 @@ const sectionSamples: Record<keyof typeof SECTION_REGISTRY, AnySection> = {
         Sur bande sombre : les libellés héritent de la bande, mais les champs gardent leur propre
         couleur de texte (<code>text-fg</code> sur <code>bg-bg</code>). Sans elle, la saisie serait
         blanche sur champ blanc. <code>idPrefix</code> évite les <code>id</code> dupliqués quand
-        deux formulaires coexistent sur une page.
+        deux formulaires coexistent sur une page. <code>submitLabel</code> change le libellé
+        d'envoi (ici « Envoyer ma demande ») ; c'est lui que le bouton retrouve après l'état
+        « Envoi… », le script relisant le libellé au lieu de le redire.
       </p>
       <!-- `bg-inverse text-inverse-fg` : la bande doit poser SA couleur de texte, `bg-inverse` ne
            pose que le fond. C'est cette bande-là qui reproduisait le bug (champ sans couleur propre
            = saisie blanche sur champ blanc) ; les libellés, eux, doivent bien en hériter. -->
       <div class="mt-4 rounded bg-inverse p-6 text-inverse-fg">
-        <ContactForm idPrefix="inverse" tone="inverse" />
+        <ContactForm idPrefix="inverse" tone="inverse" submitLabel="Envoyer ma demande" />
       </div>
 
       <h2 class="mt-10 text-xl font-semibold">Icon</h2>
