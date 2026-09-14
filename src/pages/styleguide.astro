@@ -213,7 +213,7 @@ const sectionSamples: Record<keyof typeof SECTION_REGISTRY, AnySection> = {
           <Container>
             <p class="text-xs text-muted">
               {type}
-              {'chrome' in SECTION_REGISTRY[type as keyof typeof SECTION_REGISTRY] && ' — chrome'}
+              {'chrome' in SECTION_REGISTRY[type as keyof typeof SECTION_REGISTRY] && ' · chrome'}
             </p>
           </Container>
           <SectionRenderer section={sample} />

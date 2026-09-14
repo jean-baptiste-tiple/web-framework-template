@@ -2,6 +2,7 @@
 title: "Écrire un contenu que les IA peuvent citer"
 description: "Résumé autonome, questions explicites, phrases qui tiennent hors contexte : trois réglages d'écriture qui rendent une page reprenable par un moteur génératif."
 pubDate: 2026-07-30
+updatedDate: 2026-09-14
 author: "jb"
 category: "guides"
 tags: ["geo", "contenu"]

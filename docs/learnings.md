@@ -18,6 +18,16 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-14 — Un sous-agent a tué tous les `chrome.exe` de la machine
+- **Erreur** : pour nettoyer des Chrome orphelins laissés par `audit:lh`, un sous-agent a lancé `Stop-Process -Force` sur tous les `chrome.exe` au lieu de filtrer sur le `--user-data-dir` de Lighthouse — un navigateur ouvert par l'utilisateur est fermé sans préavis.
+- **Règle écrite** : un sous-agent ne tue ni ne modifie un processus/fichier/dépôt qu'il n'a pas lancé ou hors de son périmètre ; il filtre sur ce qu'il a créé ou remonte. Contrôlable : toute commande `Stop-Process`/`taskkill`/`rm -rf` d'un prompt de sous-agent doit porter un filtre nominatif.
+- **Emplacement** : `CLAUDE.md § Qui exécute` (consignes de prompt des sous-agents).
+
+## 2026-09-14 — `audit:lh` cassé une 2e fois (chrome-launcher EPERM) → script à rendre robuste
+- **Erreur** : 2e occurrence de l'échec de `lhci autorun` à l'extinction de Chrome (taskkill n'atteint pas les enfants, EPERM sur le profil temp), sur un autre lot, même machine.
+- **Règle écrite** : aucune de plus ; action : `audit:lh` doit piloter Lighthouse directement sur `dist/` (4 URL de lighthouserc.json, serveur statique local) au lieu de lhci — à faire au prochain lot socle. Contrôlable : `pnpm run audit:lh` rend les 4 scores sans exception.
+- **Emplacement** : journal (action inscrite au TODO du kit § Socle).
+
 ## 2026-09-14 — `export` dans un frontmatter `.astro` hissé : `Icon.astro` cassait le build
 - **Erreur** : `export const ICON_NAMES = Object.keys(ICONS)` écrit dans le frontmatter d'`Icon.astro` — Astro hisse les exports au-dessus du corps, `ICONS` n'existe pas encore → `ICONS is not defined` au build (puis erreur de parse en exportant la table).
 - **Règle écrite** : table + type + liste dérivée dans un `.ts` voisin, le `.astro` ne fait que rendre. Contrôlable : `grep -n "^export const" src/components/**/*.astro` — tout export qui référence une const locale est une violation.

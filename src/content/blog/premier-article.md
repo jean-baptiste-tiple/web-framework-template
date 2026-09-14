@@ -28,6 +28,13 @@ Un article sans `description` ou sans `pubDate` casse le build, volontairement.
 Le corps est du Markdown standard. Utiliser des titres `##` et `###` sémantiques :
 ils structurent la page pour les lecteurs, pour Google, et pour les moteurs génératifs.
 
+La méthode du projet, décrite dans `CLAUDE.md` à la section Modèle de contenu, tient en trois
+phrases :
+
+> 1 fichier markdown par page pour le texte de la page ; 1 fichier de réglages pour le texte
+> partagé entre pages. Éditer du texte revient donc à éditer ce seul fichier. Le design vit dans
+> les composants et les tokens, jamais dans le contenu.
+
 ### Bonnes pratiques
 
 - Une idée par section, titre explicite.

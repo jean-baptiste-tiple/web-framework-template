@@ -17,8 +17,7 @@ const { section } = Astro.props;
           <figure class="rounded border border-border p-6">
             <blockquote class="text-fg">“{it.quote}”</blockquote>
             <figcaption class="mt-3 text-sm text-muted">
-              {it.author}
-              {it.role ? ` — ${it.role}` : ''}
+              {it.role ? `${it.author}, ${it.role}` : it.author}
             </figcaption>
           </figure>
         ))
