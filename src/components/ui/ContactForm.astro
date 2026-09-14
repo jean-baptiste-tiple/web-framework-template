@@ -12,8 +12,12 @@ interface Props {
 }
 const { idPrefix = 'contact' } = Astro.props;
 
+// La couleur du texte saisi est POSÉE, pas héritée : un champ `bg-bg` sans couleur
+// propre, posé sous une bande `text-inverse-fg` (Card tone="inverse", hero de page
+// contact), rendrait du texte blanc sur fond blanc. Les libellés, eux, héritent bien
+// de la bande. Ratios sur bg : fg 17,59:1 (seuil 4,5), muted 5,35:1 (seuil 4,5).
 const field =
-  'w-full rounded border border-border bg-bg px-3 py-2 text-sm';
+  'w-full rounded border border-border bg-bg px-3 py-2 text-sm text-fg placeholder:text-muted';
 ---
 
 <form data-contact-form class="space-y-4">

@@ -14,7 +14,7 @@ Quand un monde visuel s'engage (site dérivé, phase design) : remplir ce fichie
 
 ## Atomes du socle
 Galerie exécutable : **/styleguide** (noindex). Props et règles d'emploi : .claude/conventions/component-registry.md.
-Container, Section (mise en page) · Button (variant primary/outline × tone default/inverse) · Card (padding default/none) · Accordion (squelette `<details>` canonique) · Badge (pilule de kicker) · Icon (jeu FERMÉ, sous-ensemble Lucide ISC) · Faq / GlobalFaq · ContactForm.
+Container, Section (mise en page) · Button (variant primary/outline × tone default/inverse) · Card (padding default/none × tone default/inverse) · Accordion (squelette `<details>` canonique) · Badge (pilule de kicker) · Icon (jeu FERMÉ, sous-ensemble Lucide ISC) · Faq / GlobalFaq · ContactForm.
 
 ## Contrastes tenus
 Seuils : 4,5:1 pour le texte, 3:1 pour une bordure de contrôle, une icône ou un anneau de focus.
@@ -25,9 +25,17 @@ Les paires hors de ces 4 pages (surface inverse, tons de Badge) se recalculent �
 | --- | --- | --- |
 | fg / bg | 17,59:1 | 4,5 |
 | muted / surface | 5,05:1 | 4,5 |
+| muted / bg (placeholder de champ) | 5,35:1 | 4,5 |
 | accent-fg / accent | 4,72:1 | 4,5 |
 | bordure muted / bg (Button outline) | 5,35:1 | 3 |
 | anneau accent / bg | 4,72:1 | 3 |
 | inverse-fg / inverse | 17,25:1 | 4,5 |
 | bordure inverse-muted / inverse | 7,58:1 | 3 |
 | accent / inverse (surface de bouton) | 3,88:1 | 3 |
+
+Hors seuil — **filets décoratifs** (bordure de carte ou de champ : ni contrôle, ni porteuse
+d'information, aucun seuil WCAG ne s'y applique) : `border / bg` 1,23:1 (Card ton default,
+champs de ContactForm) et `inverse-muted/40 / inverse` 2,20:1 (Card `tone="inverse"` posée sur
+une bande `bg-inverse`, où la surface de la carte et la bande sont le même token : c'est le filet,
+pas le fond, qui dessine la carte). Une bordure qui devient une limite de contrôle (Button
+`outline`) sort de cette classe et passe au seuil 3:1, ligne dédiée ci-dessus.

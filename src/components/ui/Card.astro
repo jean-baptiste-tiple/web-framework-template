@@ -2,15 +2,27 @@
 interface Props {
   /** `none` = surface sans gouttière, pour un contenu qui touche les bords (image pleine carte). */
   padding?: 'default' | 'none';
+  /** Surface de la carte : `inverse` = carte sombre (tokens --color-inverse*). */
+  tone?: 'default' | 'inverse';
   class?: string;
 }
-const { padding = 'default', class: cls = '' } = Astro.props;
+const { padding = 'default', tone = 'default', class: cls = '' } = Astro.props;
 
 // Sans gouttière, le contenu atteint le bord : la carte doit rogner au radius,
 // sinon les angles de l'image dépassent la surface.
 const box = padding === 'none' ? 'overflow-hidden' : 'p-6';
+
+// `inverse` FIXE la couleur du texte au lieu de l'hériter : sans elle, une carte
+// sombre posée sur une page claire rendrait du texte sombre sur fond sombre.
+// Ratios mesurés (OKLCH → sRGB → WCAG) : inverse-fg/inverse 17,25:1 (seuil 4,5) ;
+// filet inverse-muted/40 sur inverse 2,20:1 — filet décoratif, même classe que le
+// border/bg du ton default (1,23:1), pas une bordure de contrôle.
+const tones = {
+  default: 'border-border bg-surface',
+  inverse: 'border-inverse-muted/40 bg-inverse text-inverse-fg',
+} as const;
 ---
 
-<div class={`rounded border border-border bg-surface ${box} ${cls}`}>
+<div class={`rounded border ${tones[tone]} ${box} ${cls}`}>
   <slot />
 </div>

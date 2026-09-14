@@ -18,14 +18,14 @@ composant OU d'écrire du markup de section. Tout nouveau composant/variante →
 | Container.astro | class?, prose? | Largeur max + padding (prose = colonne de lecture) |
 | Section.astro | class? | Espacement vertical de section |
 | Button.astro | href?, variant(primary/outline)?, tone(default/inverse)?, type(button/submit)?, class? | Bouton/lien (type pour usage formulaire ; tone = surface qui le porte) |
-| Card.astro | padding(default/none)?, class? | **Canonique surface de carte** : fond + bordure + radius. `padding="none"` = contenu bord à bord (rogné au radius), pas de surcharge de gouttière depuis un parent |
+| Card.astro | padding(default/none)?, tone(default/inverse)?, class? | **Canonique surface de carte** : fond + bordure + radius. `padding="none"` = contenu bord à bord (rogné au radius), pas de surcharge de gouttière depuis un parent. `tone="inverse"` = carte sombre (surface, filet ET couleur de texte fixés par le ton, jamais hérités) : ne PAS repeindre une `Card` par une classe au call-site |
 | Accordion.astro | summary, name?, class? | **Canonique accordéon** : `<details>/<summary>` + slot, chevron Icon en bascule CSS, reduced-motion, focus visible. `name` partagé = exclusivité native. Ne PAS réécrire ce markup dans une section |
 | Badge.astro | tone(accent/neutral/inverse)?, class? | Pilule de kicker (sur-titre court, étiquette de section). Slot libre |
 | Icon.astro | name, size?, label?, class? | Icône inlinée du jeu FERMÉ `./icons.ts` (sous-ensemble Lucide, ISC). `label` = porteuse de sens, sinon `aria-hidden`. Jamais d'emoji ni de police d'icônes |
 | icons.ts | — | Table des tracés + `IconName` + `ICON_NAMES`. Séparée du .astro : les `export` du frontmatter Astro sont hissés au-dessus du corps et ne peuvent pas dériver d'une const locale |
 | Faq.astro | title?, items[] | Titre + paires q/a, rendues par Accordion (aucun markup `<details>` propre) |
 | GlobalFaq.astro | title? | FAQ globale partagée (SITE.faq, éditée dans site.json) |
-| ContactForm.astro | idPrefix? | Formulaire contact statique vanilla (0 framework) vers PUBLIC_FORM_ENDPOINT. `idPrefix` (défaut `contact`) préfixe id/for : deux formulaires sur une page ne dupliquent pas `id="name"` |
+| ContactForm.astro | idPrefix? | Formulaire contact statique vanilla (0 framework) vers PUBLIC_FORM_ENDPOINT. `idPrefix` (défaut `contact`) préfixe id/for : deux formulaires sur une page ne dupliquent pas `id="name"`. Les champs posent leur couleur de texte (`text-fg` / `placeholder:text-muted`) : englobé dans une bande `text-inverse-fg`, le formulaire reste lisible sans surcharge au call-site |
 
 ## SEO (src/components/seo/)
 | Composant | Rôle |

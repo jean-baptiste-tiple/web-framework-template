@@ -6,6 +6,7 @@ import Container from '@/components/ui/Container.astro';
 import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import Card from '@/components/ui/Card.astro';
+import ContactForm from '@/components/ui/ContactForm.astro';
 import Faq from '@/components/ui/Faq.astro';
 import Accordion from '@/components/ui/Accordion.astro';
 import Badge from '@/components/ui/Badge.astro';
@@ -136,6 +137,30 @@ const sectionSamples: Record<keyof typeof SECTION_REGISTRY, AnySection> = {
             </p>
           </div>
         </Card>
+      </div>
+      <div class="mt-4 rounded bg-inverse p-6">
+        <Card tone="inverse">
+          <h3 class="font-medium">tone="inverse"</h3>
+          <p class="mt-1 text-sm text-inverse-muted">
+            Carte sombre : surface, filet et couleur de texte fixés par le ton, jamais hérités.
+            Posée sur la bande, elle se lit au filet ; posée sur une page claire, c'est un encart
+            appuyé.
+          </p>
+        </Card>
+      </div>
+
+      <h2 class="mt-10 text-xl font-semibold">ContactForm</h2>
+      <p class="mt-2 text-muted">
+        Sur bande sombre : les libellés héritent de la bande, mais les champs gardent leur propre
+        couleur de texte (<code>text-fg</code> sur <code>bg-bg</code>). Sans elle, la saisie serait
+        blanche sur champ blanc. <code>idPrefix</code> évite les <code>id</code> dupliqués quand
+        deux formulaires coexistent sur une page.
+      </p>
+      <!-- `bg-inverse text-inverse-fg` : la bande doit poser SA couleur de texte, `bg-inverse` ne
+           pose que le fond. C'est cette bande-là qui reproduisait le bug (champ sans couleur propre
+           = saisie blanche sur champ blanc) ; les libellés, eux, doivent bien en hériter. -->
+      <div class="mt-4 rounded bg-inverse p-6 text-inverse-fg">
+        <ContactForm idPrefix="inverse" />
       </div>
 
       <h2 class="mt-10 text-xl font-semibold">Icon</h2>

@@ -2,7 +2,7 @@
 title: "Zéro JavaScript par défaut : ce que ça change"
 description: "Un site statique sans runtime côté client charge plus vite et tombe moins souvent en panne. Ce que ce choix impose au quotidien, et ses limites."
 pubDate: 2026-06-18
-updatedDate: 2026-07-02
+updatedDate: 2026-09-14
 author: "jb"
 category: "guides"
 tags: ["performance", "astro"]
@@ -62,6 +62,7 @@ donc binaire : aucun framework par défaut, et l'installation devient une décis
 
 ## Comment le vérifier
 
-La commande `pnpm run audit:lh` construit le site puis lance Lighthouse sur quatre pages
-représentatives. Les quatre catégories sont assertées au-dessus de 0,95 : une régression de
-performance, d'accessibilité ou de SEO fait échouer la commande au lieu de passer inaperçue.
+Après un build, la commande `pnpm run audit:lh` audite le dossier `dist` avec Lighthouse sur quatre
+pages représentatives. Elle ne construit pas le site : un `dist` absent l'arrête avant l'audit. Les
+quatre catégories sont assertées au-dessus de 0,95 : une régression de performance, d'accessibilité
+ou de SEO fait échouer la commande au lieu de passer inaperçue.

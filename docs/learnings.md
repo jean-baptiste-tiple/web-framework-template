@@ -18,6 +18,11 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-14 — `bg-inverse` ne pose que le fond : texte sombre sur bande sombre (1,04:1)
+- **Erreur** : en ajoutant à /styleguide une bande `<div class="rounded bg-inverse p-6">` autour d'un `ContactForm`, les trois `<label>` ont hérité du `fg` du `body` et rendu du sombre sur sombre. `pnpm run audit:lh` sur /styleguide : `color-contrast` à 0, 3 violations à 1,04:1, accessibilité 95 au lieu de 100. Corrigé par `bg-inverse text-inverse-fg` sur la bande. La même hypothèse fausse (« le texte hérite de la bande ») était dans la commande du lot ; seul l'audit machine l'a démentie.
+- **Règle écrite** : aucune — le fichier cible (`.claude/conventions/styling-tailwind.md`) portait déjà une modification non commitée étrangère à ce lot, interdite d'édition. **Texte à porter par le pilote**, en renfort de la puce « Surface inversée » existante : « `bg-inverse` ne pose QUE le fond : une bande inversée s'écrit `bg-inverse text-inverse-fg` sur le MÊME élément, sinon tout texte qui ne fixe pas sa couleur (libellé, paragraphe, `<li>`) hérite de `fg` et rend sombre sur sombre. Contrôlable : `grep -rn "bg-inverse" src/` — chaque occurrence porte `text-inverse-fg` sur le même attribut `class`, ou ne contient que des composants qui fixent eux-mêmes leur couleur (`tone="inverse"` de Button / Badge / Card). »
+- **Emplacement** : journal seulement (règle en attente de portage dans `.claude/conventions/styling-tailwind.md § Surface inversée`).
+
 ## 2026-09-14 — Un sous-agent a tué tous les `chrome.exe` de la machine
 - **Erreur** : pour nettoyer des Chrome orphelins laissés par `audit:lh`, un sous-agent a lancé `Stop-Process -Force` sur tous les `chrome.exe` au lieu de filtrer sur le `--user-data-dir` de Lighthouse — un navigateur ouvert par l'utilisateur est fermé sans préavis.
 - **Règle écrite** : un sous-agent ne tue ni ne modifie un processus/fichier/dépôt qu'il n'a pas lancé ou hors de son périmètre ; il filtre sur ce qu'il a créé ou remonte. Contrôlable : toute commande `Stop-Process`/`taskkill`/`rm -rf` d'un prompt de sous-agent doit porter un filtre nominatif.
