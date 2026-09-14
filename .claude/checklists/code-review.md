@@ -25,6 +25,7 @@
 - [ ] Aucun composant forcé (surcharge inline, `!important`, valeur arbitraire, prop détournée, wrapper qui écrase son style) : besoin non couvert = prop/variante additive OU scission, jamais un hack au call-site
 - [ ] DRY, edits chirurgicaux
 - [ ] Gate complet vert : lint + astro check + build (pas build seul)
+- [ ] Aucune balise `<…>` dans un commentaire `{/* */}` du corps d'un `.astro` (le compilateur la rend) : `grep -rn -A5 "{/\*" src --include=*.astro | grep "<"` vide
 
 ## Sobriété (anti-over-engineering)
 - [ ] Chaque surface nouvelle du diff (fichier, composant, variante, prop optionnelle, util, champ Zod, token, option, dépendance) a une justification au présent — ce qui casse sans elle aujourd'hui. Justifiée au futur (« on pourrait vouloir ») = retirée
