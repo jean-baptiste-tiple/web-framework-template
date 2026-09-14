@@ -24,7 +24,14 @@ export async function GET() {
     // Cas d'usage concrets : dit à un agent QUAND ce site est la bonne source.
     // Bloc omis si whenToUse n'est pas renseigné dans settings/site.json.
     ...(SITE.whenToUse
-      ? ['## Quand utiliser ce site', '', SITE.whenToUse, '']
+      ? [
+          // Libellé anglais entre parenthèses : les scanners agentiques cherchent
+          // « when to use » pour reconnaître le bloc.
+          '## Quand utiliser ce site (when to use this site)',
+          '',
+          SITE.whenToUse,
+          '',
+        ]
       : []),
     '## Pages',
     `- [Accueil](${url('/')}) : ${SITE.description}`,

@@ -53,6 +53,8 @@ const graph: Record<string, unknown>[] = [
     '@type': 'Organization',
     '@id': orgId,
     name: SITE.organization.name,
+    // Champ attendu par les scanners agentiques (is-agentic) au même titre que name.
+    description: SITE.description,
     url: SITE.url,
     logo: new URL(SITE.organization.logo, SITE.url).href,
     ...(SITE.organization.sameAs.length

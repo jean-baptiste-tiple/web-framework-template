@@ -21,7 +21,8 @@
 
 ## Agentic readiness (agents IA comme visiteurs)
 Un site de contenu statique passe la plupart des checks par construction (0 JS = contenu lisible sans JavaScript, règles absolues 1-2 — ne rien redire ici). Ce qui reste à tenir :
-- llms.txt dit QUAND utiliser le site : section « Quand utiliser ce site » alimentée par `whenToUse` (site.json) — cas d'usage concrets, pas de marketing. Bootstrap : la renseigner.
+- llms.txt dit QUAND utiliser le site : section « Quand utiliser ce site (when to use this site) » alimentée par `whenToUse` (site.json) — cas d'usage concrets, pas de marketing ; le libellé anglais entre parenthèses est ce que les scanners cherchent, ne pas le retirer. Bootstrap : renseigner `whenToUse`.
+- Le nœud `Organization` du JSON-LD porte `name` ET `description` (= `SITE.description`) : un scanner qui ne trouve que `name` compte le nœud comme incomplet.
 - robots.txt n'exclut AUCUN crawler IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot…) : le `User-agent: * / Allow: /` généré les couvre ; un blocage ciblé = décision explicite (ADR), jamais un copier-coller de blocklist.
 - 404 réelle : un chemin inexistant renvoie le statut HTTP 404 (pas un 200 avec l'app shell). En statique c'est le HOST qui décide (la page src/pages/404.astro existe) — contrôle post-déploiement : `curl -s -o /dev/null -w "%{http_code}" <domaine>/chemin-inexistant` doit afficher 404. Voir deploy.md.
 - Mesure : `npx is-agentic <domaine> --json` après mise en ligne (rapport public, rescans espacés de 6 h+ — skill installé : .claude/skills/is-agentic/SKILL.md, avec API et gotchas). Objectif : zéro issue tier `essential`. Les checks orientés produit/API (OAuth scopes, rate-limit headers, serveur MCP, OpenAPI) sont N/A pour un site de contenu et ne comptent pas contre le score — ne PAS construire d'API/MCP pour un point de score (règle absolue 1).

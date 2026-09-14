@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-14 — Deux manques agentiques fermés dans le socle (Organization.description, libellé de llms.txt)
+Scan `is-agentic` d'un site dérivé : 2 constats qui relevaient du socle, donc hérités par tous ses sites.
+- **`seo/JsonLd.astro`** : le nœud `Organization` gagne `description` (= `SITE.description`), placée entre `name` et `url`. Le scanner comptait le nœud comme incomplet (« has Organization type but missing key fields »), `name` étant le seul champ descriptif émis. Contrôlé sur le build : les **11 pages** sortent `name` + `description` + `url` + `logo`, JSON reparsé sans erreur.
+- **`pages/llms.txt.ts`** : le titre du bloc devient `## Quand utiliser ce site (when to use this site)`. Le contenu (`whenToUse` de site.json) était déjà émis ; l'heuristique du scanner cherche le libellé anglais et ne voyait rien. Le français reste en tête, llms.txt étant aussi lu par des humains.
+- **Règle écrite** : `.claude/conventions/seo-geo.md § Agentic readiness` porte les deux points (champs du nœud `Organization` ; libellé anglais à ne pas retirer du titre).
+- **Option d'un cran plus simple écartée** : traduire le titre en anglais seul (`## When to use this site`), qui n'ajoutait aucun caractère — écartée parce que le bloc est du texte lisible sur un site francophone. Écarté aussi : un champ `organizationDescription` dans site.json, là où `SITE.description` dit déjà de quoi le site parle (aucun champ Zod ajouté).
+- **Vérifié** : lint vert ; `astro check` 0 erreur / 0 warning / 2 hints préexistants (`scripts/parity/`) ; build 11 pages.
+
 ## 2026-09-14 — Cible tactile du `<summary>` d'Accordion au plancher de 44px
 - **`ui/Accordion.astro`** : le `<summary>` gagne `min-h-11` (2,75rem = 44px, échelle Tailwind, aucune valeur arbitraire). Mesuré à 390 sur un site dérivé, un libellé d'une seule ligne ne faisait que **27px** de haut : la hauteur venait du texte, donc un libellé sur deux lignes (48px) passait le plancher craft-floor et un libellé court le ratait. `items-center` était déjà posé et recentre libellé et chevron dans la hauteur garantie ; les libellés sur deux lignes ne bougent pas, le chevron n'est pas touché, aucune prop ajoutée.
 - **Effet hérité** : le correctif porte sur l'atome canonique, donc il remonte sans rien d'autre à `Faq.astro`, `GlobalFaq`, la variante `content.faq-accordion` et tout site dérivé du template.
