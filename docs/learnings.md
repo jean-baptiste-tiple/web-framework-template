@@ -18,6 +18,10 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-14 — Un fichier de collection supprimé survit dans le cache de contenu
+- **Erreur** : `src/content/landings/methode.mdx` supprimé (page passée en bespoke) ; le build suivant a continué de rendre `/methode` depuis `node_modules/.astro/data-store.json` et a fini en `UnknownContentCollectionError` dans `[...slug].astro`. Deux lots parallèles ont perdu un build chacun à comprendre que la source n'était plus la source.
+- **Règle** : après suppression ou renommage d'un fichier de collection, le gate commence par `rm -rf node_modules/.astro dist`. Contrôlable : un build lancé après une suppression de contenu sans purge du cache est une violation. Emplacement : `.claude/conventions/content-patterns.md` (à la fin), `.claude/commands/commit-push.md` (étape 2).
+
 ## 2026-09-14 — Une balise citée dans un commentaire `{/* */}` d'un .astro devient un vrai élément
 - **Erreur** : un commentaire JSX `{/* … <body> … */}` dans le corps de `BaseLayout.astro` (site dérivé) a ouvert un second `<body>` réel et déversé le reste du commentaire en texte visible sur toutes les pages. Le compilateur Astro ne traite pas `{/* */}` comme un commentaire opaque : les chevrons y sont lus comme du markup. Détecté à la capture, pas au build (`astro check` vert).
 - **Règle** : dans un `.astro`, aucune balise entre chevrons dans un commentaire `{/* */}` du corps ; les explications qui citent du markup vont dans le frontmatter (`//`) ou dans un commentaire HTML `<!-- -->` (qui, lui, reste inerte mais sort dans le HTML). Contrôlable : `grep -rn -A5 "{/\*" src --include=*.astro | grep "<"` vide. Emplacement : `.claude/conventions/astro-patterns.md`, `.claude/checklists/code-review.md § A11y / perf / qualité`.

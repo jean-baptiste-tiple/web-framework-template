@@ -4,7 +4,7 @@ Seule commande du projet. Vérifie tout, puis commit + push. Ne JAMAIS pusher sa
 
 ## Étapes (dans l'ordre, s'arrêter au premier échec)
 1. **Lint** : `pnpm run lint` (eslint, incl. plugin astro). Corriger les erreurs avant de continuer.
-2. **Build + types + contenu** : `pnpm run build` (= `astro check && astro build`).
+2. **Build + types + contenu** : `pnpm run build` (= `astro check && astro build`). Si un fichier de collection a été supprimé ou renommé depuis le dernier build : `rm -rf node_modules/.astro dist` d'abord (le cache `data-store.json` garde l'entrée et le build rend une page fantôme, docs/learnings.md 2026-09-14).
    - `astro check` valide TypeScript ET le frontmatter des collections contre les schémas Zod : un champ MD/MDX manquant ou mal typé casse ici. C'est la validation "les markdown n'ont pas d'erreur".
    - Le build doit passer entièrement.
 3. **Finalisation docs** (si pas déjà fait) : component-registry, docs/changelog.md à jour. (llms.txt et sitemap.xml sont générés au build ; page bespoke ajoutée = la référencer dans llms.txt.ts et sitemap.xml.ts.)

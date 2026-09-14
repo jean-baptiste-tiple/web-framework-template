@@ -11,6 +11,7 @@ Tout archétype de page qui se répète avec la même forme = UNE collection + U
 - Slug = nom de fichier (kebab-case).
 - Tout champ sur lequel une route générée filtre (RSS par rubrique, index, sitemap, llms.txt) doit être REQUIS dans le schéma Zod : optionnel = flux silencieusement vide dès qu'un fichier l'omet.
 - Une donnée déclarée (settings, champ de schéma) mais rendue par aucun composant est une donnée DORMANTE : l'annoter comme telle au registre, ne pas la présenter comme branchée.
+- Supprimer ou renommer un fichier de collection ne suffit pas : `node_modules/.astro/data-store.json` garde l'entrée et le build suivant rend une page fantôme (puis `UnknownContentCollectionError`). Après toute suppression de contenu : `rm -rf node_modules/.astro dist` avant le gate (docs/learnings.md 2026-09-14).
 
 ## Collections du socle
 - Blog : Markdown, src/content/blog/. Pages : Markdown, src/content/pages/. Landings : MDX, src/content/landings/.
