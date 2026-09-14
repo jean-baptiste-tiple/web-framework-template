@@ -82,6 +82,11 @@ famille sans aucun template source se crée).
 | P7 Deploy | deploy.md (validation humaine explicite, post-déploiement) | prod | 404 réelle, LH prod, is-agentic |
 | P8 Apprentissage | learnings + catalogue enrichi | docs/learnings.md | gate apprentissage |
 
+## État au 2026-09-14
+- Kit-0 et Kit-1 FAITS : 38/38 templates inventoriés et classés (1 670 entrées, 1 037 candidates), **145 variantes portées** (132 sections + 13 layouts, previews validées) sur 56 familles — 31 à ≥ 3 variantes, 24 à 2, 4 sous 2 (familles « recette » de composition ou à compléter au fil des sites). Outillage : inventory, headers, reconcile, align, coverage, preview (sections + layouts + assets), harness. Résidus : `C:\apps\web-kit\TODO.md`.
+- Skills + playbook FAITS (copywriting, section-catalog, design-craft, website-builder.md).
+- Pilote Open Kairos EN COURS : `C:\apps\site-open-kairos` (P0-P1 écrits, lot 1 bootstrap/collections/contenus en cours ; monde visuel en attente de confirmation).
+
 ## Chantiers
 1. **Kit-0 Inventaire** (1 session, agents parallèles) : dézipper, builder, screenshoter les 37 ; produire
    `catalog/worlds/` et `catalog/sections/` ; croiser avec la taxonomie → matrice de couverture (famille ×

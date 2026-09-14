@@ -18,10 +18,20 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-14 — `color-contrast` ne voit pas ce qui est masqué : 3,20:1 en production sur /contact
+- **Erreur** : le message de succès de `ContactForm` était peint par l'échelle Tailwind verte 600 — **3,20:1 sur `bg`**, sous le seuil 4,5. Le défaut a survécu à tous les `pnpm run audit:lh` à 100/100 : les deux `<p>` d'état naissent `hidden`, et Lighthouse n'audite que le visible. Il n'a été trouvé qu'en recalculant les ratios à la main pour tokeniser la couleur.
+- **Règle écrite** : une paire de couleurs portée par un élément masqué au chargement (`hidden`, `<details>` fermé, état de formulaire) n'est PAS couverte par l'audit machine ; elle se calcule à la main et prend une ligne dans la table de `docs/design/system.md § Contrastes tenus`. Contrôlable en review : élément masqué + classe de couleur sans ligne dans la table = violation.
+- **Emplacement** : `.claude/conventions/a11y.md § Contraste` (renfort de la puce existante) ; table complétée dans `docs/design/system.md`.
+
+## 2026-09-14 — Une classe citée en toutes lettres dans une convention régénère son CSS mort
+- **Erreur** : la règle interdisant les échelles Tailwind en dur citait la classe rouge en toutes lettres. Tailwind 4 scanne aussi `.claude/` et `docs/` : l'utilitaire supprimé du code est revenu dans le bundle (~50 octets morts) alors qu'aucun fichier de `src/` ne l'utilisait plus.
+- **Règle écrite** : aucune règle nouvelle — la puce concernée de `styling-tailwind.md` porte l'avertissement et écrit l'échelle en `*`. Observation : toute doc du repo est une source de scan Tailwind ; un exemple de classe INTERDITE s'y écrit tronqué. 2e occurrence = règle à part entière.
+- **Emplacement** : `.claude/conventions/styling-tailwind.md § États` (avertissement dans la puce) + journal.
+
 ## 2026-09-14 — `bg-inverse` ne pose que le fond : texte sombre sur bande sombre (1,04:1)
 - **Erreur** : en ajoutant à /styleguide une bande `<div class="rounded bg-inverse p-6">` autour d'un `ContactForm`, les trois `<label>` ont hérité du `fg` du `body` et rendu du sombre sur sombre. `pnpm run audit:lh` sur /styleguide : `color-contrast` à 0, 3 violations à 1,04:1, accessibilité 95 au lieu de 100. Corrigé par `bg-inverse text-inverse-fg` sur la bande. La même hypothèse fausse (« le texte hérite de la bande ») était dans la commande du lot ; seul l'audit machine l'a démentie.
 - **Règle écrite** : aucune — le fichier cible (`.claude/conventions/styling-tailwind.md`) portait déjà une modification non commitée étrangère à ce lot, interdite d'édition. **Texte à porter par le pilote**, en renfort de la puce « Surface inversée » existante : « `bg-inverse` ne pose QUE le fond : une bande inversée s'écrit `bg-inverse text-inverse-fg` sur le MÊME élément, sinon tout texte qui ne fixe pas sa couleur (libellé, paragraphe, `<li>`) hérite de `fg` et rend sombre sur sombre. Contrôlable : `grep -rn "bg-inverse" src/` — chaque occurrence porte `text-inverse-fg` sur le même attribut `class`, ou ne contient que des composants qui fixent eux-mêmes leur couleur (`tone="inverse"` de Button / Badge / Card). »
-- **Emplacement** : journal seulement (règle en attente de portage dans `.claude/conventions/styling-tailwind.md § Surface inversée`).
+- **Emplacement** : `.claude/conventions/styling-tailwind.md` (portée par le pilote le 2026-09-14).
 
 ## 2026-09-14 — Un sous-agent a tué tous les `chrome.exe` de la machine
 - **Erreur** : pour nettoyer des Chrome orphelins laissés par `audit:lh`, un sous-agent a lancé `Stop-Process -Force` sur tous les `chrome.exe` au lieu de filtrer sur le `--user-data-dir` de Lighthouse — un navigateur ouvert par l'utilisateur est fermé sans préavis.

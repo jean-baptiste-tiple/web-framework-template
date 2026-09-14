@@ -4,6 +4,7 @@
 - Une page = un title (<= 60 car.) + une description (140-160 car.). Override via seo.* dans le frontmatter.
 - Canonical auto (resolveSeo) : URL absolue AVEC slash final (= URL servie et sitemap, une seule forme déclarée). noindex via seo.noindex (exclut aussi du sitemap et de llms.txt).
 - JSON-LD via JsonLd.astro (graph : Organization + WebSite toujours ; BlogPosting/WebPage/Service ou Product ; FAQPage ; BreadcrumbList). dateModified : updatedDate (articles + pages).
+- BreadcrumbList : émis par JsonLd dès que `breadcrumbs` est passé à BaseLayout (`{ name, url }[]` → `ListItem` + `position` 1..n). C'est la PAGE qui construit le fil, en URL ABSOLUES (`new URL('/blog/<slug>/', SITE.url).href`, slash final comme le canonical) — cf. src/pages/[...slug].astro et src/pages/blog/[...slug].astro. Une section visuelle de fil d'Ariane (famille `nav/breadcrumb-*` du kit) n'émet AUCUN JSON-LD, par la règle absolue 5 et parce qu'une section ignore l'URL absolue : la poser sur une page n'exonère pas de passer `breadcrumbs` au layout, et ne le duplique pas non plus.
 - sitemap.xml : route custom src/pages/sitemap.xml.ts — lastmod par page = updatedDate (pubDate en repli pour le blog). Nouvelle page .astro bespoke = à ajouter dans BESPOKE.
 - rss.xml + robots.txt (généré, URL depuis astro.config).
 - Un seul H1 par page (= title). H2/H3 sémantiques.

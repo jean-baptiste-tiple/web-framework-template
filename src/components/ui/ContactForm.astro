@@ -9,8 +9,14 @@ interface Props {
   /** Préfixe des id/for : deux formulaires sur la même page dupliqueraient sinon
       `id="name"`, et un `<label for>` viserait le mauvais champ. */
   idPrefix?: string;
+  /** Surface qui PORTE le formulaire (même sens que `tone` de Button/Card).
+      N'agit que sur les messages d'état : eux seuls posent une couleur qui
+      dépend du fond. Les champs posent la leur (voir ci-dessous), les libellés
+      héritent de la bande à dessein, et le Button garde son ton par défaut
+      (`accent` sur `inverse` = 3,88:1, seuil 3 tenu — docs/design/system.md). */
+  tone?: 'default' | 'inverse';
 }
-const { idPrefix = 'contact' } = Astro.props;
+const { idPrefix = 'contact', tone = 'default' } = Astro.props;
 
 // La couleur du texte saisi est POSÉE, pas héritée : un champ `bg-bg` sans couleur
 // propre, posé sous une bande `text-inverse-fg` (Card tone="inverse", hero de page
@@ -18,6 +24,16 @@ const { idPrefix = 'contact' } = Astro.props;
 // de la bande. Ratios sur bg : fg 17,59:1 (seuil 4,5), muted 5,35:1 (seuil 4,5).
 const field =
   'w-full rounded border border-border bg-bg px-3 py-2 text-sm text-fg placeholder:text-muted';
+
+// Messages d'état : une couleur par ton, jamais une valeur hors @theme. Ratios
+// mesurés (OKLCH → sRGB → WCAG), seuil 4,5:1 — détail dans docs/design/system.md :
+//   default  success/bg 5,51:1 · error/bg 5,90:1
+//   inverse  success-on-inverse/inverse 7,49:1 · error-on-inverse/inverse 6,60:1
+const status = {
+  default: { ok: 'text-success', error: 'text-error' },
+  inverse: { ok: 'text-success-on-inverse', error: 'text-error-on-inverse' },
+} as const;
+const statusTone = status[tone];
 ---
 
 <form data-contact-form class="space-y-4">
@@ -39,10 +55,10 @@ const field =
 
   <Button type="submit">Envoyer</Button>
 
-  <p data-status="ok" role="status" hidden class="text-sm text-green-600">
+  <p data-status="ok" role="status" hidden class={`text-sm ${statusTone.ok}`}>
     Message envoyé, merci.
   </p>
-  <p data-status="error" role="alert" hidden class="text-sm text-red-600"></p>
+  <p data-status="error" role="alert" hidden class={`text-sm ${statusTone.error}`}></p>
 </form>
 
 <script>

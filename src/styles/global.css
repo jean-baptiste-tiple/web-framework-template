@@ -20,6 +20,19 @@
   --color-inverse-fg: oklch(97% 0 0);
   --color-inverse-muted: oklch(72% 0.02 265);
 
+  /* États (message de succès / d'erreur d'un formulaire). DEUX valeurs par état,
+     pas une : aucune couleur unique ne peut tenir 4,5:1 à la fois sur `bg`
+     (Y=0,970 → Y du texte ≤ 0,177) et sur `inverse` (Y=0,006 → Y du texte
+     ≥ 0,201) — les deux domaines sont disjoints. Le suffixe `-on-inverse` dit
+     donc la SURFACE qui porte le texte, comme `tone="inverse"` des composants.
+     Ratios mesurés (OKLCH → sRGB → WCAG), seuil 4,5:1 :
+       error / bg 5,90:1 · success / bg 5,51:1
+       error-on-inverse / inverse 6,60:1 · success-on-inverse / inverse 7,49:1 */
+  --color-error: oklch(52% 0.19 27);
+  --color-success: oklch(50% 0.12 150);
+  --color-error-on-inverse: oklch(70% 0.15 27);
+  --color-success-on-inverse: oklch(70% 0.15 150);
+
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;

@@ -25,7 +25,7 @@ composant OU d'écrire du markup de section. Tout nouveau composant/variante →
 | icons.ts | — | Table des tracés + `IconName` + `ICON_NAMES`. Séparée du .astro : les `export` du frontmatter Astro sont hissés au-dessus du corps et ne peuvent pas dériver d'une const locale |
 | Faq.astro | title?, items[] | Titre + paires q/a, rendues par Accordion (aucun markup `<details>` propre) |
 | GlobalFaq.astro | title? | FAQ globale partagée (SITE.faq, éditée dans site.json) |
-| ContactForm.astro | idPrefix? | Formulaire contact statique vanilla (0 framework) vers PUBLIC_FORM_ENDPOINT. `idPrefix` (défaut `contact`) préfixe id/for : deux formulaires sur une page ne dupliquent pas `id="name"`. Les champs posent leur couleur de texte (`text-fg` / `placeholder:text-muted`) : englobé dans une bande `text-inverse-fg`, le formulaire reste lisible sans surcharge au call-site |
+| ContactForm.astro | idPrefix?, tone(default/inverse)? | Formulaire contact statique vanilla (0 framework) vers PUBLIC_FORM_ENDPOINT. `idPrefix` (défaut `contact`) préfixe id/for : deux formulaires sur une page ne dupliquent pas `id="name"`. Les champs posent leur couleur de texte (`text-fg` / `placeholder:text-muted`) : englobé dans une bande `text-inverse-fg`, le formulaire reste lisible sans surcharge au call-site. `tone` = surface qui porte le formulaire, et n'agit QUE sur les messages d'état (seule couleur qui dépende du fond : aucune valeur ne tient 4,5:1 sur `bg` et sur `inverse`) — champs, libellés et Button sont déjà corrects sur les deux surfaces |
 
 ## SEO (src/components/seo/)
 | Composant | Rôle |
