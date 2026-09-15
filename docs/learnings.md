@@ -18,6 +18,11 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-15 — Une hypothèse du pilote posée à l'utilisateur comme s'il l'avait demandée
+- **Erreur** : pour le second tour des logos du pilote Open Kairos, le pilote avait lui-même proposé au sous-agent de tourner en diagonale la coupe de la piste « seuil ». Le sous-agent l'a écartée au rendu (toutes les diagonales font l'icône « actualiser ») et l'a remontée parmi ses points « à trancher par le client ». Le pilote l'a relayée telle quelle : l'artefact parlait de « la diagonale demandée », et une question `AskUserQuestion` demandait à JB s'il voulait la voir « malgré l'effet actualiser ». JB n'avait jamais demandé de diagonale ; réponse : « je comprends pas la question ?? ».
+- **Règle écrite** : une question posée à l'utilisateur découle d'un de ses messages ; un point ouvert né de la consigne du pilote se tranche par le pilote, et rien n'est présenté comme « demandé » sans le message qui le demande. Contrôlable en review sur la trace : chaque question cite ou désigne le message de l'utilisateur dont elle découle.
+- **Emplacement** : `.claude/checklists/code-review.md § Sobriété` (ligne des arbitrages renforcée).
+
 ## 2026-09-15 — Un contrôle par grep peut échouer en silence, ou compter des octets
 - **Erreur** : deux fois le même jour, sur le pilote Open Kairos. Un sous-agent a vérifié l'absence de caractères non ASCII dans 72 SVG avec `grep -P … || echo "aucun"` : sous la locale C de Git Bash, `grep -P` refuse de tourner (code 2), et le `|| echo` a imprimé « aucun ». Le pilote a refait le contrôle et obtenu le même code 2, visible seulement parce qu'il l'imprimait. Puis il a compté les tirets cadratins d'une page avec `grep -o '[—–]' | wc -l` : 20, pour 0 compté par code point. Sans locale UTF-8, la classe `[—–]` compare des octets, et « nœud » partage un octet avec le tiret. Le premier contrôle validait sans avoir tourné ; le second aurait fait corriger un texte sain.
 - **Règle écrite** : un contrôle par grep lit son code de sortie (1 = aucune occurrence, 2 = contrôle cassé, donc échec) et ne le masque jamais ; un motif non ASCII se cherche sous `LC_ALL=C.UTF-8`. Contrôlable en review : `|| echo`, `2>/dev/null` ou `| wc -l` accolé à un contrôle cité = violation.

@@ -32,7 +32,7 @@
 - [ ] Chaque surface nouvelle du diff (fichier, composant, variante, prop optionnelle, util, champ Zod, token, option, dépendance) a une justification au présent — ce qui casse sans elle aujourd'hui. Justifiée au futur (« on pourrait vouloir ») = retirée
 - [ ] Au-delà d'un edit trivial, le récap de fin de tâche nomme l'option d'un cran plus simple écartée et la raison
 - [ ] Changement > 1-2 fichiers ou surface créée : rayon d'impact rempli (4 items, item Appelants avec commande citée), et tout refacto proposé a été posé via `AskUserQuestion`, pas laissé en note
-- [ ] Aucun arbitrage rendu en prose dans le récap (« j'ai choisi », « à toi de voir ») : chaque décision qui revenait à l'utilisateur a un appel `AskUserQuestion` dans la trace
+- [ ] Aucun arbitrage rendu en prose dans le récap (« j'ai choisi », « à toi de voir ») : chaque décision qui revenait à l'utilisateur a un appel `AskUserQuestion` dans la trace. Et l'inverse : une question posée découle d'un message de l'utilisateur. Un point ouvert remonté par un sous-agent sur une hypothèse que le pilote a lui-même mise dans la consigne se tranche par le pilote, et rien n'est présenté comme « demandé » sans le message qui le demande
 
 ## Craft (si de l'UI a été touchée — réf. : skill design-craft)
 - [ ] Zéro `—` / `–` dans le texte visible (grep) ; zéro faux screenshot en div ; zéro carte imbriquée
