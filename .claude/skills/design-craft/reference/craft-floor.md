@@ -13,10 +13,11 @@ Un brief épinglé ou le DESIGN.md du projet peut racheter un « Refuse » ; ton
 6. **Surfaces navigateur** : sélection de texte (::selection), focus ring, underline-offset, chiffres tabulaires dans les données — thématisés depuis la palette. C'est le signal le moins cher qu'une page a été DESSINÉE et non assemblée, et le plus souvent oublié.
 7. **Motion** : contenu visible au repos (un élément caché en attendant un script est un élément absent) ; `prefers-reduced-motion` respecté avec une alternative intentionnelle. Détail : motion-css.md.
 8. **Copy** : relire chaque chaîne visible (titres, labels, alt, footer, erreurs) — grammaire, référent clair, pas de mignon-mais-faux. Dans le doute, remplacer par une phrase fonctionnelle plate. Chiffre précis (92 %, 4.1×) = donnée réelle ou marqué `<!-- mock -->`, sinon interdit.
+9. **Tracé SVG dessiné à la main** (logo, pictogramme) : deux formes de même remplissage ne se touchent jamais bord à bord. Elles se recouvrent d'au moins 0,5 unité ou fusionnent en un seul chemin : deux bords anticrénelés posés sur la même droite laissent passer le fond, un liseré clair que le code ne montre pas. Contrôle : rendu à 1024 px, aucun liseré aux jonctions.
 
 ## Interdits durs (grep = échec de review)
 
-- **Tiret cadratin/demi-cadratin : ZÉRO `—` et `–` dans tout texte visible** (titres, corps, labels, boutons, alt, légendes). Remplacer par deux-points, virgule, parenthèses ou une phrase coupée. Formulé en binaire parce que « avec parcimonie » est systématiquement ignoré.
+- **Tiret cadratin/demi-cadratin : ZÉRO `—` et `–` dans tout texte visible** (titres, corps, labels, boutons, alt, légendes). Remplacer par deux-points, virgule, parenthèses ou une phrase coupée. Formulé en binaire parce que « avec parcimonie » est systématiquement ignoré. Contrôle sur le HTML construit : `LC_ALL=C.UTF-8 grep -rn '[—–]' dist/` sort en code 1. Sans locale UTF-8, la classe compare des octets et signale « nœud » comme un tiret.
 - **Faux screenshot reconstruit en `<div>`** : une capture produit est une image réelle, jamais un décor DOM.
 - **Cartes imbriquées** (carte dans carte) — cf. règle anti double-carte de styling-tailwind.md.
 

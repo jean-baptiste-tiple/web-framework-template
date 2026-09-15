@@ -18,6 +18,21 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-15 — Un contrôle par grep peut échouer en silence, ou compter des octets
+- **Erreur** : deux fois le même jour, sur le pilote Open Kairos. Un sous-agent a vérifié l'absence de caractères non ASCII dans 72 SVG avec `grep -P … || echo "aucun"` : sous la locale C de Git Bash, `grep -P` refuse de tourner (code 2), et le `|| echo` a imprimé « aucun ». Le pilote a refait le contrôle et obtenu le même code 2, visible seulement parce qu'il l'imprimait. Puis il a compté les tirets cadratins d'une page avec `grep -o '[—–]' | wc -l` : 20, pour 0 compté par code point. Sans locale UTF-8, la classe `[—–]` compare des octets, et « nœud » partage un octet avec le tiret. Le premier contrôle validait sans avoir tourné ; le second aurait fait corriger un texte sain.
+- **Règle écrite** : un contrôle par grep lit son code de sortie (1 = aucune occurrence, 2 = contrôle cassé, donc échec) et ne le masque jamais ; un motif non ASCII se cherche sous `LC_ALL=C.UTF-8`. Contrôlable en review : `|| echo`, `2>/dev/null` ou `| wc -l` accolé à un contrôle cité = violation.
+- **Emplacement** : `.claude/checklists/code-review.md § A11y / perf / qualité` (ligne ajoutée) ; `.claude/skills/design-craft/reference/craft-floor.md § Interdits durs` (commande du contrôle des tirets).
+
+## 2026-09-15 — Deux formes de même couleur posées bord à bord laissent un liseré
+- **Erreur** : deux lots de logos du pilote, deux occurrences. Aux quatre jonctions entre les arcs et les bandes du signe infini, puis là où le fût d'un K touche les barres d'un O, un filet clair apparaissait au rendu à 1024 px : deux bords anticrénelés posés sur la même droite laissent passer le fond. Invisible dans le code, invisible au build ; corrigé par une soudure de 2° dans le premier lot, un recouvrement de 0,8 unité dans le second.
+- **Règle écrite** : dans un SVG dessiné à la main, deux formes de même remplissage qui se touchent se recouvrent d'au moins 0,5 unité ou fusionnent en un seul chemin ; contrôle au rendu à 1024 px. Deuxième occurrence : l'observation devient règle.
+- **Emplacement** : `.claude/skills/design-craft/reference/craft-floor.md § Verify` (point 9).
+
+## 2026-09-15 — Python sous Windows écrit des fins de ligne CRLF quand sa sortie est redirigée
+- **Erreur** : une liste de noms de fichiers produite par un script Python, puis lue par une boucle shell, portait un `\r` final ; chaque nom devenait introuvable.
+- **Règle écrite** : aucune (observation, une occurrence). Parade : `sys.stdout.reconfigure(newline='\n')` dans le script, ou `tr -d '\r'` dans la boucle.
+- **Emplacement** : journal seulement.
+
 ## 2026-09-14 — L'audit Lighthouse mesurait un site non compressé, donc un score qui n'existe pas
 - **Erreur** : le serveur statique de `scripts/audit-lh.mjs` servait `dist/` sans compression. Lighthouse simule le réseau à partir des octets réellement transférés : la feuille de style du pilote passait pour 190 Ko au lieu des 28 Ko qu'un hébergeur envoie, soit environ 0,9 s de premier rendu fictif. Verdict rendu : performance 89 à 94 sur huit pages, « sous le seuil », avec TBT à 0 ms et CLS à 0 — un diagnostic incohérent que j'ai failli traiter en dégradant le site (élaguer la feuille, retirer les mouvements du hero). Après correction : 98 à 100, seuils tenus, aucune ligne de rendu touchée.
 - **Règle** : un harnais de mesure doit servir ce que l'hébergeur sert (compression des types texte, `Vary: Accept-Encoding`) ; sinon il ne mesure pas le site. Écrit dans `scripts/audit-lh.mjs` (commentaire sur la branche de compression) et contrôlable : `curl -sI -H 'Accept-Encoding: gzip' <url du harnais>/…css | grep content-encoding` doit répondre `gzip`.

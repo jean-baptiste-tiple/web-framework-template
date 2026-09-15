@@ -26,6 +26,7 @@
 - [ ] DRY, edits chirurgicaux
 - [ ] Gate complet vert : lint + astro check + build (pas build seul)
 - [ ] Aucune balise `<…>` dans un commentaire `{/* */}` du corps d'un `.astro` (le compilateur la rend) : `grep -rn -A5 "{/\*" src --include=*.astro | grep "<"` vide
+- [ ] Contrôle par grep (« vide », « zéro occurrence ») : lire le code de sortie, 1 = aucune occurrence, 2 = contrôle cassé donc échec. Jamais masqué par `|| echo`, `2>/dev/null` ou `| wc -l` ; grep en tête de pipe : lire `${PIPESTATUS[0]}`, car `set -o pipefail` rend le code du dernier grep (1) et non celui du grep cassé (2). Motif non ASCII (tirets, guillemets, accents) : `LC_ALL=C.UTF-8 grep`, sinon la locale C de Git Bash compare des octets
 
 ## Sobriété (anti-over-engineering)
 - [ ] Chaque surface nouvelle du diff (fichier, composant, variante, prop optionnelle, util, champ Zod, token, option, dépendance) a une justification au présent — ce qui casse sans elle aujourd'hui. Justifiée au futur (« on pourrait vouloir ») = retirée
