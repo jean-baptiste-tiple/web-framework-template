@@ -12,6 +12,26 @@ const settingsSchema = z.object({
   whenToUse: z.string().optional(),
   nav: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })),
   organizationName: z.string().min(1),
+  // Coordonnées publiques, optionnelles : un site sans elles build toujours.
+  // Rendues en JSON-LD Organization (contactPoint) et sur la page contact.
+  contact: z
+    .object({
+      email: z.string().email().optional(),
+      phone: z.string().optional(), // format international E.164 recommandé : +33…
+      contactType: z.string().default('customer service'), // valeur schema.org
+    })
+    .optional(),
+  // Adresse postale publique, optionnelle. NAP (nom, adresse, téléphone) à tenir
+  // identique ici et dans les annuaires : c'est ce que recoupent les scanners.
+  address: z
+    .object({
+      streetAddress: z.string().optional(),
+      postalCode: z.string().optional(),
+      addressLocality: z.string(),
+      addressRegion: z.string().optional(),
+      addressCountry: z.string(), // code ISO 3166-1 alpha-2 : FR
+    })
+    .optional(),
   social: z.object({ twitter: z.string(), linkedin: z.string() }),
   faq: z.array(z.object({ q: z.string(), a: z.string() })),
 });
@@ -57,6 +77,12 @@ export const SITE = {
     logo: TECHNICAL.organization.logo,
     sameAs: TECHNICAL.organization.sameAs,
   },
+  // Coordonnées publiques (optionnelles) : alimentent le contactPoint et
+  // l'address du nœud Organization (JSON-LD) et le bloc de la page contact.
+  // Les scanners agentiques y lisent la légitimité de l'éditeur ; garder ce NAP
+  // identique à celui publié dans les annuaires.
+  contact: SETTINGS.contact,
+  address: SETTINGS.address,
   // Navigation principale (header).
   nav: SETTINGS.nav,
   // FAQ globale partagée (affichable sur plusieurs pages via GlobalFaq.astro).

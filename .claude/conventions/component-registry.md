@@ -30,8 +30,8 @@ composant OU d'écrire du markup de section. Tout nouveau composant/variante →
 ## SEO (src/components/seo/)
 | Composant | Rôle |
 | --- | --- |
-| BaseHead.astro | Balises meta/OG/Twitter/canonical |
-| JsonLd.astro | JSON-LD @graph selon le type de page |
+| BaseHead.astro | Balises meta/OG/Twitter/canonical + `<link rel="alternate" type="text/markdown">` vers le jumeau `.md` (pages indexables seulement) |
+| JsonLd.astro | JSON-LD @graph selon le type de page ; Organization avec contactPoint/address dès que site.json renseigne `contact`/`address` |
 
 ## Landing (src/components/landing/)
 | Composant | Rôle |

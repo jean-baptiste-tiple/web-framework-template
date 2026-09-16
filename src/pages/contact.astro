@@ -3,12 +3,33 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Container from '@/components/ui/Container.astro';
 import Section from '@/components/ui/Section.astro';
 import ContactForm from '@/components/ui/ContactForm.astro';
+import { SITE } from '@/lib/site';
 
 const meta = {
   title: 'Contact',
   description:
     'Une question, un projet ou une demande de devis ? Écrivez-nous via le formulaire de contact : chaque message reçoit une réponse sous 48 heures ouvrées.',
 };
+
+// Coordonnées publiques : mêmes valeurs que le contactPoint JSON-LD (site.json),
+// jamais recopiées ici. Le bloc disparaît si le site n'en renseigne aucune.
+const { contact, address } = SITE;
+// Un href tel: ne tolère pas les espaces du numéro affiché.
+const telHref = contact?.phone ? `tel:${contact.phone.replace(/\s/g, '')}` : undefined;
+// Le code ISO stocké (FR) s'affiche en clair pour le visiteur ; une valeur non
+// reconnue retombe sur le code brut plutôt que de casser le build.
+let countryLabel = address?.addressCountry;
+if (address) {
+  try {
+    countryLabel =
+      new Intl.DisplayNames([SITE.lang], { type: 'region' }).of(address.addressCountry) ??
+      address.addressCountry;
+  } catch {
+    countryLabel = address.addressCountry;
+  }
+}
+
+const link = 'text-accent underline underline-offset-2 hover:text-fg';
 ---
 
 <BaseLayout meta={meta} type="page">
@@ -16,9 +37,48 @@ const meta = {
     <Container prose>
       <h1 class="mb-2 text-3xl font-bold tracking-tight">Contact</h1>
       <p class="mb-8 text-muted">
-        Formulaire statique posté vers un service tiers. Configurer
-        <code>PUBLIC_FORM_ENDPOINT</code> dans <code>.env</code>.
+        Décrivez votre besoin en quelques lignes : nous répondons sous 48 heures
+        ouvrées.
       </p>
+
+      {
+        (contact || address) && (
+          <address class="mb-10 space-y-1 text-sm not-italic text-muted">
+            {contact?.email && (
+              <p>
+                Adresse e-mail :{' '}
+                <a href={`mailto:${contact.email}`} class={link}>
+                  {contact.email}
+                </a>
+              </p>
+            )}
+            {contact?.phone && telHref && (
+              <p>
+                Téléphone :{' '}
+                <a href={telHref} class={link}>
+                  {contact.phone}
+                </a>
+              </p>
+            )}
+            {address && (
+              <p class="text-fg">
+                {address.streetAddress && (
+                  <>
+                    {address.streetAddress}
+                    <br />
+                  </>
+                )}
+                {address.postalCode ? `${address.postalCode} ` : ''}
+                {address.addressLocality}
+                {address.addressRegion ? `, ${address.addressRegion}` : ''}
+                <br />
+                {countryLabel}
+              </p>
+            )}
+          </address>
+        )
+      }
+
       <ContactForm />
     </Container>
   </Section>

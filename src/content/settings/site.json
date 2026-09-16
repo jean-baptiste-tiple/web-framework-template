@@ -10,6 +10,17 @@
     { "label": "Contact", "href": "/contact" }
   ],
   "organizationName": "Mon Organisation",
+  "contact": {
+    "email": "contact@example.com",
+    "phone": "+33 1 23 45 67 89",
+    "contactType": "customer service"
+  },
+  "address": {
+    "streetAddress": "1 rue de l'Exemple",
+    "postalCode": "75001",
+    "addressLocality": "Paris",
+    "addressCountry": "FR"
+  },
   "social": {
     "twitter": "",
     "linkedin": ""

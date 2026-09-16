@@ -112,6 +112,7 @@ Le nom du fichier = l'URL (slug). Penser à bumper `updatedDate`.
 - `whenToUse` (optionnel) : 1-3 phrases factuelles disant pour quels besoins/questions ce site est la bonne source — rendu dans llms.txt sous « Quand utiliser ce site » (GEO/agentic). Cas d'usage concrets, pas de marketing.
 - `nav` : liens du menu (header) — liste de `{ "label", "href" }`.
 - `organizationName` : nom affiché dans le footer + JSON-LD.
+- `contact` (email, phone, contactType) et `address` (rue, code postal, ville, pays) : coordonnées publiques, rendues sur /contact et dans le JSON-LD Organization. Optionnels : les retirer plutôt que laisser des valeurs fausses.
 - `social` : `twitter`, `linkedin`.
 - `faq` : FAQ globale partagée (affichée via `<GlobalFaq />`).
 Une seule modif ici → répercutée partout. Ne PAS recopier ces textes dans les pages.

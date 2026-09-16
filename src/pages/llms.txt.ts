@@ -33,9 +33,20 @@ export async function GET() {
           '',
         ]
       : []),
+    // Points d'entrée machine. Le chemin `.md` fonctionne quel que soit
+    // l'hébergeur (jumeaux générés au build) ; la négociation par en-tête
+    // Accept dépend du host, donc elle n'est PAS promise ici.
+    '## Ressources pour agents (for agents)',
+    '',
+    `- Chaque page existe en Markdown : ajouter \`.md\` au chemin de la page (exemple : ${url('/blog.md')}), sans navigation ni mise en page.`,
+    `- [llms-full.txt](${url('/llms-full.txt')}) : toutes les pages en un seul fichier Markdown.`,
+    `- [sitemap.xml](${url('/sitemap.xml')}) : liste des URL avec leur date de mise à jour. [rss.xml](${url('/rss.xml')}) : flux des articles.`,
+    '- Une URL inexistante renvoie le statut 404 avec ces mêmes points d’entrée.',
+    '',
     '## Pages',
     `- [Accueil](${url('/')}) : ${SITE.description}`,
     `- [Blog](${url('/blog/')}) : articles et guides.`,
+    `- [Contact](${url('/contact/')}) : coordonnées de l’organisation et formulaire de contact.`,
     ...pages.map(
       (e) => `- [${e.data.title}](${url(`/${e.id}/`)}) : ${e.data.description}`,
     ),

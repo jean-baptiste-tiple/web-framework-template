@@ -1,0 +1,31 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "routes": [
+    { "src": "/(.*)", "headers": { "Vary": "Accept" }, "continue": true },
+    { "src": "^/about/?$", "status": 308, "headers": { "Location": "/a-propos" } },
+    { "src": "^/privacy/?$", "status": 308, "headers": { "Location": "/politique-de-confidentialite" } },
+    {
+      "src": "^/$",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "dest": "/index.md",
+      "check": true,
+      "headers": { "Content-Type": "text/markdown; charset=utf-8", "Vary": "Accept" }
+    },
+    {
+      "src": "^/([^.]*[^./])/?$",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "dest": "/$1.md",
+      "check": true,
+      "headers": { "Content-Type": "text/markdown; charset=utf-8", "Vary": "Accept" }
+    },
+    { "handle": "filesystem" },
+    { "handle": "error" },
+    {
+      "src": "/(.*)",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "dest": "/404.md",
+      "status": 404,
+      "headers": { "Content-Type": "text/markdown; charset=utf-8", "Vary": "Accept" }
+    }
+  ]
+}

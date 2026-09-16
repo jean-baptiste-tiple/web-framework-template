@@ -17,6 +17,8 @@ export interface ResolvedSeo {
   title: string;
   description: string;
   canonical: string;
+  /** URL absolue du jumeau Markdown de la page (voir integrations/markdown-twins). */
+  markdown: string;
   ogImage: string;
   noindex: boolean;
 }
@@ -36,6 +38,13 @@ export function resolveSeo(input: SeoInput, pathname: string): ResolvedSeo {
   const path = pathname.endsWith('/') ? pathname : `${pathname}/`;
   const canonical = input.seo?.canonical ?? new URL(path, SITE.url).href;
 
+  // Jumeau Markdown : le canonical sans slash final + .md ; la racine n'a pas
+  // de segment, son jumeau est /index.md (cf. src/integrations/markdown-twins.mjs).
+  const markdown =
+    new URL(canonical).pathname === '/'
+      ? new URL('/index.md', SITE.url).href
+      : `${canonical.replace(/\/$/, '')}.md`;
+
   const rawOg = input.seo?.ogImage ?? input.ogImage ?? SITE.defaultOgImage;
   const ogImage = rawOg.startsWith('http')
     ? rawOg
@@ -45,6 +54,7 @@ export function resolveSeo(input: SeoInput, pathname: string): ResolvedSeo {
     title: baseTitle === SITE.name ? baseTitle : `${baseTitle} | ${SITE.name}`,
     description,
     canonical,
+    markdown,
     ogImage,
     noindex: input.seo?.noindex ?? false,
   };

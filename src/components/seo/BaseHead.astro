@@ -8,6 +8,10 @@ interface Props {
 }
 
 const { seo, ogType = 'website' } = Astro.props;
+
+// Le lien vers le jumeau Markdown (rel="alternate", type text/markdown) n'est
+// posé que sur les pages indexables : une page noindex n'a pas de jumeau
+// (src/integrations/markdown-twins.mjs ne la génère pas).
 ---
 
 <meta charset="utf-8" />
@@ -18,6 +22,7 @@ const { seo, ogType = 'website' } = Astro.props;
 <meta name="description" content={seo.description} />
 <link rel="canonical" href={seo.canonical} />
 {seo.noindex && <meta name="robots" content="noindex, nofollow" />}
+{!seo.noindex && <link rel="alternate" type="text/markdown" href={seo.markdown} />}
 
 <!-- Open Graph -->
 <meta property="og:type" content={ogType} />

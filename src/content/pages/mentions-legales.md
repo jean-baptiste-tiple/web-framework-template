@@ -1,7 +1,7 @@
 ---
 title: "Mentions légales"
 description: "Mentions légales du site."
-updatedDate: 2026-09-14
+updatedDate: 2026-09-16
 seo:
   noindex: true
 ---
@@ -50,6 +50,9 @@ Conformément au règlement (UE) 2016/679 et à la loi Informatique et Libertés
 dispose d'un droit d'accès, de rectification, d'effacement, de limitation et d'opposition sur les
 données qui la concernent. Ces droits s'exercent par courrier électronique à [adresse e-mail] ou
 par courrier postal à l'adresse du siège social. Une réclamation peut être adressée à la CNIL.
+
+Le détail des traitements, des durées de conservation et des sous-traitants figure sur la page
+[politique de confidentialité](/politique-de-confidentialite).
 
 <!-- à personnaliser : le formulaire du socle envoie les réponses au service configuré dans PUBLIC_FORM_ENDPOINT. Vérifier ce destinataire réel, sa localisation, la base légale retenue et la durée de conservation avant publication. -->
 

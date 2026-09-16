@@ -60,6 +60,43 @@ const graph: Record<string, unknown>[] = [
     ...(SITE.organization.sameAs.length
       ? { sameAs: SITE.organization.sameAs }
       : {}),
+    // contactPoint et address : champs que les scanners agentiques cherchent
+    // pour vérifier la légitimité de l'éditeur (un Organization sans moyen de
+    // contact ni adresse compte comme incomplet). Émis seulement si renseignés
+    // dans site.json, comme sameAs — un site sans coordonnées reste valide.
+    ...(SITE.contact?.email ? { email: SITE.contact.email } : {}),
+    ...(SITE.contact?.phone ? { telephone: SITE.contact.phone } : {}),
+    ...(SITE.contact
+      ? {
+          contactPoint: [
+            {
+              '@type': 'ContactPoint',
+              contactType: SITE.contact.contactType,
+              ...(SITE.contact.email ? { email: SITE.contact.email } : {}),
+              ...(SITE.contact.phone ? { telephone: SITE.contact.phone } : {}),
+              availableLanguage: [SITE.lang],
+            },
+          ],
+        }
+      : {}),
+    ...(SITE.address
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            ...(SITE.address.streetAddress
+              ? { streetAddress: SITE.address.streetAddress }
+              : {}),
+            ...(SITE.address.postalCode
+              ? { postalCode: SITE.address.postalCode }
+              : {}),
+            addressLocality: SITE.address.addressLocality,
+            ...(SITE.address.addressRegion
+              ? { addressRegion: SITE.address.addressRegion }
+              : {}),
+            addressCountry: SITE.address.addressCountry,
+          },
+        }
+      : {}),
   },
   {
     '@type': 'WebSite',

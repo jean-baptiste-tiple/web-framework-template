@@ -20,6 +20,7 @@ export const SITE_FOOTER: FooterSimpleSection = {
   // Liens de service, hors navigation principale (site.json `nav`).
   links: [
     { label: 'Mentions légales', href: '/mentions-legales' },
+    { label: 'Politique de confidentialité', href: '/politique-de-confidentialite' },
     { label: 'RSS', href: '/rss.xml' },
   ],
 };
