@@ -18,6 +18,12 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-09-16 — Une comparaison de captures avant/après peut mentir dans les deux sens
+- **Erreur** : pour prouver qu'un retrait de code ne changeait rien à l'écran (retrait du commutateur de palette du pilote Open Kairos), une comparaison pixel avant/après annonçait 12 % de pixels différents. Trois causes, toutes indépendantes du changement mesuré : le hero tire son clip vidéo au hasard à chaque chargement (`Math.random`), les images paresseuses des rangées horizontales ne se chargent jamais par simple défilement vertical, et `captureBeyondViewport` laisse du texte non rastérisé à un endroit différent à chaque passage. Après neutralisation, le vrai chiffre était 0 pixel sur 1 425 × 10 629.
+- **Règle écrite** : une comparaison de captures ne vaut qu'après un témoin — deux captures de la MÊME page doivent donner 0 pixel d'écart. Neutraliser d'abord l'aléa au chargement, forcer les images paresseuses, capturer dans un viewport à la hauteur de la page. Contrôlable en review : un avant/après cité sans témoin à zéro est une violation.
+- **Écueil plus général** : le coût de la preuve pixel a dépassé celui du lot lui-même, alors que trois greps suffisaient à montrer que les règles retirées étaient toutes conditionnées à un attribut que rien ne posait. Choisir la preuve à la mesure de l'enjeu.
+- **Emplacement** : `.claude/checklists/code-review.md § Craft` (ligne ajoutée), ce journal.
+
 ## 2026-09-15 — Une hypothèse du pilote posée à l'utilisateur comme s'il l'avait demandée
 - **Erreur** : pour le second tour des logos du pilote Open Kairos, le pilote avait lui-même proposé au sous-agent de tourner en diagonale la coupe de la piste « seuil ». Le sous-agent l'a écartée au rendu (toutes les diagonales font l'icône « actualiser ») et l'a remontée parmi ses points « à trancher par le client ». Le pilote l'a relayée telle quelle : l'artefact parlait de « la diagonale demandée », et une question `AskUserQuestion` demandait à JB s'il voulait la voir « malgré l'effet actualiser ». JB n'avait jamais demandé de diagonale ; réponse : « je comprends pas la question ?? ».
 - **Règle écrite** : une question posée à l'utilisateur découle d'un de ses messages ; un point ouvert né de la consigne du pilote se tranche par le pilote, et rien n'est présenté comme « demandé » sans le message qui le demande. Contrôlable en review sur la trace : chaque question cite ou désigne le message de l'utilisateur dont elle découle.

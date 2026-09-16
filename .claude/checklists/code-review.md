@@ -44,6 +44,7 @@
 - [ ] Cibles tactiles ≥ 44px mesurées à 390 sur les contrôles d'UNE ligne (summary, liens de nav, marque du header et du footer) : hauteur GARANTIE par une classe de l'échelle (`min-h-11`, ou `py-*` équivalent) dans le `class` du contrôle, jamais déduite du texte ni du padding du parent
 - [ ] Surfaces navigateur thématisées (::selection, focus ring, underline-offset)
 - [ ] Copy self-audit passé ; chiffres précis sourcés ou marqués mock
+- [ ] Une comparaison de captures avant/après ne prouve rien sans témoin : deux captures de la MÊME page doivent d'abord donner 0 pixel d'écart. Neutraliser ce qui varie seul — aléa au chargement (`Math.random`), images paresseuses que le défilement vertical ne charge pas, rastérisation partielle hors viewport (`captureBeyondViewport`) — puis mesurer
 - [ ] **Test du directeur artistique** : chaque archétype de page est posé CÔTE À CÔTE avec sa page source du template du monde (capture du kit) ; placeholders vides, silhouettes, mouvements absents, largeurs de sections inégales ou écart de densité visible = `fix` au mieux, jamais « livré » (une note /20 ne remplace pas ce test)
 
 ## Documentation
