@@ -16,6 +16,7 @@
 - [ ] JSON-LD présent et valide (type correct, FAQPage si faq)
 - [ ] llms.txt mis à jour si page importante
 - [ ] Un seul H1, titres sémantiques
+- [ ] Page de confiance touchée (home, à propos, contact, confidentialité) : ≥ 500 caractères de texte dans son `<main>` (mesure sur `dist/<chemin>.md`, hors front matter) ; toute page indexable a son jumeau `.md` dans `dist/` (ls), toute page noindex n'en a pas
 
 ## A11y / perf / qualité
 - [ ] Images : alt + width/height
@@ -26,6 +27,7 @@
 - [ ] DRY, edits chirurgicaux
 - [ ] Gate complet vert : lint + astro check + build (pas build seul)
 - [ ] Aucune balise `<…>` dans un commentaire `{/* */}` du corps d'un `.astro` (le compilateur la rend) : `grep -rn -A5 "{/\*" src --include=*.astro | grep "<"` vide
+- [ ] Contraste relevé au pixel sur une capture : l'anneau d'échantillonnage du fond est BORNÉ au conteneur qui porte ce fond (barre, panneau, carte). Un ratio ≈ 1:1 sur une encre visible à l'œil = sonde fausse, pas rendu faux — confirmé sur la capture avant toute correction
 - [ ] Contrôle par grep (« vide », « zéro occurrence ») : lire le code de sortie, 1 = aucune occurrence, 2 = contrôle cassé donc échec. Jamais masqué par `|| echo`, `2>/dev/null` ou `| wc -l` ; grep en tête de pipe : lire `${PIPESTATUS[0]}`, car `set -o pipefail` rend le code du dernier grep (1) et non celui du grep cassé (2). Motif non ASCII (tirets, guillemets, accents) : `LC_ALL=C.UTF-8 grep`, sinon la locale C de Git Bash compare des octets
 
 ## Sobriété (anti-over-engineering)
