@@ -69,7 +69,7 @@ section-catalog, design-craft (+ wrappers de conventions). Chaque phase a un gat
   par le client (2026-09-14).
 
 ## P7 — Déploiement
-- deploy.md : validation humaine explicite sur `git log production..main`, `/commit-push`, puis
+- deploy.md : validation humaine explicite sur `git log origin/main..HEAD` (branche unique `main` = site public, skill `publier`), `/commit-push`, puis
   contrôles post-déploiement : 404 réelle, Lighthouse prod, `npx is-agentic <domaine> --json` (zéro
   essential), Rich Results Test, sitemap soumis.
 - Gate : les 3 contrôles verts, notés dans docs/changelog.md.

@@ -126,6 +126,18 @@ export default function markdownTwins() {
             .replace(/\n{3,}/g, '\n\n')
             .trim();
 
+          // Un titre vide veut dire que son texte vivait dans un élément retiré
+          // (un <button> d'accordéon posé dans un <h3> : constaté sur un site
+          // dérivé le 2026-09-18, huit titres vides que rien ne signalait).
+          // Erreur et non avertissement : le jumeau perdrait sans bruit ce que la
+          // page affiche. Remède : une règle turndown pour cet élément.
+          const emptyHeading = markdown.match(/^#{1,6}[ \t]*$/m);
+          if (emptyHeading) {
+            throw new Error(
+              `${relPath} : titre vide dans le jumeau Markdown (« ${emptyHeading[0].trim()} ») ; son texte vit dans un élément retiré par le convertisseur, lui donner une règle.`,
+            );
+          }
+
           // Jumeau FRÈRE du dossier : blog/slug/index.html -> blog/slug.md.
           const outRel = is404
             ? '404.md'

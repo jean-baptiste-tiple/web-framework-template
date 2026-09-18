@@ -20,7 +20,7 @@ Dès qu'un changement dépasse 1-2 fichiers OU crée une surface (composant, var
 Contrôlable : un plan de cette échelle sans ces quatre items, ou un item 1 sans commande citée, est une violation. Les changements micro (1-2 fichiers, aucune surface) en sont exempts. Contrôle en review : code-review.md § Sobriété.
 
 ### Arbitrages : `AskUserQuestion`, jamais une phrase dans un récap (Demande JB 2026-08-28)
-Toute décision qui revient à l'utilisateur — demande à plusieurs lectures, arbitrage produit ou éditorial, refacto proposé, option écartée qui coûterait à rattraper — est posée avec l'outil `AskUserQuestion`. La question porte le contexte pour trancher : par option, conséquence et coût ; recommandation en premier. Filtre : « des lectures différentes mènent à un travail matériellement différent » ; le reste se tranche seul et s'écrit dans le récap. Contrôlable sur la trace : un arbitrage rendu en prose (« j'ai choisi X », « à toi de voir ») sans appel à l'outil est une violation. Un sous-agent ne tranche pas : il s'arrête et remonte l'arbitrage au pilote, qui pose la question (§ Qui exécute).
+Toute décision qui revient à l'utilisateur — demande à plusieurs lectures, arbitrage produit ou éditorial, refacto proposé, option écartée qui coûterait à rattraper — est posée avec l'outil `AskUserQuestion`. La question porte le contexte pour trancher : par option, conséquence et coût ; recommandation en premier. Filtre : « des lectures différentes mènent à un travail matériellement différent » ; le reste se tranche seul et s'écrit dans le récap. Contrôlable sur la trace : un arbitrage rendu en prose (« j'ai choisi X », « à toi de voir ») sans appel à l'outil est une violation. Un sous-agent ne tranche pas : il s'arrête et remonte l'arbitrage à la session principale, qui pose la question (§ Délégation).
 
 ### Anti-over-engineering (deux obligations contrôlables)
 Ce qui se contrôle n'est pas l'intention (« rester simple »), c'est la trace de l'arbitrage :
@@ -44,13 +44,10 @@ Contrôle en review : .claude/checklists/code-review.md § Sobriété.
 
 - **Trois écueils :** 1. Ne rien écrire parce que « ça ne se reproduira pas » — la bonne foi n'est pas un mécanisme. 2. Reporter l'écriture à « la fin » — la boucle est immédiate, avant de reprendre la tâche. 3. Écrire une règle qui décrit l'erreur au lieu de la rendre détectable — « faire attention à X » ne vaut rien ; une règle se contrôle par une machine (lint/check/build) ou une citation en review.
 
-## Qui exécute : Fable pilote, Opus écrit
-Le **modèle de la session** décide du rôle, pas la taille de la demande.
-- **Session Fable** — Fable ne modifie **jamais** `src/` ni `scripts/` lui-même. Il découpe le travail en lots indépendants, écrit pour chacun les critères vérifiables, lance des `Agent` avec `model: "opus"` — tous dans le même message quand les lots ne se touchent pas, pour qu'ils tournent en parallèle — puis relit les diffs, arbitre, et porte la finalisation : review (code-review.md), changelog, component-registry, `/commit-push`. Restent à sa main : `docs/`, `.claude/`, les vérifications, les décisions.
-- **Session Opus** — pas de délégation imposée : Opus écrit lui-même, et délègue quand un lot est réellement parallélisable, pas par principe.
-- **`model: "opus"` s'écrit explicitement** sur chaque `Agent` lancé depuis une session Fable : sans ce champ le sous-agent hérite du modèle du parent, et le pilotage ne sert à rien.
+## Délégation à des sous-agents (Demande JB 2026-09-18)
+La session écrit elle-même, quel que soit son modèle ; elle délègue quand un lot est réellement parallélisable, pas par principe.
 - **Plafond : 6 `Agent` en vol simultanément, jamais plus** (compte contrôlable dans la trace). Au-delà, le plafond de crédits de session tombe d'un coup et tue TOUS les lots en cours, qui restent à moitié faits (2026-09-13 : 13 lots perdus). Lancer une vague, attendre ses retours, lancer la suivante.
-- **Un sous-agent reçoit la méthode, pas seulement la tâche** : mode/échelle annoncés, conventions .claude/conventions/ routées à charger, critères de succès, interdiction de commiter, **interdiction de trancher un arbitrage** (il s'arrête et remonte les options au pilote, qui pose la question via `AskUserQuestion`), **interdiction de tuer ou de modifier un processus, un fichier ou un dépôt qu'il n'a pas lancé ou qui est hors de son périmètre** (un `Stop-Process chrome.exe` global ferme le navigateur de l'utilisateur ; on filtre sur le processus qu'on a soi-même créé, ou on s'arrête et on remonte). Ces trois interdictions figurent dans le prompt de chaque sous-agent. Le commit reste au pilote, via `/commit-push`.
+- **Un sous-agent reçoit la méthode, pas seulement la tâche** : mode/échelle annoncés, conventions .claude/conventions/ routées à charger, critères de succès, interdiction de commiter, **interdiction de trancher un arbitrage** (il s'arrête et remonte les options à la session principale, qui pose la question via `AskUserQuestion`), **interdiction de tuer ou de modifier un processus, un fichier ou un dépôt qu'il n'a pas lancé ou qui est hors de son périmètre** (un `Stop-Process chrome.exe` global ferme le navigateur de l'utilisateur ; on filtre sur le processus qu'on a soi-même créé, ou on s'arrête et on remonte). Ces trois interdictions figurent dans le prompt de chaque sous-agent. Le commit reste à la session principale, via `/commit-push`.
 
 ## Projet
 <!-- Nom + description du site à remplir au bootstrap -->
@@ -97,7 +94,7 @@ Où va chaque contenu :
 Routing : /blog/* et /index gagnent sur le catch-all racine [...slug].astro.
 
 ## Éditer le contenu à la main (guide humain)
-Tout s'édite dans des fichiers texte, sans interface d'admin. Après édition : `npm run dev` pour prévisualiser (http://localhost:4321), puis `/commit-push` pour publier.
+Tout s'édite dans des fichiers texte, sans interface d'admin. Après édition : `npm run dev` pour prévisualiser (http://localhost:4321), puis `/commit-push` pour publier. Dans Claude Code, décrire la demande en mots courants suffit : les skills d'intention la traduisent (§ Modes de travail > Demandes non techniques).
 
 ### Changer le TEXTE d'une page existante
 Ouvrir le seul fichier de cette page et éditer le frontmatter (entre les `---`) et/ou le corps :
@@ -166,6 +163,16 @@ Déclencheurs : ajoute/implémente/corrige/refacto/explore. Sous-modes auto (si 
 ### Activation live des conventions & skills
 - **Conventions** : toujours lire coding-standards + tech-stack + component-registry avant de coder. Chaque convention a un **wrapper skill homonyme** (.claude/skills/<nom>/) : c'est le déclencheur harness — l'invoquer dès que sa description matche la demande ou les fichiers touchés, sans attendre qu'on le demande. Le CONTENU vit uniquement dans .claude/conventions/ (source unique) ; _index.md reste la table de référence tags → fichiers.
 - **Skills** : invoquer le skill pertinent au bon moment, sans qu'on le nomme — ex. **design-craft (.claude/skills/design-craft/) avant TOUTE création ou retouche d'UI** (son SKILL.md route vers craft-floor/composition/typo-couleur/motion selon le travail ; audit-redesign.md pour reprendre un existant) ; frontend-design en complément pour la direction ; code-review avant un push important ; verify/run pour vérifier un rendu. Annoncer brièvement le skill utilisé.
+
+### Demandes non techniques : skills d'intention (Demande JB 2026-09-18)
+Un éditeur novice (Claude Code desktop) formule en mots courants ; une seconde couche de skills traduit sa demande en travail technique.
+- **Deux couches, une seule source de règles.** Les wrappers de conventions (`seo-geo`, `images`…) : « À charger avant… », ils pointent vers `.claude/conventions/`. Les skills d'intention (des verbes : `editer-page`, `publier`…) : « À déclencher quand l'utilisateur dit… », ils portent la PROCÉDURE (traduire, faire, garde-fous, rendre compte, hors périmètre) et citent les règles sans les recopier. Une règle technique ou éditoriale qu'un skill d'intention voudrait poser monte d'abord dans CLAUDE.md ou `.claude/conventions/`. Contrôle en review : code-review.md § Documentation.
+- **Point d'entrée et table de routage** : `comprendre-demande` (demande floue, « que puis-je faire ? »).
+- **Rendu au novice** : français courant, ni jargon ni chemin de fichier ; un arbitrage passe par `AskUserQuestion`, options en langage courant.
+- **Aucun skill ne publie de lui-même** : `publier` récapitule en clair et attend un oui explicite (branche unique `main` = site public, conventions/deploy.md).
+- **Demande contraire à une règle** (ce fichier, § Projet compris) : procédure unique, `comprendre-demande` § Demande contraire à une règle. L'éditeur peut lever une règle, jamais au détour d'une édition : conséquences exposées, oui explicite, règle réécrite ici dans le même commit.
+- **Rayon d'impact** : une édition de contenu menée par un skill d'intention (texte, article, image, fiche) n'en écrit pas, le skill porte ses propres effets (pages touchées, cartes, fichiers générés) ; ce qui touche au code (`modifier-design`, développement) le garde (§ Avant de coder).
+- **Surcouche d'un site dérivé** : `.claude/skills/<nom>/projet.md`, que le SKILL.md lit en premier et qui prime sur lui ; les skills propres au site vivent dans leur propre dossier. Le socle ne livre aucun `projet.md` : un tirage du socle ne les touche jamais.
 
 ## Seule commande : /commit-push
 Le push passe TOUJOURS par `/commit-push` (lint + astro check + build = validation TS et frontmatter MD/MDX, puis commit + push). C'est le seul gate et la seule commande. Ne jamais committer .env, dist/, node_modules. Détail : .claude/commands/commit-push.md.

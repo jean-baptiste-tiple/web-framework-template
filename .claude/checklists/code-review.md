@@ -51,4 +51,5 @@
 
 ## Documentation
 - [ ] Un ADR qui révise une règle de CLAUDE.md ou d'une convention met à jour ce texte dans le même commit (l'ADR trace la décision, il ne la remplace pas)
+- [ ] Skill d'intention (CLAUDE.md § Demandes non techniques) : aucune règle technique ou éditoriale absente de CLAUDE.md et de `.claude/conventions/` (il cite, il ne légifère pas) ; ce qui est propre au site vit dans `projet.md`, jamais dans le SKILL.md livré par le socle
 - [ ] Erreur corrigée pendant le chantier = boucle « Après une erreur » passée (garde écrite ou observation dans docs/learnings.md)
