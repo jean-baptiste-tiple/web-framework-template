@@ -13,7 +13,7 @@ Une seule branche, `main`, synchronisée avec le site public : envoyer = mettre 
 1. `git status`, `git diff --stat` et `git log origin/main..HEAD` : fichiers modifiés et commits pas encore envoyés.
 2. Les traduire en changements visibles : « page X : titre modifié », « tout le site : lien ajouté au menu ». Aucun nom de fichier dans le récap destiné à l'utilisateur.
 3. Fichiers modifiés qui ne viennent pas de la demande en cours (travail d'une autre session ou d'un autre éditeur) : les nommer et demander s'ils partent aussi ; par défaut, ils restent.
-4. Fichier de contenu modifié dont `updatedDate` n'a pas bougé (CLAUDE.md § Règles contenu / SEO / GEO, règle 2) : le signaler, proposer la date du jour.
+4. Fichier de contenu dont `updatedDate` précède le jour où il a été modifié (CLAUDE.md § Règles contenu / SEO / GEO, règle 2) : le signaler, proposer ce jour-là. Comparer à la date de la modification (date du fichier), pas à celle du commit précédent : un fichier retouché le jour de sa dernière mise à jour garde légitimement la même date.
 
 ## 2. Obtenir un oui explicite
 `AskUserQuestion` : « Mettre en ligne maintenant : <récap> ? ». Un accord vague, ancien ou donné pour une autre modification ne compte pas ; dans le doute, redemander.
