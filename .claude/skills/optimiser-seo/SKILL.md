@@ -1,6 +1,6 @@
 ---
 name: optimiser-seo
-description: Rendre une page plus facile à trouver sur Google et à citer par les assistants IA (ChatGPT, Perplexity…) - titre et description affichés dans les résultats, résumé citable, FAQ à créer, fraîcheur. À déclencher quand l'utilisateur dit « améliore le référencement de… », « on n'apparaît pas sur Google », « optimise pour les IA », « ajoute une FAQ à… », « le titre dans Google est coupé ». Corriger une question d'une FAQ existante : editer-page.
+description: "Rendre une page plus facile à trouver sur Google et à citer par les assistants IA (ChatGPT, Perplexity…) - titre et description affichés dans les résultats, résumé citable, FAQ à créer, fraîcheur. À déclencher quand l'utilisateur dit « améliore le référencement de… », « on n'apparaît pas sur Google », « optimise pour les IA », « ajoute une FAQ à… », « le titre dans Google est coupé ». Corriger une question d'une FAQ existante : editer-page."
 ---
 
 # Optimiser le référencement d'une page

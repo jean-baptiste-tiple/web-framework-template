@@ -1,6 +1,6 @@
 ---
 name: creer-page
-description: Ajouter une nouvelle page au site - page d'information ou légale, landing de présentation d'un service, ou nouvelle fiche dans une série qui existe déjà (un produit, un membre de l'équipe ou du réseau). À déclencher quand l'utilisateur dit « ajoute une page… », « crée une landing pour… », « il nous faut une page… », « ajoute un nouveau <produit / membre / expert> ». Pour un article de blog : integrer-article ; un site peut avoir un skill dédié à une série (voir `projet.md`).
+description: "Ajouter une nouvelle page au site - page d'information ou légale, landing de présentation d'un service, ou nouvelle fiche dans une série qui existe déjà (un produit, un membre de l'équipe ou du réseau). À déclencher quand l'utilisateur dit « ajoute une page… », « crée une landing pour… », « il nous faut une page… », « ajoute un nouveau <produit / membre / expert> ». Pour un article de blog : integrer-article ; un site peut avoir un skill dédié à une série (voir `projet.md`)."
 ---
 
 # Créer une page

@@ -1,6 +1,6 @@
 ---
 name: integrer-article
-description: Intégrer un article au blog - texte déjà rédigé (collé, fichier Word ou PDF, Google Doc) ou à rédiger avec l'auteur - converti en page d'article propre avec image, résumé et relecture typographique, sans toucher au fond ; la mise en ligne reste à publier. À déclencher quand l'utilisateur dit « publie cet article », « ajoute ce billet au blog », « mets ce texte sur le blog », « écris un article sur… », ou partage un document à mettre sur le blog. Pour corriger un article déjà en ligne : editer-page.
+description: "Intégrer un article au blog - texte déjà rédigé (collé, fichier Word ou PDF, Google Doc) ou à rédiger avec l'auteur - converti en page d'article propre avec image, résumé et relecture typographique, sans toucher au fond ; la mise en ligne reste à publier. À déclencher quand l'utilisateur dit « publie cet article », « ajoute ce billet au blog », « mets ce texte sur le blog », « écris un article sur… », ou partage un document à mettre sur le blog. Pour corriger un article déjà en ligne : editer-page."
 ---
 
 # Intégrer un article de blog

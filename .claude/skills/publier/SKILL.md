@@ -1,6 +1,6 @@
 ---
 name: publier
-description: Mettre en ligne des modifications déjà faites dans le site - récapitulatif en clair de ce qui va changer sur le site public, confirmation explicite, contrôle qualité, puis envoi. À déclencher quand l'utilisateur dit « mets en ligne », « publie tout ça », « envoie », « c'est bon, on peut pousser », « déploie ». Texte ou document pas encore intégré au site (« publie cet article ») : integrer-article d'abord. Pour savoir si c'est déjà en ligne : statut-mise-en-ligne.
+description: "Mettre en ligne des modifications déjà faites dans le site - récapitulatif en clair de ce qui va changer sur le site public, confirmation explicite, contrôle qualité, puis envoi. À déclencher quand l'utilisateur dit « mets en ligne », « publie tout ça », « passe en production », « envoie », « c'est bon, on peut pousser », « déploie ». Site à plusieurs environnements (branches, TEST) : son `projet.md` dit ce que chaque mot vise. Texte ou document pas encore intégré au site (« publie cet article ») : integrer-article d'abord. Pour savoir si c'est déjà en ligne : statut-mise-en-ligne."
 ---
 
 # Publier (mettre en ligne)

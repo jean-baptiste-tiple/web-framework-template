@@ -18,6 +18,11 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-10-20 — Description de skill illisible : skill sans déclencheurs
+- **Erreur** : 5 skills (publier, creer-page, integrer-article, optimiser-seo, deploy) avaient une description YAML sans guillemets contenant « : ». Claude Code ne lisait pas le frontmatter et affichait la première ligne du corps : phrases déclencheuses perdues, sans message. Trouvé sur website-movinmotion.
+- **Règle écrite** : description entre guillemets doubles, ou sans « : » ni « # » ; `name` = nom du dossier. Contrôle machine : `scripts/check-skills.mjs`, appelé par `pnpm run lint`.
+- **Emplacement** : `scripts/check-skills.mjs`, `package.json` (lint), ce journal.
+
 ## 2026-09-16 — Un contraste mesuré sur une capture exige un anneau BORNÉ au conteneur
 - **Erreur** : sur le pilote Open Kairos, la sonde de contraste du câblage d'un chrome sombre échantillonnait le fond dans un anneau de 6 à 14 px autour de la boîte de l'encre, sans le borner. Sur une barre de 64 à 70 px de haut et un contrôle de 44 px, l'anneau sortait de la barre et ramassait la page crème qui défile dessous : un bouton de menu blanc, parfaitement lisible, sortait à 1,00:1, et la plaque d'or à 1,38:1. Trois faux échecs qui, pris pour argent comptant, auraient fait « corriger » un chrome sain. Anneau borné à la barre : 11,39 à 19,18:1.
 - **Règle écrite** : un relevé de contraste au pixel sur une capture échantillonne le fond dans un anneau borné à la boîte du conteneur qui porte réellement ce fond ; un ratio invraisemblablement bas se traite d'abord comme un défaut de sonde, jamais comme un défaut de rendu, et se confirme à l'œil sur la capture avant toute correction.

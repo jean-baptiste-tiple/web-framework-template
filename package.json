@@ -9,7 +9,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "lint": "eslint .",
+    "lint": "eslint . && node scripts/check-skills.mjs",
     "audit:lh": "node scripts/audit-lh.mjs",
     "astro": "astro"
   },
