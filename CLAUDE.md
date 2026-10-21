@@ -46,7 +46,7 @@ Contrôle en review : .claude/checklists/code-review.md § Sobriété.
 
 ## Délégation à des sous-agents (Demande JB 2026-09-18)
 La session écrit elle-même, quel que soit son modèle ; elle délègue quand un lot est réellement parallélisable, pas par principe.
-- **Plafond : 6 `Agent` en vol simultanément, jamais plus** (compte contrôlable dans la trace). Au-delà, le plafond de crédits de session tombe d'un coup et tue TOUS les lots en cours, qui restent à moitié faits (2026-09-13 : 13 lots perdus). Lancer une vague, attendre ses retours, lancer la suivante.
+- **Plafond : 6 agents en vol simultanément au total, jamais plus, la session ou le sous-agent qui les lance compris** (Demande JB 2026-10-21 : un sous-agent qui délègue en lance au plus 5 ; compte contrôlable dans la trace). Au-delà, le plafond de crédits de session tombe d'un coup et tue TOUS les lots en cours, qui restent à moitié faits (2026-09-13 : 13 lots perdus). Lancer une vague, attendre ses retours, lancer la suivante.
 - **Un sous-agent reçoit la méthode, pas seulement la tâche** : mode/échelle annoncés, conventions .claude/conventions/ routées à charger, critères de succès, interdiction de commiter, **interdiction de trancher un arbitrage** (il s'arrête et remonte les options à la session principale, qui pose la question via `AskUserQuestion`), **interdiction de tuer ou de modifier un processus, un fichier ou un dépôt qu'il n'a pas lancé ou qui est hors de son périmètre** (un `Stop-Process chrome.exe` global ferme le navigateur de l'utilisateur ; on filtre sur le processus qu'on a soi-même créé, ou on s'arrête et on remonte). Ces trois interdictions figurent dans le prompt de chaque sous-agent. Le commit reste à la session principale, via `/commit-push`.
 
 ## Projet
