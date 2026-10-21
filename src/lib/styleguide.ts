@@ -394,7 +394,7 @@ async function buildGallery() {
     const type = mod.schema?.shape?.type?._def?.value as string | undefined;
     if (!type) throw new Error(`${schemaFile} : \`schema\` sans discriminant \`type\` littéral.`);
     if (!(type in SECTION_REGISTRY)) {
-      throw new Error(`${schemaFile} : la section « ${type} » n'est pas enregistrée dans src/lib/sections.ts.`);
+      throw new Error(`${schemaFile} : la section « ${type} » n'est pas enregistrée dans src/lib/section-schemas.ts.`);
     }
     const file = schemaFile.replace(/\.schema\.ts$/, '.astro');
     sectionFiles.set(file, type);

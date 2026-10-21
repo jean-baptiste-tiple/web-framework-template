@@ -31,7 +31,7 @@ d'y chercher. Rien ne se modifie dans le kit pendant un chantier client, sauf ma
 - Source : `catalog/inventory/<t>.json` donne la page ; le code est dans `sources/<t>/<t>-astro/src/`
   (page ou composant). Capture d'origine : `catalog/screenshots/<t>/<id>.jpg`.
 - Cible : `src/components/sections/<famille>/<Variante>.astro` + `<Variante>.schema.ts` (type
-  `<famille>.<variante>`, prop unique `section`), enregistrés dans `src/lib/sections.ts`
+  `<famille>.<variante>`, prop unique `section`), enregistrés dans `src/lib/section-schemas.ts` (schéma) et `src/lib/sections.ts`
   (SECTION_REGISTRY) ; `export const demo` (nom qui décrit la forme + `examples`, un cas libellé par variante) dans le `.schema.ts`
   (obligatoire : lint et build cassent sinon) + registry dans le même commit ; avant de porter, vérifier
   dans la bibliothèque /styleguide qu'aucune section du site ne fait déjà la même chose (sinon

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-21 · Registre des sections : schémas séparés des composants (ADR 0004)
+- **Défaut corrigé** (latent dans le modèle, vu sur Movinmotion) : `content.config.ts` importait `src/lib/sections.ts`, donc tous les composants de section ; dès qu'une section a un `<style>`, `pnpm dev` répondait 500 sur toutes les pages (« reading 'get' », « Content config not loaded »), build intact.
+- **`src/lib/section-schemas.ts`** (nouveau) : `SECTION_SCHEMAS`, `sectionSchema` et les types ; seul import du registre dans `content.config.ts`. **`src/lib/sections.ts`** : composants dans un `Record<SectionType, …>`, fusionnés en `SECTION_REGISTRY` (même forme), types réexportés ; SectionRenderer et /styleguide inchangés. Ajouter une section = une entrée dans chacun des deux fichiers.
+- **Contrôle** : `scripts/check-content-config.mjs` dans `pnpm run lint` (graphe des imports depuis `content.config.ts`, aucun `.astro`, chaîne affichée en cas d'échec).
+- **Règles** : component-registry.md § Sections, content-patterns.md, skill section-catalog.
+- **Vérifié** : `pnpm dev` 200 sur `/`, `/audit-energetique/`, `/blog/`, `/blog/premier-article/`, `/a-propos/`, `/styleguide/` (y compris avec un `<style>` temporaire dans une section, 500 avant) ; lint et build verts ; HTML de `dist` identique octet pour octet ; `VERCEL_ENV=production` : aucune page `styleguide`.
+- **Porter sur un site dérivé** : créer `src/lib/section-schemas.ts` depuis les schémas de son registre, réduire `sections.ts` aux composants, pointer `content.config.ts` sur `@/lib/section-schemas`, copier `scripts/check-content-config.mjs` et l'ajouter au script `lint`.
+
 ## 2026-10-21 · Bibliothèque : bloc emballé, menu dans l'ordre d'une page, pastilles par leur composant (ADR 0003, révision du 21/10 soir)
 - **`wraps`** : une section qui ne fait qu'emballer un composant le déclare dans son `demo` (`wraps: '<chemin sous src/components>'`) ; la galerie ne montre qu'une fiche, celle de la section, et les pages qui rendent le bloc directement s'ajoutent à son « Utilisé sur ». Contrôlé au lint (chemin, import du bloc par la section, un seul emballeur, pas de démo du bloc) et au build. Aucun cas dans le modèle : rien ne change dans sa galerie.
 - **Ordre du menu** : Fondations, Éléments, autres dossiers, puis haut et bas de page, haut de page, offre, preuve, équipe, contenu, conversion ; réglé par l'ordre des clés de `FOLDER_LABELS` / `SECTION_FAMILY_LABELS` (`src/lib/styleguide.ts`), libellés `hero` et `people` ajoutés. Un sous-composant de `sections/<famille>/` est rangé avec sa famille. Menu du modèle inchangé (ses familles étaient déjà dans cet ordre).

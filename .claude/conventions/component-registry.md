@@ -160,10 +160,20 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
 ## Sections (src/components/sections/&lt;famille&gt;/)
 Une variante = `<Variante>.astro` + `<Variante>.schema.ts` à côté (fragment Zod dont le `type` vaut
 `<famille>.<variante>`, taxonomie : C:\apps\web-kit\catalog\taxonomy.md), + UNE entrée dans
-`src/lib/sections.ts`. Le registre est la source unique : `content.config.ts` en dérive l'union
-discriminée `sections` (landings ET pages), SectionRenderer y lit le composant, la bibliothèque rend
+`src/lib/section-schemas.ts` (schéma) ET UNE dans `src/lib/sections.ts` (composant ; le
+`Record<SectionType, …>` casse `astro check` si elle manque). Le registre est la source unique :
+`content.config.ts` dérive l'union discriminée `sections` (landings ET pages) de `section-schemas.ts`,
+SectionRenderer lit le composant dans `SECTION_REGISTRY` (sections.ts), la bibliothèque rend
 l'`example` du `demo` exporté par le `.schema.ts` (lint et build cassent s'il manque). Props : un seul
 prop `section`, typé depuis le schéma.
+
+**`content.config.ts` n'importe jamais un `.astro`, ni directement ni via un module qui le fait**
+(ADR 0004) : il importe `section-schemas.ts` et les `*.schema.ts`, jamais `sections.ts`. Sinon
+`pnpm dev` répond 500 sur toutes les pages dès qu'un composant atteint a un `<style>` (« reading
+'get' », « Content config not loaded »), alors que le build passe. Un `.schema.ts` n'importe donc
+aucun `.astro` (`import type` permis : effacé à la compilation). Contrôle machine :
+`scripts/check-content-config.mjs` (dans `pnpm run lint`) suit le graphe des imports depuis
+`content.config.ts` et échoue sur tout `.astro` atteint, chaîne affichée.
 
 **Chrome (`chrome: true` au registre)** : header, footer et barre d'annonce sont des variantes de
 section comme les autres (schéma + prop `section` + `demo` dans le schéma), mais rendues UNE fois par

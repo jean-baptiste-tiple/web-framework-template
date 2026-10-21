@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { sectionSchema } from '@/lib/sections';
+import { sectionSchema } from '@/lib/section-schemas';
 
 // --- Blocs réutilisables -------------------------------------------------
 
@@ -87,7 +87,7 @@ const landings = defineCollection({
           path: ['imageAlt'],
         }),
       // Page-builder léger : chaque section est mappée à un composant par le
-      // registre src/lib/sections.ts (source unique schéma + composant).
+      // registre src/lib/sections.ts (schéma : section-schemas.ts, seul importé ici).
       sections: z.array(sectionSchema).default([]),
       // Données pour le JSON-LD (Service ou Product).
       schema: z

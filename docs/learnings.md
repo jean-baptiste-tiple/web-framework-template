@@ -18,6 +18,11 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-10-21 — `pnpm dev` en 500 : un .astro importé par la config des collections
+- **Erreur** : `content.config.ts` importait le registre des sections, qui importait tous les composants `.astro`. Sur Movinmotion (19/10), `pnpm dev` répondait 500 sur toutes les pages (« reading 'get' », « Content config not loaded ») ; le build passait, défaut invisible au gate. Latent dans le modèle (aucune section avec `<style>`, dev en 200) : un `<style>` ajouté à une section suffisait à le déclencher (500 partout).
+- **Règle écrite** : `content.config.ts` n'importe jamais un `.astro`, ni directement ni via un module qui le fait ; schémas des sections séparés des composants (`src/lib/section-schemas.ts`). Contrôle machine : `scripts/check-content-config.mjs` (graphe d'imports, dans `pnpm run lint`).
+- **Emplacement** : `docs/decisions/0004-registre-sections-schemas-separes.md`, `.claude/conventions/component-registry.md § Sections`, `.claude/conventions/content-patterns.md`, `scripts/check-content-config.mjs`.
+
 ## 2026-10-21 — La borne de hauteur soignait le symptôme : la bibliothèque restait inutilisable
 - **Erreur** : contre la démo en `vh` qui faisait grandir la bibliothèque (entrée suivante), une borne de hauteur a été posée (1600 / 2000 px) sans casser la boucle « le cadre prend la hauteur du contenu, le contenu prend la hauteur du cadre ». Sur un site dérivé de 107 fiches, toutes sur une page, la barre de défilement grandissait encore 1 à 2 minutes, à mesure que chaque iframe paresseuse montait à la borne (constaté par JB).
 - **Règle écrite** : une taille ne se déduit jamais d'une mesure d'un contenu qui dépend d'elle ; stabilité contrôlée par la hauteur du document à 5 s puis 60 s. Bibliothèque : une fiche par page, cadre à la hauteur libre de l'écran, aucun message de hauteur.
