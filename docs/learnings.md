@@ -18,6 +18,11 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-10-21 — Une démo en `vh` faisait grandir la bibliothèque sans fin
+- **Erreur** : chaque aperçu de /styleguide prend la hauteur que lui annonce sa page isolée ; un composant dimensionné en `vh` grandit avec son cadre, qui grandit avec lui. Constaté sur un site dérivé (Open Kairos : héros en 68vh, sections du template en 100vh) : la page montait à 28 millions de pixels, la capture plantait. Latent ici tant qu'aucun composant du socle n'est en `vh`.
+- **Règle écrite** : hauteur d'aperçu bornée dans la page (1600 px ordinateur, 2000 px téléphone) ; au-delà, l'aperçu défile dans son cadre et « Ouvrir seul » montre tout.
+- **Emplacement** : `src/pages/styleguide/[...galerie].astro`.
+
 ## 2026-10-21 — Un contrôle qui exclut l'outillage de son auteur masque ses propres doublons
 - **Erreur** : au réglage du contrôle « groupe de classes recopié », exclure la galerie /styleguide (outillage) masquait une recopie du squelette d'Accordion (chevron, `<details>`) écrite dans la galerie le jour même.
 - **Règle écrite** : aucune (observation). Périmètre retenu : seuls les `*.demo.astro` sont exclus, la galerie est contrôlée comme le reste ; sommaire migré sur Accordion.

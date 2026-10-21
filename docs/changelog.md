@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-21 — Bibliothèque : hauteur des aperçus bornée
+- `src/pages/styleguide/[...galerie].astro` : la hauteur d'un aperçu est bornée (1600 px ordinateur, 2000 px téléphone). Un composant en `vh` faisait grandir son cadre sans fin sur un site dérivé (docs/learnings.md, 2026-10-21) ; au-delà de la borne, l'aperçu défile dans son cadre.
+
 ## 2026-10-21 — Bibliothèque des composants vivante (/styleguide), absente de la production (ADR 0003)
 Demande JB : une galerie de TOUS les composants, à jour automatiquement, utile au développeur et aux éditeurs ; les règles forcent son usage.
 - **Démos colocalisées** : `<Nom>.demo.astro` pour les 8 composants affichables de `ui/` (fiche `export const demo: DemoDoc` : nom français, usage, phrase à dire) ; `export const demo` (fiche + `example`) dans les 6 `.schema.ts` de sections. `DemoCase.astro` (outillage) pour libeller les variantes.

@@ -363,6 +363,12 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
   type Mode = keyof typeof WIDTH;
   let mode: Mode = 'desktop';
 
+  // Hauteur d'aperçu BORNÉE (2026-10-21, constaté sur un site dérivé) : un
+  // composant en `vh` (héros en 68vh, section en 100vh) grandit avec son cadre, le
+  // cadre grandit avec lui, et la page montait à 28 millions de pixels. Au-delà de
+  // la borne, l'aperçu défile dans son cadre ; « Ouvrir seul » montre tout.
+  const MAX_HEIGHT = { desktop: 1600, phone: 2000 } as const;
+
   const frames = [...document.querySelectorAll<HTMLIFrameElement>('[data-sg-stage] iframe')];
 
   // Le cadre rend la page isolée à sa vraie largeur (donc ses vrais points de
@@ -373,7 +379,7 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
     if (!viewport || !stage) return;
     const width = WIDTH[mode];
     const scale = Math.min(1, viewport.clientWidth / width);
-    const height = Number(frame.dataset.height ?? 240);
+    const height = Math.min(Number(frame.dataset.height ?? 240), MAX_HEIGHT[mode]);
     frame.style.width = `${width}px`;
     frame.style.height = `${height}px`;
     frame.style.transform = `scale(${scale})`;
