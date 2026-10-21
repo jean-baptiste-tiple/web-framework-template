@@ -6,13 +6,14 @@
 3. Contenu en collections typées (src/content.config.ts) ; présentation séparée (composants/tokens).
 4. Routing : /blog/* (blog), [...slug] racine (landings + pages). Pas de second catch-all racine.
 5. Interactivité = par défaut AUCUNE (statique) ; sinon <script> vanilla dans le .astro. Îlots Solid = starter opt-in, seulement si nécessaire.
+6. Publication (ADR 0002) : `main` = TEST ; la production = le commit marqué par le tag `production`, construite uniquement par l'action « Mise en ligne » (.github/workflows/production.yml, reconstruction quotidienne à 04:00 UTC). Articles listés uniquement par src/lib/blog.ts (articles programmés absents de la production).
 
 ## Arbre
 - src/pages : routes (index, blog/, blog/[...slug], [...slug], contact, 404) + routes générées (rss.xml, sitemap.xml, robots.txt, llms.txt)
 - src/content : blog/ pages/ landings/ settings/ + content.config.ts
 - src/layouts : BaseLayout
 - src/components : ui/ seo/ landing/
-- src/lib : site.ts (valide settings/site.json par Zod, URL depuis astro.config), seo.ts, authors.ts
+- src/lib : site.ts (valide settings/site.json par Zod, URL depuis astro.config), seo.ts, authors.ts, blog.ts (liste des articles : brouillons, articles programmés)
 - src/styles : global.css (tokens Tailwind 4)
 - public : favicon, og-default.png, logo.png (placeholders à remplacer)
 

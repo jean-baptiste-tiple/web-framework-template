@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { getIndexablePosts } from '@/lib/blog';
 import { SITE } from '@/lib/site';
 
 // Sitemap custom (remplace @astrojs/sitemap) pour émettre un <lastmod> par
@@ -13,10 +14,7 @@ const BESPOKE: { path: string; lastmod?: Date }[] = [
 const day = (d: Date) => d.toISOString().slice(0, 10);
 
 export async function GET() {
-  const blog = await getCollection(
-    'blog',
-    ({ data }) => !data.draft && !data.seo?.noindex,
-  );
+  const blog = await getIndexablePosts();
   const pages = await getCollection('pages', ({ data }) => !data.seo?.noindex);
   const landings = await getCollection(
     'landings',

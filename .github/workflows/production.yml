@@ -1,0 +1,64 @@
+name: Mise en ligne
+
+# Seule voie vers la production (ADR 0002) : `main` est TEST, la production est
+# le commit marqué par le tag `production`.
+# - Déclenchée à la main (skill publier) : construit la production depuis `ref`
+#   (main par défaut), puis déplace le tag `production` sur ce commit et pose un
+#   tag daté `mise-en-ligne-AAAAMMJJ-HHMM` (historique, retour en arrière).
+# - Chaque matin à 04:00 UTC (6 h à Paris l'été, 5 h l'hiver) : reconstruit la
+#   production depuis le tag `production`, pour faire paraître les articles
+#   programmés (pubDate du jour, src/lib/blog.ts).
+# Réglages du dépôt GitHub (bootstrap.md) : secret VERCEL_TOKEN (jeton du compte
+# Vercel), variables VERCEL_ORG_ID et VERCEL_PROJECT_ID (.vercel/project.json
+# après `vercel link`, ou réglages du projet Vercel).
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Commit ou tag à mettre en production (vide : main)"
+        required: false
+        default: main
+  schedule:
+    - cron: '0 4 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  deployer:
+    # Dépôt sans projet Vercel (le socle lui-même, un site pas encore branché) :
+    # la reconstruction planifiée est sautée au lieu d'échouer chaque matin.
+    if: github.event_name != 'schedule' || vars.VERCEL_PROJECT_ID != ''
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Contrôler les réglages
+        run: |
+          for v in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!v}" ]; then
+              echo "::error::$v absent des réglages du dépôt (secret ou variable, bootstrap.md)"
+              exit 1
+            fi
+          done
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'refs/tags/production' || inputs.ref }}
+          fetch-depth: 0
+      - name: Construire et déployer la production
+        run: npx --yes vercel@62.7.0 deploy --prod --yes --token "$VERCEL_TOKEN"
+      - name: Marquer le commit mis en ligne
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          DATE_TAG="mise-en-ligne-$(date -u +%Y%m%d-%H%M)"
+          git tag -f production HEAD
+          git tag "$DATE_TAG" HEAD
+          git push -f origin refs/tags/production
+          git push origin "refs/tags/$DATE_TAG"

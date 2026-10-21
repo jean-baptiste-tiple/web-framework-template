@@ -12,3 +12,6 @@ node_modules/
 
 # traces Playwright MCP des agents
 .playwright-mcp/
+
+# Copies de travail temporaires (git worktree : fusions dans TEST, sous-agents)
+.claude/worktrees/

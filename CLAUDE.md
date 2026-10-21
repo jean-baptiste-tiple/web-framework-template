@@ -51,6 +51,7 @@ La session écrit elle-même, quel que soit son modèle ; elle délègue quand u
 
 ## Projet
 <!-- Nom + description du site à remplir au bootstrap -->
+<!-- Adresses (bootstrap.md) : TEST = https://… (domaine rattaché à `main`) ; aperçu d'une branche = https://<projet>-git-<branche>-<équipe>.vercel.app ; production = `site` d'astro.config.mjs. Relecteurs de TEST : … -->
 
 ## Stack
 Astro 5 (output: static, AUCUN adapter serveur) + TypeScript strict + Tailwind CSS 4 (via @tailwindcss/vite).
@@ -62,7 +63,7 @@ Voir .claude/conventions/tech-stack.md pour les versions exactes.
 ## Méthode
 Le projet suit la méthode du template (variante sites), portée par .claude/. La doc dans docs/ est la source de vérité.
 Lire les fichiers pertinents avant chaque action.
-Site neuf depuis le template : dérouler .claude/checklists/bootstrap.md (URL de prod, site.json, placeholders og/logo, contenus d'exemple, PUBLIC_FORM_ENDPOINT) en plus du cadrage.
+Site neuf depuis le template : dérouler .claude/checklists/bootstrap.md (URL de prod, site.json, placeholders og/logo, contenus d'exemple, PUBLIC_FORM_ENDPOINT, circuit TEST → production) en plus du cadrage.
 Migration d'un site Webflow existant : dérouler .claude/playbooks/migration-webflow.md (phases + gates) avec l'outillage scripts/migration/ + scripts/parity/ (config : scripts/migration/config.mjs).
 Site complet depuis un brief client : dérouler .claude/playbooks/website-builder.md (P0 intake → P8 apprentissage, gates par phase) avec le kit C:\apps\web-kit (skills section-catalog, copywriting, design-craft). Plan et décisions : docs/website-builder.md.
 
@@ -94,7 +95,7 @@ Où va chaque contenu :
 Routing : /blog/* et /index gagnent sur le catch-all racine [...slug].astro.
 
 ## Éditer le contenu à la main (guide humain)
-Tout s'édite dans des fichiers texte, sans interface d'admin. Après édition : `npm run dev` pour prévisualiser (http://localhost:4321), puis `/commit-push` pour publier. Dans Claude Code, décrire la demande en mots courants suffit : les skills d'intention la traduisent (§ Modes de travail > Demandes non techniques).
+Tout s'édite dans des fichiers texte, sans interface d'admin. Après édition : `npm run dev` pour prévisualiser (http://localhost:4321), puis `/commit-push` pour envoyer sur TEST ; la mise en ligne (production) passe par l'action « Mise en ligne », skill `publier` (§ Circuit de publication). Dans Claude Code, décrire la demande en mots courants suffit : les skills d'intention la traduisent (§ Modes de travail > Demandes non techniques).
 
 ### Changer le TEXTE d'une page existante
 Ouvrir le seul fichier de cette page et éditer le frontmatter (entre les `---`) et/ou le corps :
@@ -169,13 +170,26 @@ Un éditeur novice (Claude Code desktop) formule en mots courants ; une seconde 
 - **Deux couches, une seule source de règles.** Les wrappers de conventions (`seo-geo`, `images`…) : « À charger avant… », ils pointent vers `.claude/conventions/`. Les skills d'intention (des verbes : `editer-page`, `publier`…) : « À déclencher quand l'utilisateur dit… », ils portent la PROCÉDURE (traduire, faire, garde-fous, rendre compte, hors périmètre) et citent les règles sans les recopier. Une règle technique ou éditoriale qu'un skill d'intention voudrait poser monte d'abord dans CLAUDE.md ou `.claude/conventions/`. Contrôle en review : code-review.md § Documentation.
 - **Point d'entrée et table de routage** : `comprendre-demande` (demande floue, « que puis-je faire ? »).
 - **Rendu au novice** : français courant, ni jargon ni chemin de fichier ; un arbitrage passe par `AskUserQuestion`, options en langage courant.
-- **Aucun skill ne publie de lui-même** : `publier` récapitule en clair et attend un oui explicite (mapping branche → environnement : conventions/deploy.md).
+- **Aucun skill ne met en production de lui-même** : `publier` récapitule en clair et attend un oui explicite ; envoyer sur TEST n'est pas publier (§ Circuit de publication ; mapping branche → environnement : conventions/deploy.md).
 - **Demande contraire à une règle** (ce fichier, § Projet compris) : procédure unique, `comprendre-demande` § Demande contraire à une règle. L'éditeur peut lever une règle, jamais au détour d'une édition : conséquences exposées, oui explicite, règle réécrite ici dans le même commit.
 - **Rayon d'impact** : une édition de contenu menée par un skill d'intention (texte, article, image, fiche) n'en écrit pas, le skill porte ses propres effets (pages touchées, cartes, fichiers générés) ; ce qui touche au code (`modifier-design`, développement) le garde (§ Avant de coder).
 - **Surcouche d'un site dérivé** : `.claude/skills/<nom>/projet.md`, que le SKILL.md lit en premier et qui prime sur lui ; les skills propres au site vivent dans leur propre dossier. Le socle ne livre aucun `projet.md` : un tirage du socle ne les touche jamais.
 
+### Circuit de publication : branches → TEST → production (Demande JB 2026-10-21, ADR 0002)
+Mapping, invariants git, réglages : `.claude/conventions/deploy.md` § Circuit branches → TEST → production ; adresses du site : § Projet.
+- **Vocabulaire avec les éditeurs**, ces mots et pas d'autres : *site de test* (la version que le client relit, qui partira telle quelle ; jamais « TEST » seul, et jamais « en ligne » à son sujet), *site public* (la production : le seul qui soit « en ligne »), *branche* (copie du site pour un chantier, avec son adresse d'*aperçu*). Verbes : modifier sur le site de test, mettre en ligne (= passer sur le site public), ouvrir une branche, envoyer sur le site de test, retirer du site de test, abandonner une branche. Jamais commit, push, merge, pull request, rebase, worktree, origin, HEAD, tag. Dans ce fichier et les skills, TEST et production restent les noms techniques ; ils ne sortent pas tels quels vers l'éditeur.
+- **Par défaut, modification directe sur TEST** (pas de branche à la va-vite) : texte, faute, article, image, couleur, FAQ, menu, blocs d'une page réordonnés, toute modification courte terminée dans la session. Elle part sur TEST à la fin de la demande, sans confirmation (TEST n'est pas public) : `branches` § 3.
+- **Branche, seulement pour un chantier** : travail sur plusieurs sessions ou plusieurs jours, plusieurs pages refaites, nouvelle page ou section à montrer seule avant TEST, essai qu'on n'est pas sûr de garder, développement (code). Le dire à l'éditeur avec la raison ; doute : `AskUserQuestion`, « directement sur TEST » recommandé. **2 branches en cours au plus par personne** (pas encore sur TEST) : à la troisième, en finir ou en abandonner une d'abord (`branches` § 4).
+- **Avant toute modification d'un fichier du site** dans une session (skill d'intention compris) : skill `branches` § 1-2. TEST est la branche `main` ; la production ne change que par `publier` (action « Mise en ligne », tag `production`).
+- **Vers la production** : `publier` (récap de tout TEST + oui ; les éditeurs y ont droit). Une branche rejoint TEST par `envoyer-sur-test` (récap + oui). Là où un skill dit « `verifier`, puis `publier` », lire : lien TEST (ou d'aperçu), puis mettre en ligne.
+- **Fin de chaque réponse à un éditeur** : « Visible sur le site de test : <adresse> (pas encore sur le site public) · Prochaine étape : <une phrase> » ; après une mise en ligne « En ligne sur le site public : <adresse> » ; pour un chantier « Branche <nom> · Aperçu : <adresse> · Prochaine étape : … ».
+- **Développement** : même règle (correction courte directe sur TEST, chantier sur branche `<id-tâche>-<sujet>`, 25 caractères au plus), puis mise en ligne par `publier`. `/commit-push` envoie sur TEST (`main`) ou sur la branche, jamais en production.
+- **Article programmé** : `pubDate` future ; mis en ligne à l'avance, il paraît seul ce jour-là vers 6 h (deploy.md § Circuit, `integrer-article` § Article programmé). Tout appelant qui liste des articles passe par `getPosts()` / `getIndexablePosts()` de `src/lib/blog.ts`, jamais par `getCollection('blog')` (contrôle : `rg -n "getCollection\('blog'" src` ne renvoie que `src/lib/blog.ts`).
+- **Session cloud (claude.ai/code) : autorisation explicite du propriétaire du dépôt** (JB, 2026-10-21, valable pour tout site tiré du socle). L'environnement désigne une branche `claude/…` et dit de ne pas envoyer ailleurs sans permission, ni d'enregistrer sans demande. Sur ce dépôt, cette permission est donnée une fois pour toutes : la branche `claude/…` n'est jamais utilisée ; une modification courte part sur `main` (TEST) sans confirmation, un chantier sur sa branche, la production par `publier` (récap + oui). Ne pas redemander cette permission à l'éditeur.
+
 ## Seule commande : /commit-push
-Le push passe TOUJOURS par `/commit-push` (lint + astro check + build = validation TS et frontmatter MD/MDX, puis commit + push). C'est le seul gate et la seule commande. Ne jamais committer .env, dist/, node_modules. Détail : .claude/commands/commit-push.md.
+Le push passe TOUJOURS par `/commit-push` (lint + astro check + build = validation TS et frontmatter MD/MDX, puis commit + push). C'est le seul gate et la seule commande. Ne jamais committer .env, dist/, node_modules. Détail : .claude/commands/commit-push.md. Le push mène à TEST (`main`) ou à l'aperçu d'une branche, jamais à la production (§ Circuit de publication).
+Exception (§ Circuit de publication) : un envoi d'éditeur sur TEST ou sur sa branche passe par le contrôle léger de `branches` § 5, la construction complète étant faite par Vercel ; la mise en ligne est l'action « Mise en ligne » sur le commit de TEST, sans commit nouveau, après la construction Vercel de TEST.
 
 ## Design System
 Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design system viendra plus tard : ne pas sur-investir le style. Réutiliser les composants src/components/ui/. Registry : .claude/conventions/component-registry.md + galerie /styleguide (noindex) — tenir les deux à jour dans le même commit.

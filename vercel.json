@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "routes": [
+    { "src": "/(.*)", "missing": [{ "type": "host", "value": "example.com" }], "headers": { "X-Robots-Tag": "noindex, nofollow" }, "continue": true },
     { "src": "/(.*)", "headers": { "Vary": "Accept" }, "continue": true },
     { "src": "^/about/?$", "status": 308, "headers": { "Location": "/a-propos" } },
     { "src": "^/privacy/?$", "status": 308, "headers": { "Location": "/politique-de-confidentialite" } },

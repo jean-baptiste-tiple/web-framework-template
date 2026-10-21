@@ -1,13 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Container from '@/components/ui/Container.astro';
 import Section from '@/components/ui/Section.astro';
 import Card from '@/components/ui/Card.astro';
+import { getPosts } from '@/lib/blog';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
-);
+const posts = await getPosts();
 
 const meta = {
   title: 'Blog',

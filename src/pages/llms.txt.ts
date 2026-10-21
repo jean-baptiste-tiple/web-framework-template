@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { getIndexablePosts } from '@/lib/blog';
 import { SITE } from '@/lib/site';
 
 // llms.txt (GEO) généré au build depuis les collections : titres + descriptions
@@ -12,9 +13,7 @@ export async function GET() {
     'landings',
     ({ data }) => !data.seo?.noindex,
   );
-  const blog = (
-    await getCollection('blog', ({ data }) => !data.draft && !data.seo?.noindex)
-  ).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+  const blog = await getIndexablePosts();
 
   const lines = [
     `# ${SITE.name}`,

@@ -14,7 +14,7 @@ description: "Intégrer un article au blog - texte déjà rédigé (collé, fich
 
 ## Faire
 1. Slug : kebab-case tiré du titre, court, sans accents ; vérifier qu'aucun article ne l'utilise.
-2. Frontmatter : `title` (≤ 60 car. ; titre plus long gardé à l'écran → `seo.title` court), `description` (140-160 car.), `pubDate` (date du jour, sauf date donnée), `author` (clé de `src/lib/authors.ts` ; auteur inconnu → demander, puis ajouter l'entrée), `tldr` (1-2 phrases factuelles, citables), et ce que le schéma exige en plus.
+2. Frontmatter : `title` (≤ 60 car. ; titre plus long gardé à l'écran → `seo.title` court), `description` (140-160 car.), `pubDate` (date du jour, sauf date donnée ; date future : § Article programmé), `author` (clé de `src/lib/authors.ts` ; auteur inconnu → demander, puis ajouter l'entrée), `tldr` (1-2 phrases factuelles, citables), et ce que le schéma exige en plus.
 3. Corps : intertitres éventuels en `##` (jamais `#` : le titre est déjà rendu en H1) ; paragraphes courts ; listes et gras conservés. Ni titre, ni ligne auteur ou date, ni résumé répétés : le gabarit les affiche.
 4. Typographie française appliquée (apostrophe ’, guillemets « », espace insécable avant « : ; ! ? » ; règles : `copywriting`, et `content-patterns` si le site en pose) ; fautes évidentes corrigées, le reste signalé. Tout est listé dans le compte rendu.
 5. Avant d'écrire, une seule question `AskUserQuestion` : liens vers 2-3 pages du site (choix multiple, posés sur des mots de l'auteur) et FAQ (CLAUDE.md § Règles contenu, règle 4 ; questions venues de l'auteur). Ajout que le site impose (`projet.md`) : l'appliquer et le signaler.
@@ -24,6 +24,12 @@ description: "Intégrer un article au blog - texte déjà rédigé (collé, fich
 - Le fond appartient à l'auteur : ni ajout, ni coupe, ni reformulation sans accord explicite.
 - Auteur, chiffre ou source manquants : les demander, jamais les inventer.
 - Rédaction : CLAUDE.md § Règles contenu / SEO / GEO et § Projet ; demande contraire à une règle : `comprendre-demande` § Demande contraire à une règle.
+
+## Article programmé (« publie-le le 12 novembre »)
+- `pubDate` = le jour voulu, sans heure (`2026-11-12`). Mécanisme : `.claude/conventions/deploy.md` § Publication programmée. L'article est visible tout de suite sur TEST (date future affichée), absent de la production jusqu'à ce jour, où il paraît seul vers 6 h (5 h l'hiver) : page, cartes, flux RSS, sitemap, llms.txt.
+- Il doit être mis en ligne (`publier`) avant ce jour-là ; le dire dans le compte rendu (« À mettre en ligne quand vous voulez avant le 12/11 : il restera caché jusque-là »).
+- Lien vers lui depuis une autre page : il mènerait à une page absente jusqu'au jour J ; ne pas en ajouter avant, le dire.
+- Changer la date d'un article déjà paru : non (il disparaîtrait de la production jusqu'à la nouvelle date) ; c'est `updatedDate` qui dit la mise à jour.
 
 ## Rendre compte
 Titre, adresse de la page, résumé, image placée, corrections faites. Puis `verifier` (aperçu) ; `publier` seulement après validation de l'aperçu.

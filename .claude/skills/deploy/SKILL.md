@@ -4,4 +4,4 @@ description: "À charger avant tout travail technique de déploiement - config C
 ---
 
 Ce skill est un pointeur : la règle vit dans `.claude/conventions/deploy.md` (source unique).
-Lis ce fichier MAINTENANT. Rappel dur : le mapping branche → environnement est déclaré dans ce fichier (défaut du socle : `main` est le site public) ; mise en production = validation humaine explicite sur un récap de ce qui part (skill `publier`).
+Lis ce fichier MAINTENANT. Rappel dur : le mapping branche → environnement est déclaré dans ce fichier (défaut du socle : `main` est TEST, la production est le tag `production` posé par l'action « Mise en ligne ») ; mise en production = validation humaine explicite sur un récap de ce qui part (skill `publier`).

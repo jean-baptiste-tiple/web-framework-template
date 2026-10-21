@@ -19,6 +19,15 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      # Images déjà optimisées gardées d'une exécution à l'autre (cache d'images
+      # d'Astro, node_modules/.astro/assets) : sans lui, toutes les variantes sont
+      # régénérées à chaque fois. Pas tout node_modules/.astro :
+      # data-store.json y garderait des pages supprimées.
+      - uses: actions/cache@v4
+        with:
+          path: node_modules/.astro/assets
+          key: astro-${{ runner.os }}-${{ hashFiles('src/**/*.png', 'src/**/*.jpg', 'src/**/*.jpeg', 'src/**/*.webp', 'src/**/*.avif', 'astro.config.mjs', 'pnpm-lock.yaml') }}
+          restore-keys: astro-${{ runner.os }}-
       # astro check (types + frontmatter Zod) puis build statique : attrape
       # frontmatter invalide, lien de collection cassé, erreur de génération.
       - run: pnpm build

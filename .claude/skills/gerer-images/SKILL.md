@@ -16,6 +16,10 @@ Trouver le champ qui porte l'image : `heroImage` d'un article, `hero.image` d'un
 3. `alt` obligatoire : il décrit ce que montre l'image, pas le sujet de la page ; `alt=""` seulement pour une image purement décorative.
 4. Logo, image de partage : remplacer `public/logo.png`, `public/og-default.png` (1200×630) sous le même nom.
 
+## Photo jointe au message
+- Elle est disponible comme fichier dans la session, y compris en session cloud (dossier temporaire de la session, `…/images/<n>.<ext>`) : la copier sous un nom parlant, en gardant son format (WebP, JPG, PNG : `astro:assets` les accepte tous, aucune conversion).
+- La pièce jointe d'un chat peut être réduite : sous la largeur minimale de `.claude/conventions/images.md` pour une photo pleine largeur, prévenir qu'elle risque d'être floue et demander l'originale.
+
 ## Garde-fous
 - Règles : `.claude/conventions/images.md` (dimensions anti-CLS, image LCP, formats).
 - Origine inconnue (banque d'images, site tiers, photo de personne, logo de client) : demander si l'usage est autorisé avant de l'ajouter.

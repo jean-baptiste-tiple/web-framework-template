@@ -25,15 +25,18 @@ Ce skill localise et oriente ; il ne modifie rien. Élément localisé : passer 
 | être mieux trouvé sur Google ou cité par les IA, créer une FAQ | `optimiser-seo` |
 | changer l'adresse d'une page, la supprimer, rediriger | `renommer-rediriger` |
 | changer l'apparence, ajouter ou déplacer un bloc | `modifier-design` |
-| voir le résultat avant de publier | `verifier` |
-| mettre en ligne | `publier` |
-| savoir si c'est en ligne | `statut-mise-en-ligne` |
-| défaire une modification | `annuler-modification` |
+| voir le résultat (lien TEST ou d'aperçu) | `verifier` |
+| savoir où il en est, ouvrir, reprendre, lister ou abandonner une branche | `branches` |
+| envoyer une branche sur TEST, faire relire, retirer un sujet de TEST | `envoyer-sur-test` |
+| programmer un article pour une date | `integrer-article` (§ Article programmé) |
+| mettre en ligne, passer en production | `publier` |
+| savoir où est une modification (aperçu, TEST, production) | `statut-mise-en-ligne` |
+| défaire une modification, où qu'elle soit | `annuler-modification` |
 
 Plusieurs demandes dans un message : les lister, confirmer l'ordre, les traiter une par une.
 
 ## « Que puis-je faire ? »
-Répondre avec les lignes du tableau en mots courants (ni noms de skills, ni fichiers), un exemple de phrase par ligne.
+Répondre avec les lignes du tableau en mots courants (ni noms de skills, ni fichiers), un exemple de phrase par ligne, et le circuit en une phrase : « une petite modification se fait directement sur le site de test, qu'on relit, puis on la met en ligne sur le site public ; un gros chantier a sa branche et son aperçu » (CLAUDE.md § Circuit de publication).
 
 ## Demande contraire à une règle du site
 Procédure commune à tous les skills d'intention (CLAUDE.md § Demandes non techniques).
