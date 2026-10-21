@@ -2,11 +2,28 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
 
 jobs:
+  # Nom des branches de chantier (deploy.md § Circuit) : le sujet seul, sans
+  # préfixe client ni ID de tâche, 25 caractères au plus, sinon Vercel abrège
+  # l'adresse d'aperçu et elle n'est plus prévisible.
+  nom-de-branche:
+    # Branches créées par l'interface de Claude Code en ligne (claude/…) : hors règle.
+    if: github.event_name == 'push' && github.ref_name != 'main' && !startsWith(github.ref_name, 'claude/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Contrôler le nom
+        env:
+          NOM: ${{ github.ref_name }}
+        run: |
+          if [ ${#NOM} -gt 25 ] || ! printf '%s' "$NOM" | grep -Eq '^[a-z0-9]+(-[a-z0-9]+)*$' \
+             || printf '%s' "$NOM" | grep -Eq '^[a-z]+-?[0-9]+-'; then
+            echo "::error::Branche « $NOM » : le sujet seul, sans préfixe client ni ID de tâche, minuscules, chiffres et tirets, 25 caractères au plus (deploy.md § Circuit)."
+            exit 1
+          fi
   build:
+    if: github.event_name != 'push' || github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

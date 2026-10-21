@@ -30,7 +30,7 @@ Vocabulaire, règle « TEST d'abord, branche pour un chantier » : CLAUDE.md § 
 
 ## 4. Ouvrir une branche (chantier)
 1. Limite : 2 branches en cours par personne. Compter les branches de la personne pas encore sur TEST : pour chaque `origin/<nom>` de `git branch -r --no-merged origin/main`, auteur `git log -1 --format=%an origin/<nom>` égal à `git config user.name`. Déjà 2 : `AskUserQuestion`, « terminer <branche> et l'envoyer sur TEST » ou « abandonner <branche> » ; rien n'est ouvert avant.
-2. Nom choisi par Claude d'après le chantier : minuscules sans accent, chiffres, tirets, 25 caractères au plus (`refonte-tarifs`), absent de `git branch -a`.
+2. Nom choisi par Claude d'après le chantier, règle de deploy.md § Circuit (sujet seul, sans préfixe client ni ID, 25 caractères au plus : `refonte-tarifs`), absent de `git branch -a`.
 3. `git switch -c <nom> --no-track origin/main` : la branche part de TEST à jour ; les changements pas encore enregistrés la suivent.
 4. Annoncer : « J'ouvre la branche <nom> pour <chantier> : <raison>. »
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-21 · Nom des branches contrôlé
+- Une branche de chantier porte le sujet seul (`refonte-tarifs`), sans préfixe client ni ID de tâche, 25 caractères au plus : au-delà, Vercel abrège l'adresse d'aperçu. Job « nom de branche » de la CI (branches `claude/…` de l'interface en ligne exclues).
+
 ## 2026-10-21 — Bibliothèque : hauteur des aperçus bornée
 - `src/pages/styleguide/[...galerie].astro` : la hauteur d'un aperçu est bornée (1600 px ordinateur, 2000 px téléphone). Un composant en `vh` faisait grandir son cadre sans fin sur un site dérivé (docs/learnings.md, 2026-10-21) ; au-delà de la borne, l'aperçu défile dans son cadre.
 
