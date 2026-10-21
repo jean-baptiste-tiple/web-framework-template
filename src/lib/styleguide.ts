@@ -8,7 +8,10 @@
 //    `/* Style de texte « Nom » : rôle. */` ou `/* Style « Nom » : rôle. */` ;
 //  - illustrations : fichiers de src/assets/illustrations (dossier facultatif) ;
 //  - « Utilisé sur » : graphe des imports de src/ + frontmatter `sections:` des
-//    collections ; une route dynamique est dépliée en ses pages réelles.
+//    collections ; une route dynamique est dépliée en ses pages réelles ;
+//  - bloc qu'une section ne fait qu'emballer (`wraps` du `demo` de la section) :
+//    UNE fiche, celle de la section ; le bloc n'a pas de démo et ses usages
+//    directs (pages .astro) s'ajoutent à ceux de la section.
 // Une fiche par page (ADR 0003, révision v2) : /styleguide/<id>/ = nom, aperçu,
 // « Utilisé sur » ; /styleguide/<id>/apercu/ = le rendu seul (cadre de l'aperçu).
 // Le contrôle « tout composant a sa démo » et la forme des noms sont faits au
@@ -37,8 +40,12 @@ export interface SectionCase<T> {
   example: T;
 }
 
-/** Démo d'une section : nom + un cas par variante, typés par le schéma de la section. */
+/** Démo d'une section : nom + un cas par variante, typés par le schéma de la section.
+ *  `wraps` : bloc (chemin sous src/components, `ui/<Nom>.astro`) que la section ne
+ *  fait qu'emballer ; il n'a pas de fiche à lui, ses cas sont ceux de la section
+ *  (component-registry.md § Bibliothèque vivante, contrôlé par scripts/check-styleguide.mjs). */
 export interface SectionDemo<T> extends DemoDoc {
+  wraps?: string;
   examples: [SectionCase<T>, ...SectionCase<T>[]];
 }
 
@@ -138,12 +145,18 @@ const ILLUSTRATIONS = import.meta.glob<{ default: ImageMetadata }>(
 const rel = (path: string) => path.replace(/^\//, '');
 const FILES = new Map(Object.entries(SOURCES).map(([k, v]) => [rel(k), v]));
 
-// Libellés français des familles. Dossier absent ici : son nom, capitalisé.
+// Familles du menu : libellé français ET ordre (l'ordre des clés est celui du menu,
+// SEUL endroit où il se règle). Fondations d'abord, puis les dossiers de composants,
+// puis les familles de sections dans l'ordre d'une page (taxonomie du kit). Dossier
+// absent ici : son nom capitalisé, après ceux de la table ; famille de sections
+// absente : « Sections : <famille> », après celles de la table.
 const FOLDER_LABELS: Record<string, string> = { ui: 'Éléments' };
 const SECTION_FAMILY_LABELS: Record<string, string> = {
   nav: 'Haut et bas de page',
+  hero: 'Sections : haut de page',
   offer: 'Sections : offre',
   proof: 'Sections : preuve',
+  people: 'Sections : équipe',
   content: 'Sections : contenu',
   convert: 'Sections : conversion',
 };
@@ -252,6 +265,21 @@ async function usageOf(file: string, sectionFiles: Map<string, string>, bySectio
     }
   }
   return [...out.values()].sort((a, b) => a.label.localeCompare(b.label, 'fr'));
+}
+
+// Usages d'une section qui emballe un bloc (`wraps`) : les siens, plus ceux du bloc
+// (pages qui le rendent directement).
+async function usedByWith(
+  file: string,
+  wraps: string | undefined,
+  sectionFiles: Map<string, string>,
+  bySection: Map<string, Usage[]>,
+) {
+  const own = await usageOf(file, sectionFiles, bySection);
+  if (!wraps) return own;
+  const block = await usageOf(`src/components/${wraps}`, sectionFiles, bySection);
+  const all = new Map([...own, ...block].map((u) => [u.label, u]));
+  return [...all.values()].sort((a, b) => a.label.localeCompare(b.label, 'fr'));
 }
 
 // Pages qui déclarent chaque type de section dans leur frontmatter `sections:`.
@@ -378,6 +406,18 @@ async function buildGallery() {
     }
   }
 
+  // Blocs emballés : déclarés par `wraps`, sans fiche propre (leur démo est refusée,
+  // au lint et ici) ; leurs usages directs rejoignent la fiche de la section.
+  const wrapped = new Map<string, string>();
+  for (const { schemaFile, mod } of sectionEntries) {
+    const target = mod.demo?.wraps;
+    if (!target) continue;
+    const block = `src/components/${target}`;
+    if (!FILES.has(block)) throw new Error(`${schemaFile} : \`wraps\` vise ${block}, introuvable.`);
+    if (wrapped.has(block)) throw new Error(`${schemaFile} : ${block} déjà emballé par ${wrapped.get(block)} (une seule fiche par bloc).`);
+    wrapped.set(block, schemaFile);
+  }
+
   for (const { file, schemaFile, type, mod } of sectionEntries) {
     const name = checkName(mod.demo, schemaFile, '{ name, examples: [{ label, example }] }');
     const examples = mod.demo?.examples ?? [];
@@ -395,7 +435,7 @@ async function buildGallery() {
       group: SECTION_FAMILY_LABELS[family] ?? `Sections : ${family}`,
       sectionType: type,
       name,
-      usedBy: await usageOf(file, sectionFiles, bySection),
+      usedBy: await usedByWith(file, mod.demo?.wraps, sectionFiles, bySection),
       render: { kind: 'section', examples },
     });
   }
@@ -405,21 +445,35 @@ async function buildGallery() {
     const demoFile = rel(path);
     const file = demoFile.replace(/\.demo\.astro$/, '.astro');
     if (!FILES.has(file)) throw new Error(`${demoFile} : composant ${file} introuvable.`);
+    if (wrapped.has(file)) {
+      throw new Error(`${demoFile} : bloc emballé par ${wrapped.get(file)} (\`wraps\`), sa fiche est celle de la section : supprimer cette démo.`);
+    }
     const folder = file.split('/')[2];
+    // Sous-composant d'une famille de sections (sections/nav/<Nom>.astro) : rangé avec elle.
+    const family = folder === 'sections' ? file.split('/')[3] : undefined;
     entries.push({
       id: idOf(file),
       file,
-      group: FOLDER_LABELS[folder] ?? capitalize(folder),
+      group: family ? (SECTION_FAMILY_LABELS[family] ?? `Sections : ${family}`) : (FOLDER_LABELS[folder] ?? capitalize(folder)),
       name: checkName(mod.demo, demoFile, '{ name }'),
       usedBy: await usageOf(file, sectionFiles, bySection),
       render: { kind: 'demo', Demo: mod.default },
     });
   }
 
-  // Ordre du menu : Éléments, autres dossiers, puis familles de sections (ordre du registre).
-  const sectionOrder = [...new Set(Object.keys(SECTION_REGISTRY).map((t) => t.split('.')[0]))];
-  const rank = (e: GalleryEntry) =>
-    e.sectionType ? 100 + sectionOrder.indexOf(e.sectionType.split('.')[0]) : e.group === FOLDER_LABELS.ui ? 0 : 1;
+  // Ordre du menu : celui des clés de FOLDER_LABELS puis de SECTION_FAMILY_LABELS
+  // (dossiers et familles qu'elles ne nomment pas : après, dans l'ordre du registre
+  // pour les familles, alphabétique pour les dossiers).
+  const folderOrder = Object.keys(FOLDER_LABELS);
+  const sectionOrder = [
+    ...new Set([...Object.keys(SECTION_FAMILY_LABELS), ...Object.keys(SECTION_REGISTRY).map((t) => t.split('.')[0])]),
+  ];
+  const rank = (e: GalleryEntry) => {
+    const family = e.sectionType?.split('.')[0] ?? e.file.match(/^src\/components\/sections\/([^/]+)\//)?.[1];
+    if (family) return 1000 + Math.max(0, sectionOrder.indexOf(family));
+    const i = folderOrder.indexOf(e.file.split('/')[2]);
+    return i === -1 ? folderOrder.length : i;
+  };
   entries.sort((a, b) => rank(a) - rank(b) || a.group.localeCompare(b.group, 'fr') || a.name.localeCompare(b.name, 'fr'));
 
   // `fondations` : segment réservé aux rubriques (/styleguide/fondations/<id>/).

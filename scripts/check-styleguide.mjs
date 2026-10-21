@@ -7,6 +7,9 @@
 //  - `<Nom>.astro` avec un `<Nom>.schema.ts` voisin (section) : le schéma exporte `demo`
 //    (`name` + `examples`, un cas libellé par variante), rendu par SectionRenderer ;
 //  - tout autre `<Nom>.astro` : un `<Nom>.demo.astro` voisin qui exporte `demo` (`name`) ;
+//  - bloc qu'une section ne fait qu'emballer : déclaré par `wraps: '<chemin sous
+//    src/components>'` dans le `demo` de la section, qui doit l'importer ; il n'a PAS de
+//    démo (une seule fiche, celle de la section) et une seule section l'emballe ;
 //  - outillage de la bibliothèque (src/components/styleguide/) : hors contrôle ;
 //  - une démo sans composant, ou une exclusion qui ne vise plus rien, est une erreur.
 // Pourquoi : la galerie écrite à la main oubliait sans bruit (23 composants sur 69
@@ -59,6 +62,23 @@ const files = walk(root);
 const errors = [];
 let covered = 0;
 
+// Blocs emballés par une section (`wraps` du `demo` de son .schema.ts).
+const WRAPPED = new Map();
+for (const schema of files.filter((f) => f.endsWith('.schema.ts'))) {
+  const target = readFileSync(schema, 'utf8').match(/\bwraps:\s*(['"])([^'"]+)\1/)?.[2];
+  if (!target) continue;
+  const block = `${root}/${target}`;
+  const section = schema.replace(/\.schema\.ts$/, '.astro');
+  const fileName = target.split('/').pop();
+  const importsBlock = new RegExp(`\\bimport\\s+\\w+\\s+from\\s+['"][^'"]*/${fileName.replace(/\./g, '\\.')}['"]`);
+  if (!existsSync(block)) errors.push(`${schema} : \`wraps\` vise ${block}, introuvable.`);
+  else if (!existsSync(section) || !importsBlock.test(readFileSync(section, 'utf8')))
+    errors.push(`${schema} : \`wraps\` vise ${block}, que ${section} n'importe pas (une section n'emballe que le bloc qu'elle rend).`);
+  else if (WRAPPED.has(block))
+    errors.push(`${schema} : ${block} déjà emballé par ${WRAPPED.get(block)} ; un bloc, une seule fiche : une seule section le déclare.`);
+  else WRAPPED.set(block, schema);
+}
+
 for (const file of files.filter((f) => f.endsWith('.astro') && !f.endsWith('.demo.astro'))) {
   if (EXCLUSIONS.has(file) || file.startsWith(TOOLING)) continue;
   const base = file.slice(0, -'.astro'.length);
@@ -70,6 +90,10 @@ for (const file of files.filter((f) => f.endsWith('.astro') && !f.endsWith('.dem
       errors.push(
         `${file} : section sans exemple. Ajouter \`export const demo = { name, examples: [{ label, example }] } satisfies SectionDemo<…>\` dans ${schema}.`,
       );
+  } else if (WRAPPED.has(file)) {
+    if (existsSync(demo))
+      errors.push(`${demo} : bloc emballé par ${WRAPPED.get(file)} (\`wraps\`) ; une seule fiche, celle de la section : supprimer cette démo et porter ses cas dans \`examples\` de la section.`);
+    else covered++;
   } else if (existsSync(demo)) {
     if (exportsDemo(demo)) covered++;
     else

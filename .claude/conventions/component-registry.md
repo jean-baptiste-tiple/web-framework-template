@@ -16,14 +16,30 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
   celle de la page courante ouverte, page marquée `aria-current`, recherche qui filtre), filet
   `border-r` entre menu et fiche sur toute la hauteur ; précédente / suivante dans l'ordre du menu
   (`GalleryPager.astro`). Téléphone : la fiche, puis le menu (lien « Menu »).
+- **Ordre du menu : celui d'une page** (ADR 0003, révision du 21/10 soir) : Fondations, Éléments
+  (`ui/`), les autres dossiers de composants, puis les familles de sections : haut et bas de page,
+  haut de page, offre, preuve, équipe, contenu, conversion. Réglé en UN endroit, l'ordre des clés de
+  `FOLDER_LABELS` puis de `SECTION_FAMILY_LABELS` (`src/lib/styleguide.ts`), qui donnent aussi les
+  libellés ; un dossier ou une famille qu'elles ne nomment pas passe après (libellé par défaut). Un
+  sous-composant rangé sous `sections/<famille>/` (sans `.schema.ts`) est classé avec sa famille.
 - **Fiche = nom + visuel + « Utilisé sur », rien d'autre** : ni phrase « à quoi ça sert », ni « seul /
   développeur », ni phrase à dire à Claude, ni vue technique (props et fichiers se lisent dans le code).
   Une variante se montre comme un CAS de l'aperçu, libellé par sa différence (`DemoCase label`,
   `examples[].label` d'une section), jamais par un texte au-dessus du visuel. « Utilisé sur » : liens
   des pages (une route dynamique est dépliée en ses pages réelles par son `getStaticPaths`), les 5
   premières puis « et N autres » ; sinon « Utilisé sur aucune page pour l'instant ». Contrôle :
-  `DemoDoc` = `{ name }`, `SectionDemo` = `{ name, examples }` (un champ de plus casse `astro check`) ;
-  ajouter une ligne à la fiche = révision de l'ADR 0003.
+  `DemoDoc` = `{ name }`, `SectionDemo` = `{ name, wraps?, examples }` (un champ de plus casse
+  `astro check`) ; ajouter une ligne à la fiche = révision de l'ADR 0003.
+- **Bloc qu'une section ne fait qu'emballer : UNE fiche, la section** : quand une section se contente
+  de poser un composant existant (le « bloc ») dans sa Section/Container, elle le déclare par
+  `wraps: '<chemin sous src/components>'` dans son `demo` (ex. `wraps: 'blocks/FinalCta.astro'`). Le
+  bloc n'a PAS de démo : ses variantes sont des cas (`examples`) de la section, et les pages qui le
+  rendent directement (gabarits `.astro`) s'ajoutent au « Utilisé sur » de la section. Une variante du
+  bloc que la section ne sait pas exprimer reste non montrée et se note au § Doublons : on n'ajoute
+  pas un champ de section offert aux éditeurs pour la seule galerie. Contrôle : lint (chemin
+  inexistant, section qui n'importe pas le bloc déclaré, bloc emballé par deux sections, démo d'un
+  bloc emballé = échec) et build (chemin inexistant, bloc emballé deux fois, démo d'un bloc emballé = échec). Le modèle n'en
+  déclare aucun ; la liste des blocs emballés d'un site dérivé se tient ici.
 - **Aperçu à hauteur bornée et stable** : le cadre prend la hauteur libre de l'écran (fiche en
   `h-svh`), JAMAIS celle de son contenu ; rien n'est mesuré dans l'iframe ni renvoyé à la page. Un
   composant en `vh` se rend dans un cadre fixe et la page ne grandit pas (avant : barre de défilement
@@ -58,8 +74,9 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
   un troisième composant. Contrôle : deux fiches au même nom font échouer le lint ; deux noms qui ne
   diffèrent que par un élément (« … avec picto » / « … ») se citent en review.
 - **Contrôles machine** : `pnpm run lint` (`scripts/check-styleguide.mjs`) échoue si un composant de
-  `src/components` n'a ni démo ni exemple de section, si une démo n'a plus de composant, si une
-  exclusion ne vise plus rien, si un nom de fiche sort de la règle ci-dessus ; le build (hors
+  `src/components` n'a ni démo ni exemple de section (hors bloc emballé), si une démo n'a plus de
+  composant, si une exclusion ne vise plus rien, si un nom de fiche sort de la règle ci-dessus, si un
+  `wraps` est faux (ci-dessus) ; le build (hors
   production) échoue si une fiche n'a pas de nom, si un exemple ne passe pas son schéma, si une section
   du registre n'a pas de `.schema.ts`, si un identifiant est en double ou vaut `fondations`. Exclusions
   (composants sans rendu propre) : liste COURTE dans le script, une raison par ligne ; l'outillage de la
@@ -101,6 +118,7 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
 - Styles partagés : `@utility` annotés de global.css (styling-tailwind.md), montrés en Fondations de la bibliothèque. Aucun dans le modèle ; un site dérivé en tient la liste ici (classe : rôle).
 - Surface de carte : Card.astro. Un wrapper ne pose pas une surface que son slot porte déjà (anti double-carte).
 - Squelette d'accordéon : Accordion.astro. Une section qui a besoin d'un `<details>` le consomme (comme Faq.astro) au lieu de réécrire summary + marqueur + bascule.
+- Pastilles, coches et étiquettes : passent par LEUR composant, jamais par du markup écrit à la main dans un bloc ou une page. Modèle : étiquette en pilule = Badge ; un site dérivé ajoute ses canoniques (pastille de pictogramme, pastille d'état ou coche de confirmation, pastille de lecture…) et les liste ici. Une taille, un ton ou un contenu manquant = variante additive du composant (prop typée, call-sites inchangés, cas ajouté à sa démo), jamais une copie à côté. Hors règle : indicateurs internes d'un composant canonique (chevron d'Accordion), contrôles (bouton rond, interrupteur, case à cocher). Contrôle : machine A du lint (même groupe de 4 classes ou plus dans deux fichiers) comme filet ; une copie unique ou de moins de 4 classes se cite en review (code-review.md).
 - Icônes : jeu FERMÉ d'Icon.astro. Un tracé dessiné dans une section (au lieu d'être ajouté à icons.ts) est une duplication à corriger ; emoji et police d'icônes sont interdits (craft-floor § Refuse).
 - Ne pas créer de composant sans usage. Une donnée déclarée (settings, schéma) mais rendue par aucun composant est annotée « dormante » ici, pas présentée comme branchée.
 
@@ -114,7 +132,7 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
 | PageHero.astro | eyebrow?, title ; slots lead, actions, défaut (média) | **Canonique haut de page** : sur-titre + H1 + chapô + actions + média, centrés dans Section/Container. Home et landings ; une image de haut de page passée en slot garde `loading="eager"` + `fetchpriority="high"` |
 | Tldr.astro | text | Encadré « En bref » (tldr du frontmatter) en tête d'une page éditoriale ou d'un article ; porte sa marge basse (`mb-8`) |
 | Accordion.astro | summary, name?, open?, variant(boxed/plain)?, class? | **Canonique accordéon** : `<details>/<summary>` + slot, chevron Icon en bascule CSS, reduced-motion, focus visible. `name` partagé = exclusivité native. `open` = ouvert au chargement (contenu visible sans script). `variant="plain"` = sans cadre ni marge intérieure, pour une liste de volets serrés (familles du menu de /styleguide) ; défaut `boxed` inchangé. **Cible tactile garantie** : `min-h-11` (44px) + `items-center` sur le `<summary>`, donc au plancher craft-floor même sur un libellé d'une seule ligne. Ne PAS réécrire ce markup dans une section |
-| Badge.astro | tone(accent/neutral/inverse)?, class? | Pilule de kicker (sur-titre court, étiquette de section). Slot libre |
+| Badge.astro | tone(accent/neutral/inverse)?, class? | **Canonique étiquette** en pilule (sur-titre court, étiquette de section, statut). Slot libre. Ton ou taille manquant = variante additive, jamais une pilule écrite à la main (§ Normes transverses) |
 | Icon.astro | name, size?, label?, class? | Icône inlinée du jeu FERMÉ `./icons.ts` (sous-ensemble Lucide, ISC). `label` = porteuse de sens, sinon `aria-hidden`. Jamais d'emoji ni de police d'icônes |
 | icons.ts | — | Table des tracés + `IconName` + `ICON_NAMES`. Séparée du .astro : les `export` du frontmatter Astro sont hissés au-dessus du corps et ne peuvent pas dériver d'une const locale |
 | Faq.astro | title?, items[] | Titre + paires q/a, rendues par Accordion (aucun markup `<details>` propre) |
