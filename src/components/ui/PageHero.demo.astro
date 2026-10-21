@@ -12,8 +12,11 @@ export const demo: DemoDoc = {
 ---
 
 <div class="space-y-8">
-  {/* Un seul cas : le titre est le H1 de la page isolée, qui n'en porte qu'un. */}
-  <DemoCase label="sur-titre · titre · chapô (slot lead) · actions (slot actions) · média (slot par défaut)">
+  {/* Un seul cas : le titre est le H1 de la page isolée, qui n'en porte qu'un.
+      `bleed` : PageHero pose sa Section/Container, ses gouttières sont les vraies. */}
+  <DemoCase
+    bleed
+    label="sur-titre · titre · chapô (slot lead) · actions (slot actions) · média (slot par défaut)">
     <PageHero eyebrow="Service" title="Un audit énergétique clair et actionnable">
       <Fragment slot="lead">Diagnostic complet, recommandations chiffrées, accompagnement.</Fragment>
       <Fragment slot="actions">

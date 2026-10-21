@@ -1,5 +1,6 @@
 ---
 import type { DemoDoc } from '@/lib/styleguide';
+import DemoCase from '@/components/styleguide/DemoCase.astro';
 import Icon from './Icon.astro';
 import { ICON_NAMES } from './icons';
 
@@ -10,13 +11,15 @@ export const demo: DemoDoc = {
 };
 ---
 
-<div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
-  {
-    ICON_NAMES.map((name) => (
-      <div class="flex flex-col items-center gap-2 rounded border border-border p-3">
-        <Icon name={name} size={24} />
-        <code class="text-center text-xs text-muted">{name}</code>
-      </div>
-    ))
-  }
-</div>
+<DemoCase label="jeu fermé : toutes les icônes de icons.ts">
+  <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
+    {
+      ICON_NAMES.map((name) => (
+        <div class="flex flex-col items-center gap-2 rounded border border-border p-3">
+          <Icon name={name} size={24} />
+          <code class="text-center text-xs text-muted">{name}</code>
+        </div>
+      ))
+    }
+  </div>
+</DemoCase>

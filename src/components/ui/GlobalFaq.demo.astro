@@ -1,6 +1,7 @@
 ---
 // Rendu réel : le texte vient des réglages du site (SITE.faq ← site.json).
 import type { DemoDoc } from '@/lib/styleguide';
+import DemoCase from '@/components/styleguide/DemoCase.astro';
 import GlobalFaq from './GlobalFaq.astro';
 
 export const demo: DemoDoc = {
@@ -10,4 +11,6 @@ export const demo: DemoDoc = {
 };
 ---
 
-<GlobalFaq />
+<DemoCase label="questions lues dans site.json (faq)">
+  <GlobalFaq />
+</DemoCase>

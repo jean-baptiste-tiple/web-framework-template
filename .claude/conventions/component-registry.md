@@ -9,8 +9,12 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
 (`src/pages/styleguide/[...galerie].astro`) ne liste rien, chaque composant y entre par sa démo.
 - **Démo colocalisée** : `<Nom>.demo.astro` à côté de `<Nom>.astro`. Frontmatter :
   `export const demo: DemoDoc = { name, purpose, ask }` (annotation de type, jamais `satisfies` :
-  coding-standards), corps = rendu des variantes, chacune dans `DemoCase` (libellé + `surface="inverse"`
-  pour un `tone="inverse"`). Modèle : `ui/Button.demo.astro`. Une section porte la sienne dans son
+  coding-standards), corps = rendu des variantes, TOUTES dans `DemoCase` (libellé + `surface="inverse"`
+  pour un `tone="inverse"`) : la page isolée ne pose aucune marge latérale, c'est `DemoCase` qui la
+  pose. `bleed` la retire : à poser quand le rendu pose lui-même sa Section/Container (haut de page,
+  bloc pleine largeur, comme `ui/PageHero.demo.astro`), sinon ses gouttières s'ajoutent à la marge et
+  l'aperçu téléphone est faux (32 px au lieu de 16) ; jamais sur un élément (bouton, carte, champ).
+  Modèle : `ui/Button.demo.astro`. Une section porte la sienne dans son
   `.schema.ts` : `export const demo = { name, purpose, ask, example } satisfies SectionDemo<…Section>`
   (fichier `.ts`, `satisfies` y est permis), rendu par SectionRenderer.
 - **Fiche éditeur** : `name` = nom français que l'éditeur emploie (pas le nom du fichier), `purpose` =
@@ -23,6 +27,18 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
   exclusion ne vise plus rien ; le build (hors production) échoue si une fiche est incomplète, si un
   `example` ne passe pas son schéma, si une section du registre n'a pas de `.schema.ts`. Exclusions
   (composants sans rendu propre) : liste COURTE dans le script, une raison par ligne.
+- **Fondations** (lues au build, rien à écrire dans la page) : tokens des blocs `@theme` de
+  `src/styles/global.css` ; « Styles partagés » = ses `@utility` annotés (format et règle :
+  styling-tailwind.md), avec aperçu, règle appliquée et fichiers qui posent chaque style ;
+  « Illustrations » = `src/assets/illustrations/*.{webp,png,jpg,jpeg,svg}`, le nom de fichier sans
+  extension étant le nom à citer à Claude. Ces deux rubriques sont FACULTATIVES : absentes du menu et
+  de la page tant que le site n'a ni `@utility` annoté ni ce dossier (cas du modèle).
+- **Usage visible** : chaque fiche dit « Utilisé sur aucune page pour l'instant » ou « Utilisé sur : … »
+  (trois usages, le reste en vue technique) ; chercher « aucune page » liste les composants inutilisés.
+- **En-tête collant** : la barre d'aperçu et le menu collent à `top-0`, les ancres gardent
+  `scroll-mt-36` (hauteur de la barre sur téléphone). Un site dont l'en-tête colle décale ces valeurs
+  de sa hauteur dans `src/pages/styleguide/[...galerie].astro` ; la barre reste opaque (`bg-bg`), une
+  barre translucide laisse lire les aperçus à travers elle.
 - **Avant tout markup ou composant** (développement, `modifier-design`, `creer-page`, design-craft,
   portage d'une section du kit) : chercher dans la bibliothèque PAR LE CONCEPT (« témoignage »,
   « chiffres »), puis citer dans le plan ou le rayon d'impact, item Doublons, le composant réutilisé
@@ -32,7 +48,9 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
   typo, contour) dans deux fichiers `.astro` fait échouer `pnpm run lint`. Hors périmètre : les
   `*.demo.astro`, les `class={…}` calculés, les groupes de pure mise en page (`grid gap-6
   sm:grid-cols-2`). Remède : le composant de la bibliothèque qui porte ce markup, ou en extraire un
-  (avec sa démo) ; jamais renommer ou réordonner des classes pour passer le contrôle.
+  (avec sa démo), ou, pour une combinaison de style sans structure (titre, chapô, légende, barre
+  collante), un style partagé de `global.css` (styling-tailwind.md) ; jamais renommer ou réordonner
+  des classes pour passer le contrôle.
 - **Page qui compose ses sections (contrôle machine B)** : déclarée dans § Pages bespoke ci-dessous,
   sinon `pnpm run lint` échoue.
 - **Amélioration continue** : un composant modifié (prop, variante, rendu, usage) voit sa démo et sa
@@ -47,6 +65,7 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
 ## Normes transverses
 - Préférer UN composant à variantes à N composants quasi identiques. Quand une famille grandit, marquer son CANONIQUE ici (« Canonique hero », « Canonique CTA »…) ; les composants gardés séparés portent un ⛔ avec la raison en une ligne (sinon chaque review rejoue le débat de fusion).
 - Largeur : toute section passe par <Container>. Aucune surcharge de largeur en px ; exceptions de LECTURE (prose) listées ici, et la bibliothèque /styleguide (pleine largeur à gouttières relatives : l'aperçu ordinateur de 1280 px y est réduit à la colonne, qui doit rester large).
+- Styles partagés : `@utility` annotés de global.css (styling-tailwind.md), montrés en Fondations de la bibliothèque. Aucun dans le modèle ; un site dérivé en tient la liste ici (classe : rôle).
 - Surface de carte : Card.astro. Un wrapper ne pose pas une surface que son slot porte déjà (anti double-carte).
 - Squelette d'accordéon : Accordion.astro. Une section qui a besoin d'un `<details>` le consomme (comme Faq.astro) au lieu de réécrire summary + marqueur + bascule.
 - Icônes : jeu FERMÉ d'Icon.astro. Un tracé dessiné dans une section (au lieu d'être ajouté à icons.ts) est une duplication à corriger ; emoji et police d'icônes sont interdits (craft-floor § Refuse).
@@ -72,7 +91,7 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
 ## Outillage de la bibliothèque (src/components/styleguide/)
 | Composant | Props | Rôle |
 | --- | --- | --- |
-| DemoCase.astro | label, surface(default/inverse)? | Un cas d'une démo : libellé + rendu ; `inverse` pose la bande sombre (fond ET texte). Utilisé par les `*.demo.astro` seulement |
+| DemoCase.astro | label, surface(default/inverse)?, bleed? | Un cas d'une démo : libellé + rendu, avec la marge latérale de la page isolée ; `inverse` pose la bande sombre (fond ET texte) ; `bleed` = rendu bord à bord, libellé aligné sur le Container (bloc qui pose sa Section/Container). Utilisé par les `*.demo.astro` seulement |
 
 ## SEO (src/components/seo/)
 | Composant | Rôle |

@@ -9,6 +9,10 @@
 // l'aperçu ordinateur rend 1280 px réduits à la colonne, qui doit rester large.
 // Les échantillons de tokens posent `var(--…)` en style inline : la liste des
 // tokens est lue au build, aucune classe Tailwind ne peut être écrite à l'avance.
+// Collants : barre d'aperçu (`top-0`), menu (`lg:top-0`), ancres (`scroll-mt-36`,
+// hauteur de la barre sur téléphone). L'en-tête du modèle ne colle pas ; un site
+// dont l'en-tête colle décale ces trois valeurs de sa hauteur.
+import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Accordion from '@/components/ui/Accordion.astro';
 import Badge from '@/components/ui/Badge.astro';
@@ -19,7 +23,14 @@ export function getStaticPaths() {
   return GALLERY_ENABLED ? [{ params: { galerie: undefined } }] : [];
 }
 
-const { groups, tokens, entries } = await getGallery();
+const { groups, tokens, entries, styles, illustrations } = await getGallery();
+// Rubriques de Fondations lues ailleurs que dans @theme : affichées seulement si le
+// site en a (le modèle n'a ni @utility annoté ni src/assets/illustrations).
+const extraFoundations = [
+  { id: 'styles', label: 'Styles partagés', shown: styles.length > 0 },
+  { id: 'illustrations', label: 'Illustrations', shown: illustrations.length > 0 },
+].filter((f) => f.shown);
+const short = (file: string) => file.replace(/^src\/(components|pages)\//, '');
 
 const meta = {
   title: 'Bibliothèque des composants',
@@ -87,7 +98,7 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
                 <p class="text-xs font-semibold tracking-wide text-muted uppercase">Fondations</p>
                 <ul class="mt-2">
                   {
-                    tokens.map((g) => (
+                    [...tokens, ...extraFoundations].map((g) => (
                       <li data-sg-item={`fondations-${g.id}`}>
                         <a
                           href={`#fondations-${g.id}`}
@@ -149,7 +160,7 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
         </header>
 
         <div
-          class="sticky top-0 z-10 -mx-4 mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border bg-bg/95 px-4 py-3 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
+          class="sticky top-0 z-10 -mx-4 mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border bg-bg px-4 py-3 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
           <span id="sg-viewport-label" class="text-sm font-medium">Aperçu</span>
           <div role="group" aria-labelledby="sg-viewport-label" class="inline-flex rounded border border-border p-0.5">
@@ -176,8 +187,10 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
         <section data-sg-group aria-labelledby="fondations" class="mt-10">
           <h2 id="fondations" class="text-2xl font-semibold tracking-tight">Fondations</h2>
           <p class="mt-2 max-w-reading text-sm text-muted">
-            Lues dans <code>src/styles/global.css</code> (blocs <code>@theme</code>) à chaque
-            construction : couleurs, polices, tailles et rayons viennent d’ici et de nulle part ailleurs.
+            Lues dans <code>src/styles/global.css</code> à chaque construction : couleurs, polices,
+            tailles et rayons (blocs <code>@theme</code>) viennent d’ici et de nulle part ailleurs, comme
+            les styles partagés (<code>@utility</code> annotés) ; les illustrations, dans
+            <code>src/assets/illustrations</code>.
           </p>
           {
             tokens.map((g) => (
@@ -185,7 +198,7 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
                 id={`fondations-${g.id}`}
                 data-sg-entry
                 data-search={tokenSearch(g)}
-                class="scroll-mt-24 border-t border-border py-8 first-of-type:mt-6"
+                class="scroll-mt-36 border-t border-border py-8 first-of-type:mt-6"
               >
                 <h3 class="text-lg font-semibold">{g.label}</h3>
                 <ul
@@ -221,6 +234,74 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
               </div>
             ))
           }
+          {
+            styles.length > 0 && (
+              <div
+                id="fondations-styles"
+                data-sg-entry
+                data-search={`fondations styles partagés texte titre ${styles.map((st) => `${st.name} ${st.label}`).join(' ')}`}
+                class="scroll-mt-36 border-t border-border py-8"
+              >
+                <h3 class="text-lg font-semibold">Styles partagés</h3>
+                <p class="mt-2 max-w-reading text-sm text-muted">
+                  Une combinaison de classes qui revient de composant en composant porte un nom : on pose
+                  le nom, jamais la combinaison recopiée (styling-tailwind.md).
+                </p>
+                <ul class="mt-6 space-y-8">
+                  {styles.map((st) => (
+                    <li class="min-w-0">
+                      {st.text && <p class={st.name}>Portez la voix du site, 0123456789</p>}
+                      <p class="mt-2 text-sm">
+                        <code class="font-medium">{st.name}</code> · {st.label} : {st.description}
+                      </p>
+                      <p class="mt-1 text-xs break-words text-muted">
+                        <code>{st.rule}</code>
+                      </p>
+                      <p class="mt-1 text-xs text-muted">
+                        {st.usedIn.length
+                          ? `Posé dans : ${st.usedIn.map(short).join(', ')}`
+                          : 'Posé dans aucun fichier pour l’instant.'}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+          {
+            illustrations.length > 0 && (
+              <div
+                id="fondations-illustrations"
+                data-sg-entry
+                data-search={`fondations illustrations dessins ${illustrations.map((i) => i.name).join(' ')}`}
+                class="scroll-mt-36 border-t border-border py-8"
+              >
+                <h3 class="text-lg font-semibold">Illustrations</h3>
+                <p class="mt-2 max-w-reading text-sm text-muted">
+                  Lues dans <code>src/assets/illustrations</code> : une illustration ajoutée à ce dossier
+                  apparaît ici d’elle-même. Pour en utiliser une, citez son nom à Claude (« Mets
+                  l’illustration <code>nom</code> sur la carte … de la page … »).
+                </p>
+                <ul class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
+                  {illustrations.map((i) => (
+                    <li class="min-w-0">
+                      <figure>
+                        <Image
+                          src={i.src}
+                          alt=""
+                          width={240}
+                          class="aspect-square w-full rounded border border-border object-contain p-2"
+                        />
+                        <figcaption class="mt-2 text-xs break-all">
+                          <code>{i.name}</code>
+                        </figcaption>
+                      </figure>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
         </section>
 
         {
@@ -228,7 +309,7 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
             <section data-sg-group class="mt-16">
               <h2 class="text-2xl font-semibold tracking-tight">{g.label}</h2>
               {g.entries.map((e) => (
-                <article id={e.id} data-sg-entry data-search={e.search} class="scroll-mt-24 border-t border-border py-10 first-of-type:mt-6">
+                <article id={e.id} data-sg-entry data-search={e.search} class="scroll-mt-36 border-t border-border py-10 first-of-type:mt-6">
                   <div class="flex flex-wrap items-center justify-between gap-3">
                     <h3 class="text-xl font-semibold">
                       <a href={`#${e.id}`} class="underline-offset-4 hover:underline">
@@ -238,6 +319,14 @@ const tokenSearch = (g: TokenGroup) => `fondations ${g.label} ${g.tokens.map((t)
                     <Badge tone={ACCESS[e.access].tone}>{ACCESS[e.access].badge}</Badge>
                   </div>
                   <p class="mt-2 max-w-reading text-muted">{e.doc.purpose}</p>
+                  {e.usedBy.length === 0 ? (
+                    <p class="mt-2 text-sm font-medium">Utilisé sur aucune page pour l’instant.</p>
+                  ) : (
+                    <p class="mt-2 text-sm text-muted">
+                      Utilisé sur : {e.usedBy.slice(0, 3).map((u) => u.label).join(', ')}
+                      {e.usedBy.length > 3 && ` et ${e.usedBy.length - 3} autre${e.usedBy.length > 4 ? 's' : ''} (vue technique)`}
+                    </p>
+                  )}
 
                   <div class="mt-5 max-w-reading">
                     <p class="text-sm font-medium">À dire à Claude</p>

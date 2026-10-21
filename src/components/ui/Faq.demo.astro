@@ -1,5 +1,6 @@
 ---
 import type { DemoDoc } from '@/lib/styleguide';
+import DemoCase from '@/components/styleguide/DemoCase.astro';
 import Faq from './Faq.astro';
 
 export const demo: DemoDoc = {
@@ -9,9 +10,11 @@ export const demo: DemoDoc = {
 };
 ---
 
-<Faq
-  items={[
-    { q: 'Où êtes-vous situés ?', a: 'À Paris, avec des interventions dans toute la France.' },
-    { q: 'Travaillez-vous à distance ?', a: 'Oui, les échanges se font en visioconférence quand c’est possible.' },
-  ]}
-/>
+<DemoCase label="titre par défaut · items (paires question / réponse)">
+  <Faq
+    items={[
+      { q: 'Où êtes-vous situés ?', a: 'À Paris, avec des interventions dans toute la France.' },
+      { q: 'Travaillez-vous à distance ?', a: 'Oui, les échanges se font en visioconférence quand c’est possible.' },
+    ]}
+  />
+</DemoCase>

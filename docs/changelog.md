@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-21 · Bibliothèque : styles partagés, illustrations, usage visible (ADR 0003, révision du 21/10)
+- Fondations : rubriques « Styles partagés » (`@utility` annotés de global.css : aperçu, règle, fichiers qui les posent) et « Illustrations » (`src/assets/illustrations`, nom à citer à Claude). Facultatives : absentes tant que le site n'en a pas, donc invisibles dans le modèle.
+- Chaque fiche dit « Utilisé sur aucune page pour l'instant » ou « Utilisé sur : … » ; chercher « aucune page » liste les composants inutilisés.
+- Barre d'aperçu opaque ; ancres en `scroll-mt-36` (la barre mesure 115 px sur téléphone). Pages du site hors galerie : HTML identique avant/après.
+- Démos : la marge latérale de la page isolée est posée par `DemoCase`, `bleed` la retire (bloc qui pose sa Section/Container). Haut de page (PageHero) en `bleed` : à 390 px son texte est à 16 px du bord, comme sur la vraie page (32 px avant). Faq, GlobalFaq, Icon et Tldr ont désormais leur `DemoCase` (libellé ajouté).
+- Règle (styling-tailwind.md) : un style de texte répété = un `@utility` annoté, jamais des classes recopiées. Registre : § Bibliothèque vivante (Fondations, usage visible, en-tête collant).
+
 ## 2026-10-21 · Nom des branches contrôlé
 - Une branche de chantier porte le sujet seul (`refonte-tarifs`), sans préfixe client ni ID de tâche, 25 caractères au plus : au-delà, Vercel abrège l'adresse d'aperçu. Job « nom de branche » de la CI (branches `claude/…` de l'interface en ligne exclues).
 

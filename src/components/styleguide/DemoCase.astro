@@ -3,15 +3,23 @@
 // Outillage des fichiers `*.demo.astro`, jamais utilisé par une page du site.
 // `surface="inverse"` pose la bande sombre (fond ET couleur de texte, comme
 // toute bande inversée : styling-tailwind.md) pour montrer un `tone="inverse"`.
+// La marge latérale de la page isolée est posée ICI (elle n'en pose aucune) ;
+// `bleed` la retire pour un rendu qui pose sa propre Section/Container (PageHero) :
+// rendu bord à bord, libellé aligné sur le Container du site, vraies gouttières.
+import Container from '@/components/ui/Container.astro';
+
 interface Props {
   label: string;
   surface?: 'default' | 'inverse';
+  bleed?: boolean;
 }
-const { label, surface = 'default' } = Astro.props;
+const { label, surface = 'default', bleed = false } = Astro.props;
 ---
 
-<figure class="space-y-3">
-  <figcaption class="text-xs font-medium text-muted">{label}</figcaption>
+<figure class:list={['space-y-3', !bleed && 'px-4']}>
+  <figcaption class="text-xs font-medium text-muted">
+    {bleed ? <Container>{label}</Container> : label}
+  </figcaption>
   <div class={surface === 'inverse' ? 'rounded bg-inverse p-6 text-inverse-fg' : ''}>
     <slot />
   </div>

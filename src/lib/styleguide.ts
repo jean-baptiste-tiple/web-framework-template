@@ -4,6 +4,9 @@
 //  - sections : `export const demo` (métadonnées + `example` typé) de chaque
 //    `<Variante>.schema.ts`, rendu par SectionRenderer ;
 //  - tokens : blocs @theme de src/styles/global.css ;
+//  - styles partagés : @utility de global.css annotés juste au-dessus
+//    `/* Style de texte « Nom » : rôle. */` ou `/* Style « Nom » : rôle. */` ;
+//  - illustrations : fichiers de src/assets/illustrations (dossier facultatif) ;
 //  - « pages qui l'utilisent » : graphe des imports de src/ + frontmatter
 //    `sections:` des collections.
 // Le contrôle « tout composant a sa démo » est fait au lint
@@ -67,6 +70,27 @@ export interface GalleryEntry {
   search: string;
 }
 
+/** Style partagé (@utility annoté de global.css) : nom de classe, rôle, contenu. */
+export interface SharedStyle {
+  /** Classe à poser (`title-section`). */
+  name: string;
+  /** Nom donné dans l'annotation (« Titre de section »). */
+  label: string;
+  description: string;
+  /** Style de texte (aperçu en phrase) ou autre (déclaration seule). */
+  text: boolean;
+  /** Ce que le style applique (`@apply …`). */
+  rule: string;
+  /** Fichiers .astro de src/ qui posent la classe (hors outillage de la bibliothèque). */
+  usedIn: string[];
+}
+
+/** Illustration de src/assets/illustrations : le nom est celui à citer à Claude. */
+export interface Illustration {
+  name: string;
+  src: ImageMetadata;
+}
+
 export interface TokenGroup {
   id: string;
   label: string;
@@ -90,6 +114,13 @@ const SOURCES = import.meta.glob<string>('/src/**/*.{astro,ts,mdx}', {
   import: 'default',
   eager: true,
 });
+
+// Dossier FACULTATIF : absent (cas du modèle), le glob est vide et la rubrique
+// « Illustrations » n'apparaît pas (component-registry.md § Bibliothèque vivante).
+const ILLUSTRATIONS = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/illustrations/*.{webp,png,jpg,jpeg,svg}',
+  { eager: true },
+);
 
 const rel = (path: string) => path.replace(/^\//, '');
 const FILES = new Map(Object.entries(SOURCES).map(([k, v]) => [rel(k), v]));
@@ -352,6 +383,36 @@ export function readTokens(css: string): TokenGroup[] {
   return [...groups.values()];
 }
 
+// --- Styles partagés et illustrations -------------------------------------------
+
+// Annotation sur UN commentaire collé au @utility (le rôle ne déborde jamais sur
+// un autre commentaire) ; espaces insécables tolérés autour des guillemets.
+const SHARED_STYLE =
+  /\/\*\s*Style( de texte)?\s*«\s*([^»]+?)\s*»\s*:\s*((?:(?!\*\/)[\s\S])*?)\s*\*\/\s*@utility\s+([\w-]+)\s*\{([^}]*)\}/g;
+
+export function readSharedStyles(css: string): SharedStyle[] {
+  return [...css.matchAll(SHARED_STYLE)].map(([, text, label, description, name, body]) => {
+    // Le nom comme classe : entouré d'espaces, de guillemets ou de bords de chaîne.
+    const token = new RegExp(`(^|[\\s"'\`])${name}([\\s"'\`]|$)`);
+    return {
+      name,
+      label,
+      description: description.replace(/\s+/g, ' ').trim(),
+      text: !!text,
+      rule: body.replace(/\s+/g, ' ').trim(),
+      usedIn: [...FILES]
+        .filter(([file, source]) => !isTooling(file) && file.endsWith('.astro') && token.test(source))
+        .map(([file]) => file)
+        .sort(),
+    };
+  });
+}
+
+const illustrations = (): Illustration[] =>
+  Object.entries(ILLUSTRATIONS)
+    .map(([path, mod]) => ({ name: path.split('/').pop()!.replace(/\.\w+$/, ''), src: mod.default }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
 // --- Assemblage -----------------------------------------------------------------
 
 function checkDoc(doc: DemoDoc | undefined, file: string): DemoDoc {
@@ -436,7 +497,9 @@ async function buildGallery() {
   }
 
   for (const e of entries) {
-    e.search = [e.doc.name, e.doc.purpose, e.doc.ask, e.group, e.id, e.file, e.sectionType ?? ''].join(' ');
+    // « aucune page » : retrouver d'un mot les composants inutilisés (ligne visible de la fiche).
+    const unused = e.usedBy.length ? '' : 'aucune page inutilisé';
+    e.search = [e.doc.name, e.doc.purpose, e.doc.ask, e.group, e.id, e.file, e.sectionType ?? '', unused].join(' ');
   }
 
   // Ordre du menu : Éléments, autres dossiers, puis familles de sections (ordre du registre).
@@ -458,7 +521,13 @@ async function buildGallery() {
     ids.add(e.id);
   }
 
-  return { entries, groups, tokens: readTokens(themeCss) };
+  return {
+    entries,
+    groups,
+    tokens: readTokens(themeCss),
+    styles: readSharedStyles(themeCss),
+    illustrations: illustrations(),
+  };
 }
 
 let cache: ReturnType<typeof buildGallery> | undefined;

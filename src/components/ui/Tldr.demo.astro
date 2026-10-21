@@ -1,5 +1,6 @@
 ---
 import type { DemoDoc } from '@/lib/styleguide';
+import DemoCase from '@/components/styleguide/DemoCase.astro';
 import Tldr from './Tldr.astro';
 
 export const demo: DemoDoc = {
@@ -9,4 +10,6 @@ export const demo: DemoDoc = {
 };
 ---
 
-<Tldr text="Un article de blog est un fichier Markdown dont le frontmatter est vérifié au build." />
+<DemoCase label="text (tldr du frontmatter)">
+  <Tldr text="Un article de blog est un fichier Markdown dont le frontmatter est vérifié au build." />
+</DemoCase>

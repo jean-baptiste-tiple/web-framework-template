@@ -3,6 +3,8 @@
 // Affichée dans l'iframe de /styleguide (largeur basculée ordinateur /
 // téléphone, donc vrais points de rupture) et ouvrable seule. Sans en-tête ni
 // pied de page (chrome={false}). Absente de la production (GALLERY_ENABLED).
+// Démo : aucune marge latérale ici, chaque DemoCase pose la sienne (ou la
+// retire avec `bleed` pour un bloc qui pose son Container, comme PageHero).
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionRenderer from '@/components/landing/SectionRenderer.astro';
 import { GALLERY_ENABLED, getGallery, type GalleryEntry } from '@/lib/styleguide';
@@ -33,7 +35,7 @@ const meta = {
       render.kind === 'section' ? (
         <SectionRenderer section={render.example} />
       ) : (
-        <div class="px-4 py-6">
+        <div class="py-6">
           <render.Demo />
         </div>
       )
