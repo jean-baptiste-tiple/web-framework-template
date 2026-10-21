@@ -18,6 +18,21 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-10-21 — La borne de hauteur soignait le symptôme : la bibliothèque restait inutilisable
+- **Erreur** : contre la démo en `vh` qui faisait grandir la bibliothèque (entrée suivante), une borne de hauteur a été posée (1600 / 2000 px) sans casser la boucle « le cadre prend la hauteur du contenu, le contenu prend la hauteur du cadre ». Sur un site dérivé de 107 fiches, toutes sur une page, la barre de défilement grandissait encore 1 à 2 minutes, à mesure que chaque iframe paresseuse montait à la borne (constaté par JB).
+- **Règle écrite** : une taille ne se déduit jamais d'une mesure d'un contenu qui dépend d'elle ; stabilité contrôlée par la hauteur du document à 5 s puis 60 s. Bibliothèque : une fiche par page, cadre à la hauteur libre de l'écran, aucun message de hauteur.
+- **Emplacement** : `.claude/skills/design-craft/reference/craft-floor.md § Verify 11`, `.claude/conventions/component-registry.md § Bibliothèque vivante`, `.claude/checklists/code-review.md § Craft`, ADR 0003 révision v2.
+
+## 2026-10-21 — Onglet actif dont l'arrondi ne suivait pas celui de sa barre
+- **Erreur** : barre « Ordinateur | Téléphone » en `rounded` (8 px) + `border` (1 px) + `p-0.5` (2 px), onglet en `rounded-sm` (4 px) : il fallait 5 px ; les deux courbes ne gardaient pas le même écart (vu par JB).
+- **Règle écrite** : rayons concentriques, rayon intérieur = rayon extérieur − (bordure + marge intérieure), valeurs choisies pour tomber sur l'échelle (barre 8 px, 1 + 3 px, onglet 4 px) ; contrôle au rendu par `getComputedStyle` et capture zoomée du coin.
+- **Emplacement** : `.claude/skills/design-craft/reference/craft-floor.md § Verify 10`, `.claude/checklists/code-review.md § Craft`.
+
+## 2026-10-21 — Fiches de bibliothèque chargées de texte, nommées par leur contenu
+- **Erreur** : chaque fiche portait une phrase d'usage, une phrase à dire à Claude avec bouton Copier, une étiquette « Vous pouvez l'ajouter seul / Développeur », une vue technique, et des noms de contenu (« Trois forces », « Haut de page Tarifs avec les offres ») ; deux composants qui ne diffèrent que par un picto avaient deux fiches. Les éditeurs ne s'y retrouvaient pas (retour de JB sur 107 fiches).
+- **Règle écrite** : fiche = nom + visuel + « Utilisé sur » (`DemoDoc` = `{ name }`, un champ de plus casse `astro check`) ; nom = forme (type de mise en page + éléments, 5 mots au plus, ni guillemets, ni `!`/`?`, ni nom du site, unique : lint) ; variante = un cas de la même fiche, deux composants voisins = candidat à fusion au § Doublons.
+- **Emplacement** : `.claude/conventions/component-registry.md § Bibliothèque vivante` et `§ Doublons`, `scripts/check-styleguide.mjs`, `src/lib/styleguide.ts`, `.claude/checklists/code-review.md`.
+
 ## 2026-10-21 — Une démo en `vh` faisait grandir la bibliothèque sans fin
 - **Erreur** : chaque aperçu de /styleguide prend la hauteur que lui annonce sa page isolée ; un composant dimensionné en `vh` grandit avec son cadre, qui grandit avec lui. Constaté sur un site dérivé (Open Kairos : héros en 68vh, sections du template en 100vh) : la page montait à 28 millions de pixels, la capture plantait. Latent ici tant qu'aucun composant du socle n'est en `vh`.
 - **Règle écrite** : hauteur d'aperçu bornée dans la page (1600 px ordinateur, 2000 px téléphone) ; au-delà, l'aperçu défile dans son cadre et « Ouvrir seul » montre tout.

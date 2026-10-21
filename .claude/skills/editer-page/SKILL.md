@@ -33,4 +33,4 @@ Texte affiché sur plusieurs pages (méthode : `comprendre-demande` § Localiser
 
 ## Hors périmètre
 Texte figé dans un composant (`src/components/`) : c'est du développement (`comprendre-demande` § Hors périmètre).
-Ajouter, retirer ou déplacer un bloc d'une page à sections : `modifier-design` (blocs de la bibliothèque, par leur nom français).
+Ajouter, retirer ou déplacer un bloc d'une page à sections : `modifier-design` (blocs de la bibliothèque, par leur nom).

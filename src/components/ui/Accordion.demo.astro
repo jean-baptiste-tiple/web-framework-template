@@ -5,29 +5,37 @@ import Accordion from './Accordion.astro';
 
 export const demo: DemoDoc = {
   name: 'Volet dépliant',
-  purpose: 'Range un contenu secondaire derrière un titre cliquable ; le texte reste lisible par Google même replié.',
-  ask: 'Range les conditions détaillées de la page Tarifs dans un volet dépliant « Voir les conditions ».',
 };
 ---
 
 <div class="space-y-8">
-  <DemoCase label="seul">
+  <DemoCase label="fermé">
     <Accordion summary="Voir les conditions">
       <p class="mt-2 text-muted">Le contenu est libre : texte, liste ou autre composant.</p>
     </Accordion>
   </DemoCase>
-  <DemoCase label="open : ouvert au chargement">
+  <DemoCase label="ouvert au chargement">
     <Accordion summary="Sommaire" open>
       <p class="mt-2 text-muted">Visible sans attendre de script ; se replie au clic.</p>
     </Accordion>
   </DemoCase>
-  <DemoCase label="name partagé : ouvrir l’un referme l’autre">
+  <DemoCase label="en groupe : ouvrir l’un referme l’autre">
     <div class="space-y-3">
       <Accordion summary="Premier volet" name="demo-accordion">
         <p class="mt-2 text-muted">Ouvrir le second referme celui-ci.</p>
       </Accordion>
       <Accordion summary="Second volet" name="demo-accordion">
         <p class="mt-2 text-muted">Même attribut name que le précédent.</p>
+      </Accordion>
+    </div>
+  </DemoCase>
+  <DemoCase label="sans cadre : liste de volets serrés (menu)">
+    <div class="max-w-xs">
+      <Accordion summary="Premier volet" variant="plain">
+        <p class="pb-2 text-sm text-muted">Pas de bordure ni de marge intérieure.</p>
+      </Accordion>
+      <Accordion summary="Second volet" variant="plain">
+        <p class="pb-2 text-sm text-muted">Les volets se suivent sans espace.</p>
       </Accordion>
     </div>
   </DemoCase>

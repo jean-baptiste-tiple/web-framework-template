@@ -12,17 +12,21 @@ export const schema = z.object({
 
 export type FooterSimpleSection = z.infer<typeof schema>;
 
-// Fiche et exemple de la bibliothèque /styleguide (src/lib/styleguide.ts).
+// Fiche de la bibliothèque /styleguide : nom (forme, pas contenu) + un cas par
+// variante, libellé par sa différence (src/lib/styleguide.ts).
 export const demo = {
-  name: 'Pied de page',
-  purpose: 'Mention de copyright et liens de service (mentions légales, confidentialité) en bas de chaque page.',
-  ask: 'Ajoute un lien « Plan du site » dans le pied de page.',
-  example: {
-    type: 'nav.footer-simple',
-    organizationName: 'Mon Organisation',
-    links: [
-      { label: 'Mentions légales', href: '/mentions-legales' },
-      { label: 'Politique de confidentialité', href: '/politique-de-confidentialite' },
-    ],
-  },
+  name: 'Pied de page · liens',
+  examples: [
+    {
+      label: 'copyright et liens de service',
+      example: {
+        type: 'nav.footer-simple',
+        organizationName: 'Mon Organisation',
+        links: [
+          { label: 'Mentions légales', href: '/mentions-legales' },
+          { label: 'Politique de confidentialité', href: '/politique-de-confidentialite' },
+        ],
+      },
+    },
+  ],
 } satisfies SectionDemo<FooterSimpleSection>;

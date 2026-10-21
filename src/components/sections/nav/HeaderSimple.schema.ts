@@ -12,18 +12,22 @@ export const schema = z.object({
 
 export type HeaderSimpleSection = z.infer<typeof schema>;
 
-// Fiche et exemple de la bibliothèque /styleguide (src/lib/styleguide.ts).
+// Fiche de la bibliothèque /styleguide : nom (forme, pas contenu) + un cas par
+// variante, libellé par sa différence (src/lib/styleguide.ts).
 export const demo = {
-  name: 'En-tête du site',
-  purpose: 'Nom du site à gauche et menu principal à droite, en haut de chaque page.',
-  ask: 'Ajoute « Tarifs » au menu du haut, entre Blog et Contact.',
-  example: {
-    type: 'nav.header-simple',
-    brand: 'Mon Site',
-    nav: [
-      { label: 'Accueil', href: '/' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Contact', href: '/contact' },
-    ],
-  },
+  name: 'En-tête · marque et menu',
+  examples: [
+    {
+      label: 'marque et trois liens',
+      example: {
+        type: 'nav.header-simple',
+        brand: 'Mon Site',
+        nav: [
+          { label: 'Accueil', href: '/' },
+          { label: 'Blog', href: '/blog' },
+          { label: 'Contact', href: '/contact' },
+        ],
+      },
+    },
+  ],
 } satisfies SectionDemo<HeaderSimpleSection>;

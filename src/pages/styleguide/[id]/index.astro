@@ -1,0 +1,148 @@
+---
+// Fiche d'un composant de la bibliothèque : /styleguide/<id>/ (ADR 0003,
+// révision v2). Une fiche par page, rien d'autre : le NOM, le VISUEL (cadre
+// ordinateur 1280 px réduit à la colonne, ou téléphone 390 px) et « Utilisé
+// sur » avec les liens des pages. Pas de phrase d'usage, pas de vue technique :
+// une variante se lit dans le libellé de son cas (DemoCase), dans l'aperçu.
+// Hauteur du cadre = hauteur libre de l'écran (fiche en h-svh), jamais celle du
+// contenu : aucune boucle de mesure, le document ne grandit pas.
+import GalleryShell from '@/components/styleguide/GalleryShell.astro';
+import GalleryPager from '@/components/styleguide/GalleryPager.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { GALLERY_ENABLED, getGallery, type GalleryEntry } from '@/lib/styleguide';
+
+export async function getStaticPaths() {
+  if (!GALLERY_ENABLED) return [];
+  const { entries } = await getGallery();
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+interface Props {
+  entry: GalleryEntry;
+}
+const { entry } = Astro.props;
+const href = `/styleguide/${entry.id}/`;
+// Pages listées : les premières, puis « et N autres » (une route dynamique est
+// dépliée en ses pages réelles par src/lib/styleguide.ts).
+const SHOWN = 5;
+const shown = entry.usedBy.slice(0, SHOWN);
+const more = entry.usedBy.length - shown.length;
+---
+
+<GalleryShell title={entry.name} current={href}>
+  <div class="flex h-svh flex-col">
+    <header class="border-b border-border px-4 py-4 sm:px-6">
+      <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+        <h1 class="min-w-0 text-2xl font-semibold tracking-tight">{entry.name}</h1>
+        <GalleryPager current={href} />
+      </div>
+      <p class="mt-2 text-sm text-muted">
+        {
+          shown.length === 0 ? (
+            <span class="font-medium text-fg">Utilisé sur aucune page pour l’instant.</span>
+          ) : (
+            <>
+              Utilisé sur :{' '}
+              {/* Sur une ligne : un retour à la ligne dans le lien serait souligné. */}
+              {shown.map((u, n) => (
+                <>{n > 0 && ', '}{u.href ? <a href={u.href} class="text-fg underline underline-offset-2 hover:text-accent">{u.label}</a> : u.label}</>
+              ))}
+              {more > 0 && ` et ${more} autre${more > 1 ? 's' : ''}`}
+            </>
+          )
+        }
+      </p>
+    </header>
+
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-4 py-2 sm:px-6">
+      {/* Rayons concentriques (craft-floor) : rayon des onglets = rayon de la barre
+          (rounded, 8 px) moins bordure (1 px) et marge intérieure (p-0.75, 3 px) = 4 px (rounded-sm). */}
+      <div role="group" aria-label="Largeur de l’aperçu" class="inline-flex rounded border border-border p-0.75">
+        <button
+          type="button"
+          data-sg-mode="desktop"
+          aria-pressed="true"
+          class="min-h-11 rounded-sm px-4 text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-pressed:bg-fg aria-pressed:text-bg motion-reduce:transition-none"
+        >
+          Ordinateur
+        </button>
+        <button
+          type="button"
+          data-sg-mode="phone"
+          aria-pressed="false"
+          class="min-h-11 rounded-sm px-4 text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-pressed:bg-fg aria-pressed:text-bg motion-reduce:transition-none"
+        >
+          Téléphone
+        </button>
+      </div>
+      <a
+        href={`${href}apercu/`}
+        target="_blank"
+        class="inline-flex min-h-11 items-center gap-1.5 text-sm text-muted underline-offset-4 hover:text-fg hover:underline"
+      >
+        Ouvrir l’aperçu seul
+        <Icon name="external-link" size={14} />
+      </a>
+    </div>
+
+    <div data-sg-viewport class="min-h-0 flex-1 overflow-hidden bg-surface">
+      <div data-sg-stage class="mx-auto h-full overflow-hidden bg-bg">
+        <iframe src={`${href}apercu/`} title={`Aperçu : ${entry.name}`} class="block h-full w-full origin-top-left border-0"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</GalleryShell>
+
+<script>
+  // Cadre de l'aperçu : la page isolée est rendue à sa vraie largeur (donc ses
+  // vrais points de rupture), réduite à la colonne si elle est plus étroite. Sa
+  // hauteur vient de la place libre (le cadre), JAMAIS du contenu : un composant
+  // en `vh` ne peut plus faire grandir la page (ADR 0003, révision v2). Le choix
+  // ordinateur / téléphone suit l'éditeur de fiche en fiche (sessionStorage,
+  // facultatif). Sans JS : l'aperçu à la largeur de la colonne.
+  const WIDTH = { desktop: 1280, phone: 390 } as const;
+  type Mode = keyof typeof WIDTH;
+  const KEY = 'sg-mode';
+
+  const viewport = document.querySelector<HTMLElement>('[data-sg-viewport]');
+  const stage = document.querySelector<HTMLElement>('[data-sg-stage]');
+  const frame = stage?.querySelector('iframe');
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-sg-mode]')];
+
+  // Par défaut : téléphone sur un écran étroit (1280 px y seraient réduits au tiers).
+  let mode: Mode = (viewport?.clientWidth ?? WIDTH.desktop) < 640 ? 'phone' : 'desktop';
+  try {
+    const stored = sessionStorage.getItem(KEY);
+    if (stored === 'phone' || stored === 'desktop') mode = stored;
+  } catch {
+    // Stockage indisponible : choix par défaut.
+  }
+
+  const layout = () => {
+    if (!viewport || !stage || !frame) return;
+    const width = WIDTH[mode];
+    const scale = Math.min(1, viewport.clientWidth / width);
+    const height = viewport.clientHeight;
+    frame.style.width = `${width}px`;
+    frame.style.height = `${height / scale}px`;
+    frame.style.transform = `scale(${scale})`;
+    stage.style.width = `${width * scale}px`;
+    stage.style.height = `${height}px`;
+    for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.sgMode === mode));
+  };
+
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      mode = button.dataset.sgMode as Mode;
+      try {
+        sessionStorage.setItem(KEY, mode);
+      } catch {
+        // Choix non retenu pour la fiche suivante : sans conséquence.
+      }
+      layout();
+    });
+  }
+  if (viewport) new ResizeObserver(layout).observe(viewport);
+  layout();
+</script>

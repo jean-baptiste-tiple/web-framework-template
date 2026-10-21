@@ -4,13 +4,11 @@ import DemoCase from '@/components/styleguide/DemoCase.astro';
 import Faq from './Faq.astro';
 
 export const demo: DemoDoc = {
-  name: 'Questions fréquentes (dans une page)',
-  purpose: 'Questions et réponses dépliables, placées à l’intérieur d’une page de texte.',
-  ask: 'Ajoute deux questions fréquentes en bas de la page À propos : « Où êtes-vous situés ? » et « Travaillez-vous à distance ? ».',
+  name: 'Questions dépliables',
 };
 ---
 
-<DemoCase label="titre par défaut · items (paires question / réponse)">
+<DemoCase label="titre et questions">
   <Faq
     items={[
       { q: 'Où êtes-vous situés ?', a: 'À Paris, avec des interventions dans toute la France.' },

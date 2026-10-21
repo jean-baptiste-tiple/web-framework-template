@@ -1,0 +1,44 @@
+---
+// Fiche précédente / suivante de la bibliothèque (/styleguide), dans l'ordre du
+// menu (Fondations, puis les familles), et lien « Menu » sur téléphone. Outillage, jamais utilisé par une page du site.
+import Icon from '@/components/ui/Icon.astro';
+import { getGallery } from '@/lib/styleguide';
+
+interface Props {
+  /** Adresse de la page affichée (`/styleguide/<id>/`). */
+  current: string;
+}
+const { current } = Astro.props;
+const sequence = (await getGallery()).nav.flatMap((g) => g.items);
+const i = sequence.findIndex((s) => s.href === current);
+const links = [
+  { item: sequence[i - 1], label: 'Précédente', icon: 'rotate-180' },
+  { item: sequence[i + 1], label: 'Suivante', icon: '' },
+];
+---
+
+<nav aria-label="Fiche précédente et suivante" class="flex gap-2">
+  {
+    links.map(({ item, label, icon }) =>
+      item ? (
+        <a
+          href={item.href}
+          title={item.name}
+          class="inline-flex min-h-11 items-center gap-1.5 rounded border border-border px-3 text-sm font-medium hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          {icon && <Icon name="arrow-right" size={16} class={icon} />}
+          {label}
+          <span class="sr-only">: {item.name}</span>
+          {!icon && <Icon name="arrow-right" size={16} />}
+        </a>
+      ) : null,
+    )
+  }
+  {/* Téléphone : le menu est sous la fiche (GalleryShell). */}
+  <a
+    href="#sg-menu"
+    class="inline-flex min-h-11 items-center rounded border border-border px-3 text-sm font-medium hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden"
+  >
+    Menu
+  </a>
+</nav>

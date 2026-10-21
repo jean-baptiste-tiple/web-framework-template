@@ -5,12 +5,20 @@
 //
 // Règles :
 //  - `<Nom>.astro` avec un `<Nom>.schema.ts` voisin (section) : le schéma exporte `demo`
-//    (fiche + `example`), rendu par SectionRenderer ;
-//  - tout autre `<Nom>.astro` : un `<Nom>.demo.astro` voisin qui exporte `demo` ;
+//    (`name` + `examples`, un cas libellé par variante), rendu par SectionRenderer ;
+//  - tout autre `<Nom>.astro` : un `<Nom>.demo.astro` voisin qui exporte `demo` (`name`) ;
+//  - outillage de la bibliothèque (src/components/styleguide/) : hors contrôle ;
 //  - une démo sans composant, ou une exclusion qui ne vise plus rien, est une erreur.
 // Pourquoi : la galerie écrite à la main oubliait sans bruit (23 composants sur 69
 // absents sur un site dérivé). La complétude des fiches et la validité des exemples
 // sont contrôlées au build (src/lib/styleguide.ts).
+//
+// NOMS des fiches (component-registry.md § Bibliothèque vivante, « Nom d'une fiche ») :
+//  le nom DÉCRIT la forme (type de mise en page + éléments), jamais le contenu. Contrôlé :
+//  5 mots au plus (2 au moins pour une section), sans guillemets ni ponctuation de
+//  slogan (« » " “ ” ! ?), sans le nom du site (site.json : name, shortName,
+//  organizationName), unique dans la bibliothèque. Ce que la machine ne voit pas (nom
+//  de page, slogan sans guillemets) se cite en review.
 //
 // Deux contrôles de RÉUTILISATION en plus (component-registry.md § Bibliothèque vivante) :
 //  A. Groupe de classes recopié : le même ensemble de classes (ordre indifférent) dans
@@ -34,8 +42,9 @@ const EXCLUSIONS = new Map([
   ['src/components/landing/SectionRenderer.astro', 'aiguillage sans markup : chaque section a sa démo'],
   ['src/components/ui/Container.astro', 'primitive de largeur, visible dans toutes les démos'],
   ['src/components/ui/Section.astro', 'primitive d’espacement vertical, sans rendu propre'],
-  ['src/components/styleguide/DemoCase.astro', 'outillage des démos de la bibliothèque'],
 ]);
+// Outillage de la bibliothèque elle-même (DemoCase, mise en page, navigation) : sans démo.
+const TOOLING = 'src/components/styleguide/';
 
 const root = 'src/components';
 const exportsDemo = (file) => /export\s+const\s+demo\b/.test(readFileSync(file, 'utf8'));
@@ -51,7 +60,7 @@ const errors = [];
 let covered = 0;
 
 for (const file of files.filter((f) => f.endsWith('.astro') && !f.endsWith('.demo.astro'))) {
-  if (EXCLUSIONS.has(file)) continue;
+  if (EXCLUSIONS.has(file) || file.startsWith(TOOLING)) continue;
   const base = file.slice(0, -'.astro'.length);
   const schema = `${base}.schema.ts`;
   const demo = `${base}.demo.astro`;
@@ -59,13 +68,13 @@ for (const file of files.filter((f) => f.endsWith('.astro') && !f.endsWith('.dem
     if (exportsDemo(schema)) covered++;
     else
       errors.push(
-        `${file} : section sans exemple. Ajouter \`export const demo = { name, purpose, ask, example } satisfies SectionDemo<…>\` dans ${schema}.`,
+        `${file} : section sans exemple. Ajouter \`export const demo = { name, examples: [{ label, example }] } satisfies SectionDemo<…>\` dans ${schema}.`,
       );
   } else if (existsSync(demo)) {
     if (exportsDemo(demo)) covered++;
     else
       errors.push(
-        `${demo} : \`export const demo: DemoDoc = { name, purpose, ask }\` absent du frontmatter (annotation de type : \`satisfies\` casse le build d'un export hissé).`,
+        `${demo} : \`export const demo: DemoDoc = { name }\` absent du frontmatter (annotation de type : \`satisfies\` casse le build d'un export hissé).`,
       );
   } else {
     errors.push(
@@ -79,6 +88,36 @@ for (const demo of files.filter((f) => f.endsWith('.demo.astro'))) {
 }
 for (const file of EXCLUSIONS.keys()) {
   if (!existsSync(file)) errors.push(`EXCLUSIONS de scripts/check-styleguide.mjs : ${file} n'existe plus, retirer la ligne.`);
+}
+
+// --- Noms des fiches : la forme, pas le contenu --------------------------------------
+const site = JSON.parse(readFileSync('src/content/settings/site.json', 'utf8'));
+const siteNames = [...new Set([site.name, site.shortName, site.organizationName].filter(Boolean))];
+const names = new Map();
+for (const file of files.filter((f) => f.endsWith('.demo.astro') || f.endsWith('.schema.ts'))) {
+  const m = readFileSync(file, 'utf8').match(/export\s+const\s+demo\b[\s\S]*?\bname:\s*(['"`])((?:(?!\1).)*)\1/);
+  if (!m) continue;
+  const name = m[2];
+  const section = file.endsWith('.schema.ts');
+  const words = name.split(/[\s·,+/«»"“”!?:;()-]+/).filter(Boolean).length;
+  const problems = [];
+  if (words > 5 || (section && words < 2)) problems.push(`${words} mot${words > 1 ? 's' : ''} (attendu : ${section ? '2' : '1'} à 5)`);
+  if (/[«»"“”!?]/.test(name)) problems.push('guillemets ou ponctuation de slogan');
+  for (const s of siteNames) if (name.toLowerCase().includes(s.toLowerCase())) problems.push(`nom du site « ${s} »`);
+  if (problems.length) {
+    errors.push(
+      `${file} : nom « ${name} » refusé (${problems.join(', ')}). Le nom décrit la forme : type de mise en page + éléments (« 3 colonnes · picto, titre, texte »), sans contenu, nom de page ni slogan ; une variante se nomme dans le libellé de son cas (component-registry.md § Bibliothèque vivante).`,
+    );
+  }
+  if (!names.has(name)) names.set(name, []);
+  names.get(name).push(file);
+}
+for (const [name, where] of names) {
+  if (where.length > 1) {
+    errors.push(
+      `Nom « ${name} » porté par ${where.join(', ')} : deux fiches au même nom. Même forme = un composant à variante (component-registry.md § Doublons), sinon nommer la différence.`,
+    );
+  }
 }
 
 // --- A. Groupes de classes recopiés entre fichiers ---------------------------------
@@ -129,5 +168,5 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(
-  `Bibliothèque : ${covered} composants avec démo, ${EXCLUSIONS.size} exclusions déclarées, 0 groupe de classes recopié, ${declared.size} pages bespoke déclarées.`,
+  `Bibliothèque : ${covered} composants avec démo, ${names.size} noms conformes, ${EXCLUSIONS.size} exclusions déclarées, 0 groupe de classes recopié, ${declared.size} pages bespoke déclarées.`,
 );

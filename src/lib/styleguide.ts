@@ -1,52 +1,45 @@
 // Bibliothèque de composants (/styleguide) : tout ce qu'elle montre est
 // DÉCOUVERT au build, rien n'y est listé à la main (ADR 0003).
 //  - composants : chaque `<Nom>.demo.astro` colocalisé (rendu + `export const demo`) ;
-//  - sections : `export const demo` (métadonnées + `example` typé) de chaque
-//    `<Variante>.schema.ts`, rendu par SectionRenderer ;
+//  - sections : `export const demo` (nom + `examples` typés) de chaque
+//    `<Variante>.schema.ts`, rendus par SectionRenderer ;
 //  - tokens : blocs @theme de src/styles/global.css ;
 //  - styles partagés : @utility de global.css annotés juste au-dessus
 //    `/* Style de texte « Nom » : rôle. */` ou `/* Style « Nom » : rôle. */` ;
 //  - illustrations : fichiers de src/assets/illustrations (dossier facultatif) ;
-//  - « pages qui l'utilisent » : graphe des imports de src/ + frontmatter
-//    `sections:` des collections.
-// Le contrôle « tout composant a sa démo » est fait au lint
-// (scripts/check-styleguide.mjs) ; ce module casse le build si une démo est
-// incomplète ou si l'exemple d'une section ne passe pas son schéma.
+//  - « Utilisé sur » : graphe des imports de src/ + frontmatter `sections:` des
+//    collections ; une route dynamique est dépliée en ses pages réelles.
+// Une fiche par page (ADR 0003, révision v2) : /styleguide/<id>/ = nom, aperçu,
+// « Utilisé sur » ; /styleguide/<id>/apercu/ = le rendu seul (cadre de l'aperçu).
+// Le contrôle « tout composant a sa démo » et la forme des noms sont faits au
+// lint (scripts/check-styleguide.mjs) ; ce module casse le build si une démo est
+// incomplète ou si un exemple de section ne passe pas son schéma.
 import { getCollection } from 'astro:content';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import type { z } from 'astro/zod';
 import { collections } from '@/content.config';
-import { SECTION_REGISTRY, type AnySection, type SectionType } from '@/lib/sections';
+import { SECTION_REGISTRY, type AnySection } from '@/lib/sections';
 import themeCss from '@/styles/global.css?raw';
 
 // Galerie absente du build de production (action « Mise en ligne »,
 // VERCEL_ENV=production) ; présente sur TEST, les aperçus et en local.
 export const GALLERY_ENABLED = process.env.VERCEL_ENV !== 'production';
 
-/** Fiche éditeur d'un composant : ce que la bibliothèque affiche en tête. */
+/** Fiche d'un composant : son nom, qui DÉCRIT la forme (component-registry.md
+ *  § Bibliothèque vivante : type de mise en page + éléments, 5 mots au plus). */
 export interface DemoDoc {
-  /** Nom en français, celui qu'un éditeur emploie (« Bandeau d'appel à l'action »). */
   name: string;
-  /** À quoi ça sert, en une phrase. */
-  purpose: string;
-  /** Phrase à dire à Claude pour l'utiliser (« Ajoute un bandeau… sur la page… »). */
-  ask: string;
 }
 
-/** Démo d'une section : fiche + exemple typé par le schéma de la section. */
-export interface SectionDemo<T> extends DemoDoc {
+/** Un cas d'une section : libellé (sa différence, « avec pictos ») + exemple typé. */
+export interface SectionCase<T> {
+  label: string;
   example: T;
 }
 
-/** Qui peut s'en servir : `page` = section ajoutable dans `sections:` (édition),
- *  `global` = chrome (textes dans site.json, modèle = développement), `dev` = développement. */
-export type Access = 'page' | 'global' | 'dev';
-
-export interface Field {
-  name: string;
-  optional: boolean;
-  type: string;
-  note?: string;
+/** Démo d'une section : nom + un cas par variante, typés par le schéma de la section. */
+export interface SectionDemo<T> extends DemoDoc {
+  examples: [SectionCase<T>, ...SectionCase<T>[]];
 }
 
 export interface Usage {
@@ -55,19 +48,27 @@ export interface Usage {
 }
 
 export interface GalleryEntry {
-  /** Ancre (#id) et page isolée /styleguide/<id>/. */
+  /** Fiche /styleguide/<id>/ et rendu seul /styleguide/<id>/apercu/. */
   id: string;
   file: string;
-  demoFile: string;
   group: string;
-  access: Access;
   sectionType?: string;
-  doc: DemoDoc;
-  fields: Field[];
-  variants: { name: string; values: string[] }[];
+  name: string;
   usedBy: Usage[];
-  render: { kind: 'demo'; Demo: AstroComponentFactory } | { kind: 'section'; example: AnySection };
+  render: { kind: 'demo'; Demo: AstroComponentFactory } | { kind: 'section'; examples: SectionCase<AnySection>[] };
+}
+
+/** Lien du menu : une fiche de composant ou une rubrique de Fondations. */
+export interface NavItem {
+  href: string;
+  name: string;
+  /** Texte où la recherche du menu cherche (nom, famille, identifiant). */
   search: string;
+}
+
+export interface NavGroup {
+  label: string;
+  items: NavItem[];
 }
 
 /** Style partagé (@utility annoté de global.css) : nom de classe, rôle, contenu. */
@@ -98,6 +99,12 @@ export interface TokenGroup {
   tokens: { name: string; value: string }[];
 }
 
+/** Rubrique de Fondations : une page /styleguide/fondations/<id>/. */
+export type Foundation =
+  | { id: string; label: string; kind: 'tokens'; group: TokenGroup }
+  | { id: 'styles'; label: string; kind: 'styles'; styles: SharedStyle[] }
+  | { id: 'illustrations'; label: string; kind: 'illustrations'; illustrations: Illustration[] };
+
 // --- Sources découvertes --------------------------------------------------------
 
 const DEMOS = import.meta.glob<{ default: AstroComponentFactory; demo?: DemoDoc }>(
@@ -108,12 +115,18 @@ const SCHEMAS = import.meta.glob<{
   schema: z.AnyZodObject;
   demo?: SectionDemo<AnySection>;
 }>('/src/components/sections/**/*.schema.ts', { eager: true });
-// Sources brutes : props des composants et graphe des imports.
+// Sources brutes : graphe des imports et styles partagés.
 const SOURCES = import.meta.glob<string>('/src/**/*.{astro,ts,mdx}', {
   query: '?raw',
   import: 'default',
   eager: true,
 });
+// Routes du site (hors bibliothèque), chargées à la demande : une route dynamique
+// qui utilise un composant est dépliée en ses pages réelles (getStaticPaths).
+const ROUTES = import.meta.glob<{ getStaticPaths?: (options: unknown) => unknown }>([
+  '/src/pages/**/*.astro',
+  '!/src/pages/styleguide/**',
+]);
 
 // Dossier FACULTATIF : absent (cas du modèle), le glob est vide et la rubrique
 // « Illustrations » n'apparaît pas (component-registry.md § Bibliothèque vivante).
@@ -147,104 +160,6 @@ const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const kebab = (s: string) => s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 const idOf = (file: string) =>
   kebab(file.replace(/^src\/components\//, '').replace(/\.astro$/, '')).replace(/\//g, '-');
-
-// --- Props d'un composant (interface Props du frontmatter) ----------------------
-
-function propsOf(source: string): Field[] {
-  const code = source.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
-  const start = code.match(/(?:interface\s+Props\b[^{]*|type\s+Props\s*=\s*)\{/);
-  if (!start || start.index === undefined) return [];
-  let i = start.index + start[0].length;
-  const from = i;
-  for (let depth = 1; i < code.length && depth > 0; i++) {
-    if (code[i] === '{') depth++;
-    else if (code[i] === '}') depth--;
-  }
-  const fields: Field[] = [];
-  let note = '';
-  let inComment = false;
-  let buf = '';
-  let depth = 0;
-  for (const raw of code.slice(from, i - 1).split('\n')) {
-    const line = raw.trim();
-    if (!buf) {
-      if (inComment || line.startsWith('/*')) {
-        inComment = !line.endsWith('*/');
-        note += ` ${line.replace(/^\/\*+|\*+\/$|^\*+/g, '').trim()}`;
-        continue;
-      }
-      if (line.startsWith('//')) {
-        note += ` ${line.slice(2).trim()}`;
-        continue;
-      }
-      if (!line) continue;
-    }
-    buf += ` ${line.replace(/\s\/\/.*$/, '')}`;
-    depth += (line.match(/\{/g) ?? []).length - (line.match(/\}/g) ?? []).length;
-    if (depth > 0) continue;
-    const m = buf.trim().match(/^(?:readonly\s+)?([\w$]+)(\?)?\s*:\s*(.+?);?$/);
-    // Note affichée telle quelle : les tirets des commentaires de code deviennent
-    // des virgules (zéro tiret dans le texte visible, craft-floor).
-    const text = note.replace(/\s*[—–]\s*/g, ', ').trim();
-    if (m) fields.push({ name: m[1], optional: !!m[2], type: m[3], note: text || undefined });
-    buf = '';
-    note = '';
-  }
-  return fields;
-}
-
-// --- Champs d'une section (schéma Zod) ------------------------------------------
-
-type AnyZod = z.ZodTypeAny;
-
-function zodType(t: AnyZod): string {
-  const d = t._def;
-  switch (d.typeName) {
-    case 'ZodOptional':
-    case 'ZodNullable':
-    case 'ZodDefault':
-      return zodType(d.innerType);
-    case 'ZodEffects':
-      return zodType(d.schema);
-    case 'ZodString':
-      return 'texte';
-    case 'ZodNumber':
-      return 'nombre';
-    case 'ZodBoolean':
-      return 'oui / non';
-    case 'ZodDate':
-      return 'date';
-    case 'ZodLiteral':
-      return JSON.stringify(d.value);
-    case 'ZodEnum':
-      return (d.values as string[]).map((v) => `'${v}'`).join(' | ');
-    case 'ZodArray':
-      return `liste de ${zodType(d.type)}`;
-    case 'ZodObject':
-      return `{ ${Object.entries((t as z.AnyZodObject).shape)
-        .map(([k, v]) => `${k}${(v as AnyZod).isOptional() ? '?' : ''}`)
-        .join(', ')} }`;
-    case 'ZodUnion':
-    case 'ZodDiscriminatedUnion':
-      return (d.options as AnyZod[]).map(zodType).join(' | ');
-    default:
-      return String(d.typeName).replace(/^Zod/, '').toLowerCase();
-  }
-}
-
-const fieldsOf = (schema: z.AnyZodObject): Field[] =>
-  Object.entries(schema.shape)
-    .filter(([name]) => name !== 'type')
-    .map(([name, t]) => ({ name, optional: (t as AnyZod).isOptional(), type: zodType(t as AnyZod) }));
-
-// Variantes = champs dont le type est une union de littéraux texte.
-const variantsOf = (fields: Field[]) =>
-  fields.flatMap((f) => {
-    const values = [...f.type.matchAll(/'([^']+)'/g)].map((m) => m[1]);
-    return values.length > 1 && /^\s*'[^']+'(\s*\|\s*'[^']+')+\s*$/.test(f.type)
-      ? [{ name: f.name, values }]
-      : [];
-  });
 
 // --- Graphe des imports : qui utilise quoi --------------------------------------
 
@@ -290,12 +205,30 @@ function contentUrl(collection: string, id: string): Usage {
   return url ? { label: url, href: url } : { label: `${collection}/${id}` };
 }
 
-function routeUsage(file: string): Usage {
+// Pages réelles d'une route : statique = elle-même ; dynamique = ses chemins
+// (getStaticPaths de la route). Pagination ou échec : la route, sans lien.
+async function routeUsages(file: string): Promise<Usage[]> {
   const route = `${file.replace(/^src\/pages/, '').replace(/\.(astro|ts)$/, '').replace(/\/?index$/, '')}/`;
-  return route.includes('[') ? { label: `${route} (chaque page de cette route)` } : { label: route, href: route };
+  if (!route.includes('[')) return [{ label: route, href: route }];
+  const fallback = [{ label: `${route} (chaque page de cette route)` }];
+  try {
+    const mod = await ROUTES[`/${file}`]?.();
+    const paths = (await mod?.getStaticPaths?.({ paginate: () => [], routePattern: route })) as
+      | { params: Record<string, string | number | undefined> }[]
+      | undefined;
+    if (!paths?.length) return fallback;
+    return paths.map(({ params }) => {
+      const url = route
+        .replace(/\[(?:\.\.\.)?(\w+)\]/g, (_, key: string) => String(params[key] ?? ''))
+        .replace(/\/{2,}/g, '/');
+      return { label: url, href: url };
+    });
+  } catch {
+    return fallback;
+  }
 }
 
-function usageOf(file: string, sectionFiles: Map<string, string>, bySection: Map<string, Usage[]>): Usage[] {
+async function usageOf(file: string, sectionFiles: Map<string, string>, bySection: Map<string, Usage[]>) {
   const out = new Map<string, Usage>();
   const seen = new Set([file]);
   const queue = [file];
@@ -310,8 +243,7 @@ function usageOf(file: string, sectionFiles: Map<string, string>, bySection: Map
       if (importer === 'src/lib/sections.ts') continue;
       if (importer.startsWith('src/layouts/')) out.set('*', { label: 'Toutes les pages (mise en page commune)' });
       else if (importer.startsWith('src/pages/')) {
-        const u = routeUsage(importer);
-        out.set(u.label, u);
+        for (const u of await routeUsages(importer)) out.set(u.label, u);
       } else if (importer.startsWith('src/content/')) {
         const [, collection, ...rest] = importer.replace(/\.mdx?$/, '').split('/').slice(1);
         const u = contentUrl(collection, rest.join('/'));
@@ -415,21 +347,18 @@ const illustrations = (): Illustration[] =>
 
 // --- Assemblage -----------------------------------------------------------------
 
-function checkDoc(doc: DemoDoc | undefined, file: string): DemoDoc {
-  const missing = (['name', 'purpose', 'ask'] as const).filter((k) => !doc?.[k]?.trim());
-  if (!doc || missing.length) {
-    throw new Error(
-      `${file} : \`export const demo\` incomplet (${missing.join(', ') || 'absent'}). Fiche attendue : { name, purpose, ask } (src/lib/styleguide.ts, DemoDoc).`,
-    );
+function checkName(doc: DemoDoc | undefined, file: string, expected: string): string {
+  if (!doc?.name?.trim()) {
+    throw new Error(`${file} : \`export const demo\` sans \`name\`. Fiche attendue : ${expected} (src/lib/styleguide.ts).`);
   }
-  return doc;
+  return doc.name;
 }
 
 async function buildGallery() {
   const bySection = await sectionUsage();
   const entries: GalleryEntry[] = [];
 
-  // Sections : une démo par variante du registre, prise dans son .schema.ts.
+  // Sections : une fiche par variante du registre, ses cas pris dans son .schema.ts.
   const sectionFiles = new Map<string, string>();
   const sectionEntries: { file: string; schemaFile: string; type: string; mod: (typeof SCHEMAS)[string] }[] = [];
   for (const [path, mod] of Object.entries(SCHEMAS)) {
@@ -450,26 +379,24 @@ async function buildGallery() {
   }
 
   for (const { file, schemaFile, type, mod } of sectionEntries) {
-    const doc = checkDoc(mod.demo, schemaFile);
-    const parsed = mod.schema.safeParse(mod.demo!.example);
-    if (!parsed.success) {
-      throw new Error(`${schemaFile} : \`demo.example\` ne passe pas le schéma : ${parsed.error.message}`);
+    const name = checkName(mod.demo, schemaFile, '{ name, examples: [{ label, example }] }');
+    const examples = mod.demo?.examples ?? [];
+    if (!examples.length) throw new Error(`${schemaFile} : \`demo.examples\` vide (un cas au moins).`);
+    for (const { label, example } of examples) {
+      const parsed = mod.schema.safeParse(example);
+      if (!parsed.success) {
+        throw new Error(`${schemaFile} : l'exemple « ${label} » ne passe pas le schéma : ${parsed.error.message}`);
+      }
     }
     const family = type.split('.')[0];
-    const fields = fieldsOf(mod.schema);
     entries.push({
       id: idOf(file),
       file,
-      demoFile: schemaFile,
       group: SECTION_FAMILY_LABELS[family] ?? `Sections : ${family}`,
-      access: 'chrome' in SECTION_REGISTRY[type as SectionType] ? 'global' : 'page',
       sectionType: type,
-      doc,
-      fields,
-      variants: variantsOf(fields),
-      usedBy: usageOf(file, sectionFiles, bySection),
-      render: { kind: 'section', example: mod.demo!.example },
-      search: '',
+      name,
+      usedBy: await usageOf(file, sectionFiles, bySection),
+      render: { kind: 'section', examples },
     });
   }
 
@@ -477,57 +404,63 @@ async function buildGallery() {
   for (const [path, mod] of Object.entries(DEMOS)) {
     const demoFile = rel(path);
     const file = demoFile.replace(/\.demo\.astro$/, '.astro');
-    const source = FILES.get(file);
-    if (source === undefined) throw new Error(`${demoFile} : composant ${file} introuvable.`);
+    if (!FILES.has(file)) throw new Error(`${demoFile} : composant ${file} introuvable.`);
     const folder = file.split('/')[2];
-    const fields = propsOf(source);
     entries.push({
       id: idOf(file),
       file,
-      demoFile,
       group: FOLDER_LABELS[folder] ?? capitalize(folder),
-      access: 'dev',
-      doc: checkDoc(mod.demo, demoFile),
-      fields,
-      variants: variantsOf(fields),
-      usedBy: usageOf(file, sectionFiles, bySection),
+      name: checkName(mod.demo, demoFile, '{ name }'),
+      usedBy: await usageOf(file, sectionFiles, bySection),
       render: { kind: 'demo', Demo: mod.default },
-      search: '',
     });
-  }
-
-  for (const e of entries) {
-    // « aucune page » : retrouver d'un mot les composants inutilisés (ligne visible de la fiche).
-    const unused = e.usedBy.length ? '' : 'aucune page inutilisé';
-    e.search = [e.doc.name, e.doc.purpose, e.doc.ask, e.group, e.id, e.file, e.sectionType ?? '', unused].join(' ');
   }
 
   // Ordre du menu : Éléments, autres dossiers, puis familles de sections (ordre du registre).
   const sectionOrder = [...new Set(Object.keys(SECTION_REGISTRY).map((t) => t.split('.')[0]))];
   const rank = (e: GalleryEntry) =>
     e.sectionType ? 100 + sectionOrder.indexOf(e.sectionType.split('.')[0]) : e.group === FOLDER_LABELS.ui ? 0 : 1;
-  entries.sort((a, b) => rank(a) - rank(b) || a.group.localeCompare(b.group, 'fr') || a.doc.name.localeCompare(b.doc.name, 'fr'));
+  entries.sort((a, b) => rank(a) - rank(b) || a.group.localeCompare(b.group, 'fr') || a.name.localeCompare(b.name, 'fr'));
 
-  const groups: { label: string; entries: GalleryEntry[] }[] = [];
+  // `fondations` : segment réservé aux rubriques (/styleguide/fondations/<id>/).
+  const ids = new Set<string>(['fondations']);
   for (const e of entries) {
-    const last = groups.at(-1);
-    if (last?.label === e.group) last.entries.push(e);
-    else groups.push({ label: e.group, entries: [e] });
-  }
-
-  const ids = new Set<string>();
-  for (const e of entries) {
-    if (ids.has(e.id)) throw new Error(`Identifiant de galerie en double : ${e.id} (${e.file}).`);
+    if (ids.has(e.id)) throw new Error(`Identifiant de galerie en double ou réservé : ${e.id} (${e.file}).`);
     ids.add(e.id);
   }
 
-  return {
-    entries,
-    groups,
-    tokens: readTokens(themeCss),
-    styles: readSharedStyles(themeCss),
-    illustrations: illustrations(),
-  };
+  // Fondations : une rubrique par groupe de tokens, puis les rubriques
+  // facultatives, présentes seulement si le site en a (le modèle n'a ni @utility
+  // annoté ni src/assets/illustrations).
+  const styles = readSharedStyles(themeCss);
+  const art = illustrations();
+  const foundations: Foundation[] = [
+    ...readTokens(themeCss).map((group) => ({ id: group.id, label: group.label, kind: 'tokens' as const, group })),
+    ...(styles.length ? [{ id: 'styles' as const, label: 'Styles partagés', kind: 'styles' as const, styles }] : []),
+    ...(art.length
+      ? [{ id: 'illustrations' as const, label: 'Illustrations', kind: 'illustrations' as const, illustrations: art }]
+      : []),
+  ];
+
+  // Menu (et ordre précédent / suivant) : Fondations, puis les familles.
+  const nav: NavGroup[] = [
+    {
+      label: 'Fondations',
+      items: foundations.map((f) => ({
+        href: `/styleguide/fondations/${f.id}/`,
+        name: f.label,
+        search: `fondations ${f.label}`,
+      })),
+    },
+  ];
+  for (const e of entries) {
+    const item = { href: `/styleguide/${e.id}/`, name: e.name, search: `${e.name} ${e.group} ${e.id}` };
+    const last = nav.at(-1)!;
+    if (last.label === e.group) last.items.push(item);
+    else nav.push({ label: e.group, items: [item] });
+  }
+
+  return { entries, foundations, nav };
 }
 
 let cache: ReturnType<typeof buildGallery> | undefined;

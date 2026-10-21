@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 
   // Garde anti-collision : un slug réservé (route .astro existante) ou présent
   // dans les deux collections serait silencieusement masqué. On casse le build.
-  // `styleguide` : bibliothèque et ses pages isolées /styleguide/<id>/, absentes
+  // `styleguide` : bibliothèque et ses fiches /styleguide/<id>/, absentes
   // de la production mais réservées partout (une page de contenu de ce nom
   // serait en ligne en production et masquée sur le site de test).
   const reserved = new Set(['blog', 'contact', '404', 'index', 'styleguide']);

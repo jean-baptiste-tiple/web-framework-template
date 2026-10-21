@@ -5,12 +5,10 @@ import DemoCase from '@/components/styleguide/DemoCase.astro';
 import GlobalFaq from './GlobalFaq.astro';
 
 export const demo: DemoDoc = {
-  name: 'Questions fréquentes communes',
-  purpose: 'Les questions partagées par tout le site, écrites une seule fois dans les réglages et affichables sur plusieurs pages.',
-  ask: 'Ajoute la question « Quels sont vos délais ? » aux questions fréquentes communes du site.',
+  name: 'Questions dépliables communes',
 };
 ---
 
-<DemoCase label="questions lues dans site.json (faq)">
+<DemoCase label="questions lues dans les réglages du site">
   <GlobalFaq />
 </DemoCase>

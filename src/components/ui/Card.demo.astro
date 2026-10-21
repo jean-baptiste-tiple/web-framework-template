@@ -5,13 +5,11 @@ import Card from './Card.astro';
 
 export const demo: DemoDoc = {
   name: 'Carte',
-  purpose: 'Encadre un contenu court (un avantage, un article, une offre) sur une surface légèrement teintée.',
-  ask: 'Présente nos trois offres sous forme de cartes côte à côte sur la page Tarifs.',
 };
 ---
 
 <div class="space-y-8">
-  <DemoCase label="padding default · padding none (image bord à bord)">
+  <DemoCase label="avec marge intérieure · sans marge (image bord à bord)">
     <div class="grid gap-4 sm:grid-cols-2">
       <Card>
         <h3 class="font-medium">Carte simple</h3>
@@ -26,7 +24,7 @@ export const demo: DemoDoc = {
       </Card>
     </div>
   </DemoCase>
-  <DemoCase label="tone inverse : carte sombre, texte fixé par le ton" surface="inverse">
+  <DemoCase label="sombre" surface="inverse">
     <Card tone="inverse">
       <h3 class="font-medium">Carte sombre</h3>
       <p class="mt-1 text-sm text-inverse-muted">

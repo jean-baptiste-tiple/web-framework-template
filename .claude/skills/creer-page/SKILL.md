@@ -10,7 +10,7 @@ description: "Ajouter une nouvelle page au site - page d'information ou légale,
 ## Traduire la demande : quel type de page ?
 Si ce n'est pas évident, poser la question en mots simples (`AskUserQuestion`) :
 1. **Une fiche de plus dans une série existante** (même forme que d'autres pages) → un `.md` dans la collection existante (`src/content/<collection>/`), jamais une page sur mesure (CLAUDE.md règle absolue 9).
-2. **Une page de présentation à blocs** (accroche, avantages, questions, appel à l'action) → `src/content/landings/<slug>.mdx`, blocs pris dans la bibliothèque (rubriques « Sections », `<site de test>/styleguide/`, CLAUDE.md § Projet) : les proposer à l'utilisateur par leur nom français et leur lien, dans l'ordre de la page.
+2. **Une page de présentation à blocs** (accroche, avantages, questions, appel à l'action) → `src/content/landings/<slug>.mdx`, blocs pris dans la bibliothèque (rubriques « Sections », `<site de test>/styleguide/`, CLAUDE.md § Projet) : les proposer à l'utilisateur par leur nom et le lien de leur fiche (`<site de test>/styleguide/<id>/`), dans l'ordre de la page.
 3. **Une page de texte** (à propos, mentions, FAQ) → `src/content/pages/<slug>.md`.
 Forme qu'aucun des trois ne couvre → `modifier-design` (c'est du développement).
 

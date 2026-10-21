@@ -13,7 +13,7 @@ proposé en live ou dans la spec de page. Règle : CLAUDE.md § Avant de coder �
 ## Doublons
 <!-- Ce qui fait déjà la même chose : entrée du component-registry, bibliothèque /styleguide (sa
      recherche, par le concept et pas seulement par le nom), `rg` sur le concept. Chaque composant
-     réutilisé ou étendu se cite par son ancre `/styleguide/#<id>` ; un composant nouveau dit ce qui
+     réutilisé ou étendu se cite par sa fiche `/styleguide/<id>/` ; un composant nouveau dit ce qui
      casse sans lui. Verdict par doublon : réutiliser / fusionner (gabarit
      fusion-a-trancher.md) / laisser — et pourquoi. -->
 

@@ -10,9 +10,9 @@ description: Changer l'apparence d'une page - ajouter, déplacer ou retirer un b
 ## Traduire la demande
 1. Faire préciser en mots simples : quelle page, quel bloc (capture bienvenue), quel problème ressenti (« trop chargé », « on ne voit pas le bouton »), quel résultat attendu.
 2. Reformuler en brief : page, bloc, changement, critère de réussite visible (« le bouton se voit sans défiler sur téléphone »). Le faire valider.
-3. Ajout d'un bloc : proposer les blocs DE LA BIBLIOTHÈQUE par leur nom français, avec leur lien (`<site de test>/styleguide/#<id>`, CLAUDE.md § Projet) ; jamais un bloc inventé. Aucun ne convient : le dire, c'est un nouveau composant (développement), qui rejoindra la bibliothèque ; jamais un bricolage dans la page (component-registry.md § Bibliothèque vivante).
+3. Ajout d'un bloc : proposer les blocs DE LA BIBLIOTHÈQUE par leur nom, avec le lien de leur fiche (`<site de test>/styleguide/<id>/`, CLAUDE.md § Projet), et dire soi-même si l'éditeur peut l'ajouter seul (section ajoutable dans `sections:` de la page) ou si c'est du développement ; jamais un bloc inventé. Aucun ne convient : le dire, c'est un nouveau composant (développement), qui rejoindra la bibliothèque ; jamais un bricolage dans la page (component-registry.md § Bibliothèque vivante).
 4. Classer :
-   - **Réagencer des blocs existants d'une page à sections** (ordre, ajout, retrait d'un bloc « Vous pouvez l'ajouter seul » de la bibliothèque) → éditer `sections:` de son `.mdx` ou `.md`, champs de l'`example` du bloc comme modèle.
+   - **Réagencer des blocs existants d'une page à sections** (ordre, ajout, retrait d'une section de la bibliothèque, famille « Sections ») → éditer `sections:` de son `.mdx` ou `.md`, champs d'un `example` du bloc (`demo.examples` de son `.schema.ts`) comme modèle.
    - **Tout le reste** (couleur, espacement, bloc nouveau, page sur mesure) → travail de code : CLAUDE.md § Modes de travail > Développement.
 
 ## Faire (travail de code)

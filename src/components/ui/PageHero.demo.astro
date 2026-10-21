@@ -5,9 +5,7 @@ import Button from './Button.astro';
 import PageHero from './PageHero.astro';
 
 export const demo: DemoDoc = {
-  name: 'Haut de page',
-  purpose: 'Le premier écran d’une page : sur-titre, grand titre, phrase d’accroche et un ou deux boutons, centrés.',
-  ask: 'Sur la page Audit énergétique, change le titre du haut de page en « Votre audit en deux semaines » et ajoute un bouton « Voir un exemple ».',
+  name: 'Haut de page centré',
 };
 ---
 
@@ -16,7 +14,7 @@ export const demo: DemoDoc = {
       `bleed` : PageHero pose sa Section/Container, ses gouttières sont les vraies. */}
   <DemoCase
     bleed
-    label="sur-titre · titre · chapô (slot lead) · actions (slot actions) · média (slot par défaut)">
+    label="sur-titre, titre, chapô, deux boutons">
     <PageHero eyebrow="Service" title="Un audit énergétique clair et actionnable">
       <Fragment slot="lead">Diagnostic complet, recommandations chiffrées, accompagnement.</Fragment>
       <Fragment slot="actions">

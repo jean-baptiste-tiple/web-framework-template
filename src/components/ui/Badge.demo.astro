@@ -5,21 +5,19 @@ import Badge from './Badge.astro';
 import Icon from './Icon.astro';
 
 export const demo: DemoDoc = {
-  name: 'Étiquette',
-  purpose: 'Petit sur-titre en pilule au-dessus d’un titre, pour annoncer le thème d’une section.',
-  ask: 'Ajoute une étiquette « Nouveau » au-dessus du titre de la page Audit énergétique.',
+  name: 'Étiquette en pilule',
 };
 ---
 
 <div class="space-y-8">
-  <DemoCase label="tone neutral · accent · avec icône">
+  <DemoCase label="neutre · accentuée · avec icône">
     <div class="flex flex-wrap items-center gap-3">
       <Badge>Guide</Badge>
       <Badge tone="accent">Nouveau</Badge>
       <Badge tone="accent"><Icon name="sparkles" size={14} />Avec icône</Badge>
     </div>
   </DemoCase>
-  <DemoCase label="tone inverse" surface="inverse">
+  <DemoCase label="sur fond sombre" surface="inverse">
     <Badge tone="inverse">Sur bande sombre</Badge>
   </DemoCase>
 </div>

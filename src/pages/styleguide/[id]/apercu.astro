@@ -1,0 +1,48 @@
+---
+// Rendu seul d'un composant de la bibliothèque : /styleguide/<id>/apercu/.
+// Affiché dans le cadre de sa fiche (/styleguide/<id>/, largeur basculée
+// ordinateur / téléphone, donc vrais points de rupture) et ouvrable seul. Sans
+// en-tête ni pied de page (chrome={false}). Absent de la production (GALLERY_ENABLED).
+// Le cadre a la hauteur de la fiche, jamais celle du contenu : rien n'est
+// mesuré ni annoncé à la page parente (une démo en `vh` ne peut plus la faire
+// grandir, ADR 0003 révision v2). Marges : chaque DemoCase pose la sienne (ou la
+// retire avec `bleed` pour un bloc qui pose son Container, comme les sections).
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionRenderer from '@/components/landing/SectionRenderer.astro';
+import DemoCase from '@/components/styleguide/DemoCase.astro';
+import { GALLERY_ENABLED, getGallery, type GalleryEntry } from '@/lib/styleguide';
+
+export async function getStaticPaths() {
+  if (!GALLERY_ENABLED) return [];
+  const { entries } = await getGallery();
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+interface Props {
+  entry: GalleryEntry;
+}
+const { entry } = Astro.props;
+const { render } = entry;
+
+const meta = {
+  title: `${entry.name} · Aperçu`,
+  description: `Aperçu du composant « ${entry.name} » de la bibliothèque du site. Page outil du site de test, absente du site public.`,
+  seo: { noindex: true },
+};
+---
+
+<BaseLayout meta={meta} chrome={false}>
+  <div class="space-y-8 py-6">
+    {
+      render.kind === 'section' ? (
+        render.examples.map((c) => (
+          <DemoCase label={c.label} bleed>
+            <SectionRenderer section={c.example} />
+          </DemoCase>
+        ))
+      ) : (
+        <render.Demo />
+      )
+    }
+  </div>
+</BaseLayout>

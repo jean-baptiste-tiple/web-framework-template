@@ -1,0 +1,137 @@
+---
+// Rubrique de Fondations de la bibliothèque : /styleguide/fondations/<id>/
+// (couleurs, polices, tailles, rayons…, puis styles partagés et illustrations
+// si le site en a). Une rubrique par page (ADR 0003, révision v2). Lue dans
+// src/styles/global.css et src/assets/illustrations à chaque construction.
+// Les échantillons posent `var(--…)` en style inline : la liste des tokens est
+// lue au build, aucune classe Tailwind ne peut être écrite à l'avance.
+import { Image } from 'astro:assets';
+import GalleryShell from '@/components/styleguide/GalleryShell.astro';
+import GalleryPager from '@/components/styleguide/GalleryPager.astro';
+import { GALLERY_ENABLED, getGallery, type Foundation, type TokenGroup } from '@/lib/styleguide';
+
+export async function getStaticPaths() {
+  if (!GALLERY_ENABLED) return [];
+  const { foundations } = await getGallery();
+  return foundations.map((foundation) => ({ params: { rubrique: foundation.id }, props: { foundation } }));
+}
+
+interface Props {
+  foundation: Foundation;
+}
+const { foundation: f } = Astro.props;
+const href = `/styleguide/fondations/${f.id}/`;
+const short = (file: string) => file.replace(/^src\/(components|pages)\//, '');
+
+const swatch = (kind: TokenGroup['kind'], name: string, value: string) => {
+  const v = `var(--${name}, ${value})`;
+  return {
+    color: `background: ${v}`,
+    font: `font-family: ${v}`,
+    weight: `font-weight: ${v}`,
+    text: `font-size: ${v}`,
+    space: `width: ${v}`,
+    width: `width: ${v}`,
+    radius: `border-radius: ${v}`,
+    shadow: `box-shadow: ${v}`,
+    value: '',
+  }[kind];
+};
+---
+
+<GalleryShell title={f.label} current={href}>
+  <div class="px-4 py-6 sm:px-6 lg:px-10">
+    <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+      <h1 class="text-2xl font-semibold tracking-tight">{f.label}</h1>
+      <GalleryPager current={href} />
+    </div>
+
+    {
+      f.kind === 'tokens' && (
+        <ul
+          class={
+            f.group.kind === 'color' ? 'mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5' : 'mt-8 space-y-4'
+          }
+        >
+          {f.group.tokens.map((t) => (
+            <li class="min-w-0">
+              {f.group.kind === 'color' && (
+                <div class="h-14 rounded border border-border" style={swatch(f.group.kind, t.name, t.value)} />
+              )}
+              {(f.group.kind === 'font' || f.group.kind === 'weight' || f.group.kind === 'text') && (
+                <p class="text-lg" style={swatch(f.group.kind, t.name, t.value)}>
+                  Portez la voix du site, 0123456789
+                </p>
+              )}
+              {(f.group.kind === 'space' || f.group.kind === 'width') && (
+                <div class="h-3 max-w-full rounded-sm bg-accent" style={swatch(f.group.kind, t.name, t.value)} />
+              )}
+              {(f.group.kind === 'radius' || f.group.kind === 'shadow') && (
+                <div class="size-16 border border-border bg-surface" style={swatch(f.group.kind, t.name, t.value)} />
+              )}
+              <p class="mt-2 text-xs">
+                <code class="font-medium">--{t.name}</code>
+              </p>
+              <p class="text-xs break-words text-muted">{t.value}</p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      f.kind === 'styles' && (
+        <>
+          <p class="mt-4 max-w-reading text-sm text-muted">
+            Une combinaison de classes qui revient de composant en composant porte un nom : on pose le nom,
+            jamais la combinaison recopiée (styling-tailwind.md).
+          </p>
+          <ul class="mt-8 space-y-8">
+            {f.styles.map((st) => (
+              <li class="min-w-0">
+                {st.text && <p class={st.name}>Portez la voix du site, 0123456789</p>}
+                <p class="mt-2 text-sm">
+                  <code class="font-medium">{st.name}</code> · {st.label} : {st.description}
+                </p>
+                <p class="mt-1 text-xs break-words text-muted">
+                  <code>{st.rule}</code>
+                </p>
+                <p class="mt-1 text-xs text-muted">
+                  {st.usedIn.length ? `Posé dans : ${st.usedIn.map(short).join(', ')}` : 'Posé dans aucun fichier pour l’instant.'}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+
+    {
+      f.kind === 'illustrations' && (
+        <>
+          <p class="mt-4 max-w-reading text-sm text-muted">
+            Lues dans <code>src/assets/illustrations</code> : une illustration ajoutée à ce dossier apparaît ici
+            d’elle-même. Pour en utiliser une, citez son nom à Claude.
+          </p>
+          <ul class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
+            {f.illustrations.map((i) => (
+              <li class="min-w-0">
+                <figure>
+                  <Image
+                    src={i.src}
+                    alt=""
+                    width={240}
+                    class="aspect-square w-full rounded border border-border object-contain p-2"
+                  />
+                  <figcaption class="mt-2 text-xs break-all">
+                    <code>{i.name}</code>
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+  </div>
+</GalleryShell>

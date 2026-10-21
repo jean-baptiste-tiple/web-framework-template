@@ -4,9 +4,7 @@ import DemoCase from '@/components/styleguide/DemoCase.astro';
 import ContactForm from './ContactForm.astro';
 
 export const demo: DemoDoc = {
-  name: 'Formulaire de contact',
-  purpose: 'Nom, email et message envoyés au service de réception du site, sans quitter la page.',
-  ask: 'Ajoute le formulaire de contact en bas de la page Audit énergétique, avec le bouton « Envoyer ma demande ».',
+  name: 'Formulaire nom, email, message',
 };
 ---
 
@@ -14,7 +12,7 @@ export const demo: DemoDoc = {
   <DemoCase label="par défaut">
     <ContactForm idPrefix="demo" />
   </DemoCase>
-  <DemoCase label="tone inverse · submitLabel « Envoyer ma demande »" surface="inverse">
+  <DemoCase label="sur fond sombre · libellé du bouton changé" surface="inverse">
     <ContactForm idPrefix="demo-inverse" tone="inverse" submitLabel="Envoyer ma demande" />
   </DemoCase>
 </div>

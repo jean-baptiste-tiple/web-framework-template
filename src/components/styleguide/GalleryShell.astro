@@ -1,0 +1,138 @@
+---
+// Mise en page de la bibliothèque (/styleguide, ADR 0003) : une seule fiche à
+// droite, le menu à gauche, AUCUN en-tête ni pied de page du site
+// (BaseLayout chrome={false}). Outillage, jamais utilisé par une page du site.
+// Menu : familles repliables (Accordion `plain`), celle de la fiche courante
+// ouverte et la fiche marquée (aria-current) ; recherche qui filtre le menu.
+// Filet net (border-r) entre menu et fiche, sur toute la hauteur : le menu colle
+// et prend la hauteur de l'écran (h-svh), il défile seul.
+// Téléphone : la fiche d'abord, le menu ensuite (#sg-menu, lien « Menu » des pages).
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Accordion from '@/components/ui/Accordion.astro';
+import { getGallery } from '@/lib/styleguide';
+
+interface Props {
+  title: string;
+  /** Adresse de la page affichée : marquée dans le menu, sa famille ouverte. */
+  current?: string;
+}
+const { title, current } = Astro.props;
+const { nav } = await getGallery();
+const count = nav.reduce((n, g) => n + g.items.length, 0);
+
+const meta = {
+  title: `${title} · Bibliothèque`,
+  description: 'Bibliothèque des composants du site : une fiche par composant. Page outil du site de test, absente du site public.',
+  seo: { noindex: true },
+};
+---
+
+<BaseLayout meta={meta} chrome={false}>
+  <div class="lg:flex">
+    <div class="min-w-0 lg:flex-1">
+      <slot />
+    </div>
+
+    <aside
+      id="sg-menu"
+      class="border-t border-border lg:sticky lg:top-0 lg:order-first lg:h-svh lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:border-t-0 lg:border-r"
+    >
+      <div class="p-4">
+        <a
+          href="/styleguide/"
+          aria-current={current ? undefined : 'page'}
+          class="flex min-h-11 items-center font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-accent"
+        >
+          Bibliothèque
+        </a>
+        <label for="sg-search" class="mt-3 block text-sm font-medium">Rechercher</label>
+        <input
+          id="sg-search"
+          type="search"
+          autocomplete="off"
+          placeholder="bouton, questions, couleurs…"
+          aria-describedby="sg-count"
+          class="mt-1 min-h-11 w-full rounded border border-border bg-bg px-3 text-sm text-fg placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        />
+        <p id="sg-count" data-sg-count aria-live="polite" class="mt-2 text-xs text-muted">{count} fiches</p>
+
+        <nav aria-label="Fiches de la bibliothèque" class="mt-2">
+          {
+            nav.map((g) => (
+              <Accordion summary={g.label} variant="plain" open={g.items.some((i) => i.href === current)}>
+                <ul class="pb-2">
+                  {g.items.map((i) => (
+                    <li data-sg-item data-search={i.search}>
+                      <a
+                        href={i.href}
+                        aria-current={i.href === current ? 'page' : undefined}
+                        class="flex min-h-11 items-center rounded-sm px-2 text-sm text-muted hover:bg-surface hover:text-fg focus-visible:outline-2 focus-visible:outline-accent aria-[current=page]:bg-surface aria-[current=page]:font-medium aria-[current=page]:text-fg lg:min-h-9"
+                      >
+                        {i.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </Accordion>
+            ))
+          }
+        </nav>
+        <p data-sg-empty hidden class="mt-2 text-sm text-muted">
+          Aucune fiche ne correspond. Un bloc absent n’existe pas encore : c’est un nouveau composant, à
+          demander.
+        </p>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>
+
+<script>
+  // Recherche du menu : tous les mots doivent apparaître, accents ignorés ; les
+  // familles qui ont un résultat s'ouvrent, les autres se masquent ; recherche
+  // vide = état d'origine (famille courante ouverte). Entrée ouvre le premier
+  // résultat, Échap vide, « / » place le curseur. Sans JS : menu complet.
+  const input = document.querySelector<HTMLInputElement>('#sg-search');
+  const count = document.querySelector<HTMLElement>('[data-sg-count]');
+  const empty = document.querySelector<HTMLElement>('[data-sg-empty]');
+  const groups = [...document.querySelectorAll<HTMLDetailsElement>('#sg-menu nav details')];
+  const initial = groups.map((g) => g.open);
+  const norm = (s: string) => s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+  const countLabel = count?.textContent ?? '';
+
+  const visible = () =>
+    [...document.querySelectorAll<HTMLAnchorElement>('#sg-menu [data-sg-item]:not([hidden]) a')];
+
+  const filter = () => {
+    const terms = norm(input?.value ?? '').split(/\s+/).filter(Boolean);
+    let shown = 0;
+    groups.forEach((group, i) => {
+      let any = false;
+      for (const item of group.querySelectorAll<HTMLElement>('[data-sg-item]')) {
+        const hay = norm(item.dataset.search ?? '');
+        item.hidden = !terms.every((t) => hay.includes(t));
+        if (!item.hidden) any = true;
+        if (!item.hidden) shown++;
+      }
+      group.hidden = terms.length > 0 && !any;
+      group.open = terms.length ? any : initial[i];
+    });
+    if (count) count.textContent = terms.length ? `${shown} résultat${shown > 1 ? 's' : ''}` : countLabel;
+    if (empty) empty.hidden = shown > 0;
+  };
+  input?.addEventListener('input', filter);
+  input?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const first = visible()[0];
+      if (input.value && first) location.href = first.href;
+    } else if (event.key === 'Escape' && input.value) {
+      input.value = '';
+      filter();
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    const target = event.target as HTMLElement;
+    if (event.key !== '/' || target.closest('input, textarea, [contenteditable]')) return;
+    event.preventDefault();
+    input?.focus();
+  });
+</script>

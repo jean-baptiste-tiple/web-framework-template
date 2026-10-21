@@ -37,7 +37,7 @@ Ce skill localise et oriente ; il ne modifie rien. Élément localisé : passer 
 Plusieurs demandes dans un message : les lister, confirmer l'ordre, les traiter une par une.
 
 ## « Que puis-je faire ? »
-Répondre avec les lignes du tableau en mots courants (ni noms de skills, ni fichiers), un exemple de phrase par ligne, le lien de la bibliothèque (`<site de test>/styleguide/` : chaque bloc du site, son nom, à quoi il sert, la phrase à dire, et s'il s'ajoute seul ou demande le développeur), et le circuit en une phrase : « une petite modification se fait directement sur le site de test, qu'on relit, puis on la met en ligne sur le site public ; un gros chantier a sa branche et son aperçu » (CLAUDE.md § Circuit de publication).
+Répondre avec les lignes du tableau en mots courants (ni noms de skills, ni fichiers), un exemple de phrase par ligne, le lien de la bibliothèque (`<site de test>/styleguide/` : chaque bloc du site sur sa fiche, son nom, son aperçu et les pages qui l'utilisent ; l'éditeur choisit un bloc par son nom, et c'est Claude qui lui dit s'il peut l'ajouter seul ou si c'est du développement), et le circuit en une phrase : « une petite modification se fait directement sur le site de test, qu'on relit, puis on la met en ligne sur le site public ; un gros chantier a sa branche et son aperçu » (CLAUDE.md § Circuit de publication).
 
 ## Demande contraire à une règle du site
 Procédure commune à tous les skills d'intention (CLAUDE.md § Demandes non techniques).

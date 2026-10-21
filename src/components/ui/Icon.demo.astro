@@ -6,12 +6,10 @@ import { ICON_NAMES } from './icons';
 
 export const demo: DemoDoc = {
   name: 'Icône',
-  purpose: 'Pictogramme au trait du jeu fermé du site ; une icône absente s’ajoute au jeu, jamais un emoji.',
-  ask: 'Mets une icône téléphone devant le numéro sur la page Contact.',
 };
 ---
 
-<DemoCase label="jeu fermé : toutes les icônes de icons.ts">
+<DemoCase label="toutes les icônes du jeu">
   <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
     {
       ICON_NAMES.map((name) => (
