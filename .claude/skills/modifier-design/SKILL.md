@@ -10,12 +10,13 @@ description: Changer l'apparence d'une page - ajouter, déplacer ou retirer un b
 ## Traduire la demande
 1. Faire préciser en mots simples : quelle page, quel bloc (capture bienvenue), quel problème ressenti (« trop chargé », « on ne voit pas le bouton »), quel résultat attendu.
 2. Reformuler en brief : page, bloc, changement, critère de réussite visible (« le bouton se voit sans défiler sur téléphone »). Le faire valider.
-3. Classer :
-   - **Réagencer des blocs existants d'une landing** (ordre, ajout, retrait) → éditer `sections:` de son `.mdx`, blocs pris dans `src/lib/sections.ts`.
+3. Ajout d'un bloc : proposer les blocs DE LA BIBLIOTHÈQUE par leur nom français, avec leur lien (`<site de test>/styleguide/#<id>`, CLAUDE.md § Projet) ; jamais un bloc inventé. Aucun ne convient : le dire, c'est un nouveau composant (développement), qui rejoindra la bibliothèque ; jamais un bricolage dans la page (component-registry.md § Bibliothèque vivante).
+4. Classer :
+   - **Réagencer des blocs existants d'une page à sections** (ordre, ajout, retrait d'un bloc « Vous pouvez l'ajouter seul » de la bibliothèque) → éditer `sections:` de son `.mdx` ou `.md`, champs de l'`example` du bloc comme modèle.
    - **Tout le reste** (couleur, espacement, bloc nouveau, page sur mesure) → travail de code : CLAUDE.md § Modes de travail > Développement.
 
 ## Faire (travail de code)
-1. Charger `design-craft`, puis `component-registry` : réutiliser ou étendre un composant existant (CLAUDE.md règle absolue 6) ; couleurs et espacements par les tokens de `src/styles/global.css` (`styling-tailwind`).
+1. Charger `design-craft`, puis `component-registry` : chercher dans la bibliothèque, réutiliser ou étendre un composant existant et le citer dans le plan, ou écrire ce qui casse sans le nouveau (CLAUDE.md règle absolue 6) ; composant créé ou modifié = sa démo et sa fiche dans le même envoi ; couleurs et espacements par les tokens de `src/styles/global.css` (`styling-tailwind`).
 2. Au-delà d'un ou deux fichiers : rayon d'impact écrit avant de coder (CLAUDE.md § Avant de coder).
 3. Goût à interpréter (« plus moderne », « plus pro ») : proposer 2 options concrètes via `AskUserQuestion`, ne pas deviner.
 

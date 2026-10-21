@@ -1,0 +1,22 @@
+---
+import type { DemoDoc } from '@/lib/styleguide';
+import Icon from './Icon.astro';
+import { ICON_NAMES } from './icons';
+
+export const demo: DemoDoc = {
+  name: 'Icône',
+  purpose: 'Pictogramme au trait du jeu fermé du site ; une icône absente s’ajoute au jeu, jamais un emoji.',
+  ask: 'Mets une icône téléphone devant le numéro sur la page Contact.',
+};
+---
+
+<div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
+  {
+    ICON_NAMES.map((name) => (
+      <div class="flex flex-col items-center gap-2 rounded border border-border p-3">
+        <Icon name={name} size={24} />
+        <code class="text-center text-xs text-muted">{name}</code>
+      </div>
+    ))
+  }
+</div>

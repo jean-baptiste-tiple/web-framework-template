@@ -1,0 +1,27 @@
+---
+import type { DemoDoc } from '@/lib/styleguide';
+import DemoCase from '@/components/styleguide/DemoCase.astro';
+import Button from './Button.astro';
+
+export const demo: DemoDoc = {
+  name: 'Bouton',
+  purpose: 'Mène vers une page ou envoie un formulaire ; un seul bouton plein par écran, les autres en contour.',
+  ask: 'Ajoute un bouton « Prendre rendez-vous » vers la page Contact sous le texte d’introduction de la page À propos.',
+};
+---
+
+<div class="space-y-8">
+  <DemoCase label="variant primary (plein) · outline (contour) · type submit">
+    <div class="flex flex-wrap items-center gap-3">
+      <Button href="#">Demander un devis</Button>
+      <Button href="#" variant="outline">En savoir plus</Button>
+      <Button type="submit">Envoyer</Button>
+    </div>
+  </DemoCase>
+  <DemoCase label="tone inverse : sur une bande sombre" surface="inverse">
+    <div class="flex flex-wrap items-center gap-3">
+      <Button href="#" tone="inverse">Demander un devis</Button>
+      <Button href="#" variant="outline" tone="inverse">En savoir plus</Button>
+    </div>
+  </DemoCase>
+</div>

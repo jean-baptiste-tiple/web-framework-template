@@ -1,0 +1,25 @@
+---
+import type { DemoDoc } from '@/lib/styleguide';
+import DemoCase from '@/components/styleguide/DemoCase.astro';
+import Button from './Button.astro';
+import PageHero from './PageHero.astro';
+
+export const demo: DemoDoc = {
+  name: 'Haut de page',
+  purpose: 'Le premier écran d’une page : sur-titre, grand titre, phrase d’accroche et un ou deux boutons, centrés.',
+  ask: 'Sur la page Audit énergétique, change le titre du haut de page en « Votre audit en deux semaines » et ajoute un bouton « Voir un exemple ».',
+};
+---
+
+<div class="space-y-8">
+  {/* Un seul cas : le titre est le H1 de la page isolée, qui n'en porte qu'un. */}
+  <DemoCase label="sur-titre · titre · chapô (slot lead) · actions (slot actions) · média (slot par défaut)">
+    <PageHero eyebrow="Service" title="Un audit énergétique clair et actionnable">
+      <Fragment slot="lead">Diagnostic complet, recommandations chiffrées, accompagnement.</Fragment>
+      <Fragment slot="actions">
+        <Button href="#">Demander un audit</Button>
+        <Button href="#" variant="outline">Voir un exemple</Button>
+      </Fragment>
+    </PageHero>
+  </DemoCase>
+</div>

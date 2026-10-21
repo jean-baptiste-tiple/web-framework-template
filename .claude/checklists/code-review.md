@@ -23,6 +23,9 @@
 - [ ] Image LCP (hero au-dessus de la ligne de flottaison) : `loading="eager"` + `fetchpriority="high"` ; toutes les autres lazy (une seule eager par page)
 - [ ] HTML sémantique, navigable clavier
 - [ ] Composants réutilisés (registry vérifié), pas de couleur en dur
+- [ ] Bibliothèque (component-registry.md § Bibliothèque vivante) : le plan ou le rayon d'impact cite, pour chaque markup ou composant touché, le composant réutilisé ou étendu (`/styleguide/#<id>`) ou ce qui casse sans le nouveau ; aucune citation = violation
+- [ ] Composant créé ou modifié (prop, variante, rendu) : sa démo et sa fiche (`name`, `purpose`, `ask`) sont à jour dans le MÊME commit ; `pnpm run lint` vert (check-styleguide) ; toute ligne ajoutée aux EXCLUSIONS du script porte sa raison
+- [ ] Markup recopié : `pnpm run lint` vert, donc contrôle machine A (même groupe de 4 classes ou plus dans deux fichiers) et B (page qui compose ses sections déclarée en § Pages bespoke) passés, sans contournement (classes renommées ou réordonnées, ligne bespoke sans vraie raison) ; ce qu'ils ne voient pas (moins de 4 classes, corps MDX) se cite en review ; deux composants qui font la même chose = brief fusion-a-trancher au registre, pas un troisième
 - [ ] Aucun composant forcé (surcharge inline, `!important`, valeur arbitraire, prop détournée, wrapper qui écrase son style) : besoin non couvert = prop/variante additive OU scission, jamais un hack au call-site
 - [ ] DRY, edits chirurgicaux
 - [ ] Gate complet vert : lint + astro check + build (pas build seul)

@@ -32,8 +32,10 @@ d'y chercher. Rien ne se modifie dans le kit pendant un chantier client, sauf ma
   (page ou composant). Capture d'origine : `catalog/screenshots/<t>/<id>.jpg`.
 - Cible : `src/components/sections/<famille>/<Variante>.astro` + `<Variante>.schema.ts` (type
   `<famille>.<variante>`, prop unique `section`), enregistrés dans `src/lib/sections.ts`
-  (SECTION_REGISTRY) ; exemple ajouté à /styleguide (obligatoire : `astro check` casse sinon) + registry
-  dans le même commit ; craft-floor lu avant, vérifié après ; capture `preview.jpg`.
+  (SECTION_REGISTRY) ; `export const demo` (fiche éditeur + `example`) dans le `.schema.ts`
+  (obligatoire : lint et build cassent sinon) + registry dans le même commit ; avant de porter, vérifier
+  dans la bibliothèque /styleguide qu'aucune section du site ne fait déjà la même chose (sinon
+  l'étendre, ou brief fusion-a-trancher) ; craft-floor lu avant, vérifié après ; capture `preview.jpg`.
 - Chrome (`nav.header-*`, `nav.footer-*`) : même contrat + `chrome: true` dans le registre ; le site
   l'active dans `src/layouts/BaseLayout.astro` (import) et `src/lib/chrome.ts` (objet construit depuis
   SITE) — jamais dans un frontmatter. Archétypes de page (`layouts/<archetype>/<variante>/` du kit) : la

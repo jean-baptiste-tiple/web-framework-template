@@ -4,4 +4,4 @@ description: À charger AVANT de créer ou modifier un composant, une section ou
 ---
 
 Ce skill est un pointeur : la règle vit dans `.claude/conventions/component-registry.md` (source unique).
-Lis ce fichier MAINTENANT et vérifie aussi la galerie `/styleguide` avant toute création (règle absolue 6).
+Lis ce fichier MAINTENANT (§ Bibliothèque vivante compris) et cherche aussi dans la bibliothèque `/styleguide` avant toute création (règle absolue 6).

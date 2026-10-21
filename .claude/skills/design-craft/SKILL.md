@@ -17,6 +17,8 @@ Distillé de pbakaus/impeccable (Apache-2.0, © 2025 Paul Bakaus) et Leonxlnx/ta
 | Ajouter la moindre animation/transition | + `reference/motion-css.md` |
 | Auditer ou redesigner un site existant (dont migration) | `reference/audit-redesign.md` |
 
+Avant toute UI : chercher dans la bibliothèque /styleguide le composant qui existe déjà et le citer dans le plan, ou écrire ce qui casse sans le nouveau ; composant créé ou retouché = sa démo à jour (component-registry.md § Bibliothèque vivante).
+
 ## Principes (dans cet ordre)
 
 1. **Le brief gagne.** Une demande explicite de l'utilisateur ou un DESIGN.md engagé bat toute règle d'ici. Ces règles n'ont autorité que contre les réflexes du modèle, jamais contre une décision humaine.

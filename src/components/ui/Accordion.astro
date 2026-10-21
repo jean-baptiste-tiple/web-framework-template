@@ -12,12 +12,14 @@ interface Props {
   summary: string;
   /** Attribut natif `name` : les <details> qui le partagent s'excluent (un seul ouvert). */
   name?: string;
+  /** Ouvert au chargement (contenu visible sans script) : sommaire de /styleguide. */
+  open?: boolean;
   class?: string;
 }
-const { summary, name, class: cls = '' } = Astro.props;
+const { summary, name, open = false, class: cls = '' } = Astro.props;
 ---
 
-<details name={name} class={`group rounded border border-border p-4 ${cls}`}>
+<details name={name} open={open} class={`group rounded border border-border p-4 ${cls}`}>
   <summary
     class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden"
   >

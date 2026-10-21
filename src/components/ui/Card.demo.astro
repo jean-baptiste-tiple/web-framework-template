@@ -1,0 +1,37 @@
+---
+import type { DemoDoc } from '@/lib/styleguide';
+import DemoCase from '@/components/styleguide/DemoCase.astro';
+import Card from './Card.astro';
+
+export const demo: DemoDoc = {
+  name: 'Carte',
+  purpose: 'Encadre un contenu court (un avantage, un article, une offre) sur une surface légèrement teintée.',
+  ask: 'Présente nos trois offres sous forme de cartes côte à côte sur la page Tarifs.',
+};
+---
+
+<div class="space-y-8">
+  <DemoCase label="padding default · padding none (image bord à bord)">
+    <div class="grid gap-4 sm:grid-cols-2">
+      <Card>
+        <h3 class="font-medium">Carte simple</h3>
+        <p class="mt-1 text-sm text-muted">Fond, bordure et arrondi du site.</p>
+      </Card>
+      <Card padding="none">
+        <div class="h-24 bg-border"></div>
+        <div class="p-6">
+          <h3 class="font-medium">Sans marge intérieure</h3>
+          <p class="mt-1 text-sm text-muted">Le contenu touche les bords, la carte rogne à l’arrondi.</p>
+        </div>
+      </Card>
+    </div>
+  </DemoCase>
+  <DemoCase label="tone inverse : carte sombre, texte fixé par le ton" surface="inverse">
+    <Card tone="inverse">
+      <h3 class="font-medium">Carte sombre</h3>
+      <p class="mt-1 text-sm text-inverse-muted">
+        Surface, filet et couleur du texte viennent du ton, jamais du parent.
+      </p>
+    </Card>
+  </DemoCase>
+</div>

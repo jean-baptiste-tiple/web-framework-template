@@ -1,0 +1,17 @@
+---
+import type { DemoDoc } from '@/lib/styleguide';
+import Faq from './Faq.astro';
+
+export const demo: DemoDoc = {
+  name: 'Questions fréquentes (dans une page)',
+  purpose: 'Questions et réponses dépliables, placées à l’intérieur d’une page de texte.',
+  ask: 'Ajoute deux questions fréquentes en bas de la page À propos : « Où êtes-vous situés ? » et « Travaillez-vous à distance ? ».',
+};
+---
+
+<Faq
+  items={[
+    { q: 'Où êtes-vous situés ?', a: 'À Paris, avec des interventions dans toute la France.' },
+    { q: 'Travaillez-vous à distance ?', a: 'Oui, les échanges se font en visioconférence quand c’est possible.' },
+  ]}
+/>

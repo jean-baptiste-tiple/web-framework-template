@@ -33,7 +33,7 @@ export const SECTION_REGISTRY = {
 
 type Registry = typeof SECTION_REGISTRY;
 
-// Tous les types du registre (chrome inclus) : indexe la galerie /styleguide.
+// Tous les types du registre (chrome inclus).
 export type SectionType = keyof Registry;
 
 // Types de chrome, dérivés du marqueur : aucune liste à tenir à jour.

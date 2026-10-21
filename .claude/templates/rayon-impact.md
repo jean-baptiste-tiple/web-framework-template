@@ -11,14 +11,17 @@ proposé en live ou dans la spec de page. Règle : CLAUDE.md § Avant de coder �
      jamais une affirmation. -->
 
 ## Doublons
-<!-- Ce qui fait déjà la même chose : entrée du component-registry, galerie /styleguide, recherche
-     sur le concept (pas seulement sur le nom). Verdict par doublon : réutiliser / fusionner (gabarit
+<!-- Ce qui fait déjà la même chose : entrée du component-registry, bibliothèque /styleguide (sa
+     recherche, par le concept et pas seulement par le nom), `rg` sur le concept. Chaque composant
+     réutilisé ou étendu se cite par son ancre `/styleguide/#<id>` ; un composant nouveau dit ce qui
+     casse sans lui. Verdict par doublon : réutiliser / fusionner (gabarit
      fusion-a-trancher.md) / laisser — et pourquoi. -->
 
 ## Effet produit
 <!-- Quel parcours voit une différence hors du fichier modifié : autres pages qui rendent le
      composant, fichiers générés au build (sitemap.xml, llms.txt, rss.xml, robots.txt, JSON-LD),
-     formulaire de contact (PUBLIC_FORM_ENDPOINT), redirections (astro.config), galerie /styleguide,
+     formulaire de contact (PUBLIC_FORM_ENDPOINT), redirections (astro.config), bibliothèque
+     /styleguide (démo et fiche du composant touché),
      sites dérivés du template (tout changement du socle leur est hérité). « Aucun » se justifie
      item par item. -->
 

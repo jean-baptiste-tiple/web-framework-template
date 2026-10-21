@@ -1,0 +1,14 @@
+---
+// Encadré « En bref » : le `tldr` du frontmatter (résumé citable, GEO), en tête
+// d'une page éditoriale ([...slug].astro) ou d'un article (blog/[...slug].astro).
+// La marge basse fait partie du bloc : il précède toujours le corps du texte.
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+---
+
+<p class="mb-8 rounded border-l-4 border-accent bg-surface p-4 text-muted">
+  <strong class="text-fg">En bref :</strong>
+  {text}
+</p>

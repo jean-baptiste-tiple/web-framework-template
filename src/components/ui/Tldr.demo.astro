@@ -1,0 +1,12 @@
+---
+import type { DemoDoc } from '@/lib/styleguide';
+import Tldr from './Tldr.astro';
+
+export const demo: DemoDoc = {
+  name: 'Encadré « En bref »',
+  purpose: 'Le résumé d’une page ou d’un article en une ou deux phrases, en tête du texte ; c’est aussi ce que citent les assistants IA.',
+  ask: 'Ajoute un « En bref » à l’article Premier article : « Un article de blog est un fichier Markdown dont le frontmatter est vérifié au build. »',
+};
+---
+
+<Tldr text="Un article de blog est un fichier Markdown dont le frontmatter est vérifié au build." />

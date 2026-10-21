@@ -18,6 +18,16 @@ Format d'une entrée :
 
 <!-- Les entrées s'ajoutent ci-dessous, la plus récente en premier. -->
 
+## 2026-10-21 — Un contrôle qui exclut l'outillage de son auteur masque ses propres doublons
+- **Erreur** : au réglage du contrôle « groupe de classes recopié », exclure la galerie /styleguide (outillage) masquait une recopie du squelette d'Accordion (chevron, `<details>`) écrite dans la galerie le jour même.
+- **Règle écrite** : aucune (observation). Périmètre retenu : seuls les `*.demo.astro` sont exclus, la galerie est contrôlée comme le reste ; sommaire migré sur Accordion.
+- **Emplacement** : journal seulement.
+
+## 2026-10-21 — `satisfies` dans un export hissé d'un .astro casse le build
+- **Erreur** : `export const demo = {…} satisfies DemoDoc;` dans le frontmatter des démos : `astro check` vert, `astro build` en échec (« Expected ";" but found "DemoDoc" »). Seul `astro check` avait servi à valider la forme.
+- **Règle écrite** : un littéral exporté d'un `.astro` se type par annotation (`export const demo: DemoDoc = …`), jamais par `satisfies` ; le message du contrôle `check-styleguide.mjs` le rappelle.
+- **Emplacement** : `.claude/conventions/coding-standards.md` (puce des exports hissés), `component-registry.md § Bibliothèque vivante`.
+
 ## 2026-10-20 — Description de skill illisible : skill sans déclencheurs
 - **Erreur** : 5 skills (publier, creer-page, integrer-article, optimiser-seo, deploy) avaient une description YAML sans guillemets contenant « : ». Claude Code ne lisait pas le frontmatter et affichait la première ligne du corps : phrases déclencheuses perdues, sans message. Trouvé sur website-movinmotion.
 - **Règle écrite** : description entre guillemets doubles, ou sans « : » ni « # » ; `name` = nom du dossier. Contrôle machine : `scripts/check-skills.mjs`, appelé par `pnpm run lint`.

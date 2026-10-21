@@ -24,7 +24,8 @@ Ce skill localise et oriente ; il ne modifie rien. Élément localisé : passer 
 | changer une photo, un logo | `gerer-images` |
 | être mieux trouvé sur Google ou cité par les IA, créer une FAQ | `optimiser-seo` |
 | changer l'adresse d'une page, la supprimer, rediriger | `renommer-rediriger` |
-| changer l'apparence, ajouter ou déplacer un bloc | `modifier-design` |
+| changer l'apparence, ajouter ou déplacer un bloc (choisi dans la bibliothèque) | `modifier-design` |
+| savoir quels blocs existent, à quoi ils ressemblent | la bibliothèque : `<site de test>/styleguide/` (CLAUDE.md § Projet) |
 | voir le résultat (lien TEST ou d'aperçu) | `verifier` |
 | savoir où il en est, ouvrir, reprendre, lister ou abandonner une branche | `branches` |
 | envoyer une branche sur TEST, faire relire, retirer un sujet de TEST | `envoyer-sur-test` |
@@ -36,7 +37,7 @@ Ce skill localise et oriente ; il ne modifie rien. Élément localisé : passer 
 Plusieurs demandes dans un message : les lister, confirmer l'ordre, les traiter une par une.
 
 ## « Que puis-je faire ? »
-Répondre avec les lignes du tableau en mots courants (ni noms de skills, ni fichiers), un exemple de phrase par ligne, et le circuit en une phrase : « une petite modification se fait directement sur le site de test, qu'on relit, puis on la met en ligne sur le site public ; un gros chantier a sa branche et son aperçu » (CLAUDE.md § Circuit de publication).
+Répondre avec les lignes du tableau en mots courants (ni noms de skills, ni fichiers), un exemple de phrase par ligne, le lien de la bibliothèque (`<site de test>/styleguide/` : chaque bloc du site, son nom, à quoi il sert, la phrase à dire, et s'il s'ajoute seul ou demande le développeur), et le circuit en une phrase : « une petite modification se fait directement sur le site de test, qu'on relit, puis on la met en ligne sur le site public ; un gros chantier a sa branche et son aperçu » (CLAUDE.md § Circuit de publication).
 
 ## Demande contraire à une règle du site
 Procédure commune à tous les skills d'intention (CLAUDE.md § Demandes non techniques).

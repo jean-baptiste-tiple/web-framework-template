@@ -1,0 +1,13 @@
+---
+// Rendu réel : le texte vient des réglages du site (SITE.faq ← site.json).
+import type { DemoDoc } from '@/lib/styleguide';
+import GlobalFaq from './GlobalFaq.astro';
+
+export const demo: DemoDoc = {
+  name: 'Questions fréquentes communes',
+  purpose: 'Les questions partagées par tout le site, écrites une seule fois dans les réglages et affichables sur plusieurs pages.',
+  ask: 'Ajoute la question « Quels sont vos délais ? » aux questions fréquentes communes du site.',
+};
+---
+
+<GlobalFaq />

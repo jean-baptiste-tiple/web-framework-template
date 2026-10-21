@@ -1,0 +1,40 @@
+---
+// Haut de page centré : sur-titre, titre (le H1 de la page), chapô, actions,
+// média. Canonique « haut de page » : la home (index.astro) et les landings
+// ([...slug].astro) le partagent au lieu de recopier son markup.
+// Chapô, actions et média sont des slots : la home met du markup dans son chapô
+// (`<code>`), les landings un texte du frontmatter ; une image de haut de page
+// passe par le slot par défaut et garde son `loading="eager"` (performance.md).
+import Container from './Container.astro';
+import Section from './Section.astro';
+
+interface Props {
+  /** Sur-titre court au-dessus du titre (couleur d'accent). */
+  eyebrow?: string;
+  /** Titre de la page, rendu en H1 : un seul par page. */
+  title: string;
+}
+const { eyebrow, title } = Astro.props;
+---
+
+<Section>
+  <Container class="text-center">
+    {eyebrow && <p class="mb-3 text-sm font-medium text-accent">{eyebrow}</p>}
+    <h1 class="mx-auto max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">{title}</h1>
+    {
+      Astro.slots.has('lead') && (
+        <p class="mx-auto mt-4 max-w-xl text-muted">
+          <slot name="lead" />
+        </p>
+      )
+    }
+    {
+      Astro.slots.has('actions') && (
+        <div class="mt-8 flex justify-center gap-3">
+          <slot name="actions" />
+        </div>
+      )
+    }
+    <slot />
+  </Container>
+</Section>

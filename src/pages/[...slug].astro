@@ -3,9 +3,10 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Container from '@/components/ui/Container.astro';
-import Section from '@/components/ui/Section.astro';
 import Button from '@/components/ui/Button.astro';
 import Faq from '@/components/ui/Faq.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Tldr from '@/components/ui/Tldr.astro';
 import SectionRenderer from '@/components/landing/SectionRenderer.astro';
 import { SITE } from '@/lib/site';
 
@@ -19,10 +20,13 @@ export async function getStaticPaths() {
 
   // Garde anti-collision : un slug réservé (route .astro existante) ou présent
   // dans les deux collections serait silencieusement masqué. On casse le build.
-  const reserved = new Set(['blog', 'contact', '404', 'index']);
+  // `styleguide` : bibliothèque et ses pages isolées /styleguide/<id>/, absentes
+  // de la production mais réservées partout (une page de contenu de ce nom
+  // serait en ligne en production et masquée sur le site de test).
+  const reserved = new Set(['blog', 'contact', '404', 'index', 'styleguide']);
   const seen = new Set<string>();
   for (const id of [...landings, ...pages].map((e) => e.id)) {
-    if (reserved.has(id))
+    if (reserved.has(id) || id.startsWith('styleguide/'))
       throw new Error(
         `Slug "${id}" réservé par une route src/pages/ : renommer le fichier de contenu.`,
       );
@@ -84,40 +88,29 @@ const faqForJsonLd =
       faq={faqForJsonLd}
       breadcrumbs={breadcrumbs}
     >
-      <Section>
-        <Container class="text-center">
-          {props.entry.data.hero.eyebrow && (
-            <p class="mb-3 text-sm font-medium text-accent">
-              {props.entry.data.hero.eyebrow}
-            </p>
-          )}
-          <h1 class="mx-auto max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">
-            {props.entry.data.hero.headline}
-          </h1>
-          {props.entry.data.hero.subheadline && (
-            <p class="mx-auto mt-4 max-w-xl text-muted">
-              {props.entry.data.hero.subheadline}
-            </p>
-          )}
-          {props.entry.data.hero.cta && (
-            <div class="mt-8">
-              <Button href={props.entry.data.hero.cta.href}>
-                {props.entry.data.hero.cta.label}
-              </Button>
-            </div>
-          )}
-          {/* Image de hero = candidate LCP : on annule le lazy par défaut d'astro:assets. */}
-          {props.entry.data.hero.image && (
-            <Image
-              src={props.entry.data.hero.image}
-              alt={props.entry.data.hero.imageAlt ?? ''}
-              class="mx-auto mt-10 rounded"
-              loading="eager"
-              fetchpriority="high"
-            />
-          )}
-        </Container>
-      </Section>
+      <PageHero
+        eyebrow={props.entry.data.hero.eyebrow}
+        title={props.entry.data.hero.headline}
+      >
+        {props.entry.data.hero.subheadline && (
+          <Fragment slot="lead">{props.entry.data.hero.subheadline}</Fragment>
+        )}
+        {props.entry.data.hero.cta && (
+          <Button slot="actions" href={props.entry.data.hero.cta.href}>
+            {props.entry.data.hero.cta.label}
+          </Button>
+        )}
+        {/* Image de hero = candidate LCP : on annule le lazy par défaut d'astro:assets. */}
+        {props.entry.data.hero.image && (
+          <Image
+            src={props.entry.data.hero.image}
+            alt={props.entry.data.hero.imageAlt ?? ''}
+            class="mx-auto mt-10 rounded"
+            loading="eager"
+            fetchpriority="high"
+          />
+        )}
+      </PageHero>
 
       {props.entry.data.sections.map((section) => (
         <SectionRenderer section={section} />
@@ -140,12 +133,7 @@ const faqForJsonLd =
           <h1 class="mb-6 text-3xl font-bold tracking-tight">
             {props.entry.data.title}
           </h1>
-          {props.entry.data.tldr && (
-            <p class="mb-8 rounded border-l-4 border-accent bg-surface p-4 text-muted">
-              <strong class="text-fg">En bref :</strong>{' '}
-              {props.entry.data.tldr}
-            </p>
-          )}
+          {props.entry.data.tldr && <Tldr text={props.entry.data.tldr} />}
           <div class="prose-content">
             <Content />
           </div>

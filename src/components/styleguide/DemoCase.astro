@@ -1,0 +1,18 @@
+---
+// Un cas d'une démo de la bibliothèque (/styleguide) : libellé + rendu.
+// Outillage des fichiers `*.demo.astro`, jamais utilisé par une page du site.
+// `surface="inverse"` pose la bande sombre (fond ET couleur de texte, comme
+// toute bande inversée : styling-tailwind.md) pour montrer un `tone="inverse"`.
+interface Props {
+  label: string;
+  surface?: 'default' | 'inverse';
+}
+const { label, surface = 'default' } = Astro.props;
+---
+
+<figure class="space-y-3">
+  <figcaption class="text-xs font-medium text-muted">{label}</figcaption>
+  <div class={surface === 'inverse' ? 'rounded bg-inverse p-6 text-inverse-fg' : ''}>
+    <slot />
+  </div>
+</figure>

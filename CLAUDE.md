@@ -14,8 +14,8 @@
 ### Rayon d'impact (Demande JB 2026-08-28)
 Dès qu'un changement dépasse 1-2 fichiers OU crée une surface (composant, variante, util src/lib/, champ Zod, collection, route, token), quatre items observables sont écrits AVANT la première ligne — dans le plan proposé en live, gabarit `.claude/templates/rayon-impact.md` :
 1. **Appelants** : pour chaque composant, fonction, champ, collection, route modifié — la commande de recherche citée (chemin absolu), les usages trouvés, ce qui change pour chacun. « Aucun autre appelant » se prouve par la commande, jamais par affirmation.
-2. **Doublons** : ce qui fait déjà la même chose (component-registry + galerie /styleguide + recherche sur le concept) ; verdict réutiliser / fusionner / laisser, et pourquoi.
-3. **Effet produit** : quel parcours voit une différence hors du fichier modifié — autres pages qui rendent le composant, fichiers générés (sitemap.xml, llms.txt, rss.xml, robots.txt, JSON-LD), formulaire (PUBLIC_FORM_ENDPOINT), redirections, galerie /styleguide, et les sites dérivés du template (tout changement du socle leur est hérité).
+2. **Doublons** : ce qui fait déjà la même chose (component-registry + bibliothèque /styleguide, sa recherche par le concept + `rg` sur le concept) ; chaque composant réutilisé ou étendu se cite par son ancre `/styleguide/#<id>` ; verdict réutiliser / fusionner / laisser, et pourquoi.
+3. **Effet produit** : quel parcours voit une différence hors du fichier modifié — autres pages qui rendent le composant, fichiers générés (sitemap.xml, llms.txt, rss.xml, robots.txt, JSON-LD), formulaire (PUBLIC_FORM_ENDPOINT), redirections, bibliothèque /styleguide (démo et fiche du composant touché), et les sites dérivés du template (tout changement du socle leur est hérité).
 4. **Refacto** : proposé ou écarté, écrit. Proposé ⇒ question posée via `AskUserQuestion` avec coût et conséquence de ne pas le faire. Le refacto reste non fait sans accord, mais il n'est jamais tu.
 Contrôlable : un plan de cette échelle sans ces quatre items, ou un item 1 sans commande citée, est une violation. Les changements micro (1-2 fichiers, aucune surface) en sont exempts. Contrôle en review : code-review.md § Sobriété.
 
@@ -37,7 +37,7 @@ Contrôle en review : .claude/checklists/code-review.md § Sobriété.
 |---|---|
 | Règle technique manquante ou fausse | Fichier du tag dans `.claude/conventions/` (routage : `_index.md`) |
 | Point de contrôle absent de la review | `.claude/checklists/code-review.md` |
-| Composant recréé au lieu de réutilisé | `.claude/conventions/component-registry.md` |
+| Composant recréé au lieu de réutilisé | `.claude/conventions/component-registry.md` (§ Bibliothèque vivante : la règle, la démo du composant qui aurait dû servir) |
 | Règle de travail globale / gotcha projet | `CLAUDE.md` (section concernée) |
 | Observation trop spécifique pour une règle | `docs/learnings.md` seulement (2 occurrences = candidate à généralisation) |
 | Invariant d'architecture absent, flou ou violé | ADR daté dans `docs/decisions/` + texte de la règle mis à jour dans le même commit (règle absolue 7). Écrit dans la foulée, sans attendre d'accord — l'ADR et le journal permettent de révoquer a posteriori |
@@ -51,7 +51,7 @@ La session écrit elle-même, quel que soit son modèle ; elle délègue quand u
 
 ## Projet
 <!-- Nom + description du site à remplir au bootstrap -->
-<!-- Adresses (bootstrap.md) : TEST = https://… (domaine rattaché à `main`) ; aperçu d'une branche = https://<projet>-git-<branche>-<équipe>.vercel.app ; production = `site` d'astro.config.mjs. Relecteurs de TEST : … -->
+<!-- Adresses (bootstrap.md) : TEST = https://… (domaine rattaché à `main`) ; bibliothèque des composants = <TEST>/styleguide/ ; aperçu d'une branche = https://<projet>-git-<branche>-<équipe>.vercel.app ; production = `site` d'astro.config.mjs. Relecteurs de TEST : … -->
 
 ## Stack
 Astro 5 (output: static, AUCUN adapter serveur) + TypeScript strict + Tailwind CSS 4 (via @tailwindcss/vite).
@@ -73,7 +73,7 @@ Site complet depuis un brief client : dérouler .claude/playbooks/website-builde
 3. Le contenu éditorial vit en Markdown/MDX dans src/content/, JAMAIS en dur dans des composants. Présentation (composants/tokens) et contenu (.md) restent séparés.
 4. Tout nouveau champ de contenu passe par un schéma Zod dans src/content.config.ts. Le typage du contenu EST le filet de sécurité (pas de tests).
 5. SEO/JSON-LD passent TOUJOURS par BaseLayout. Ne pas dupliquer de balises meta dans une page.
-6. Réutiliser avant de créer : consulter component-registry ET la galerie /styleguide AVANT tout composant ou markup de section. **Jamais forcer un composant hors de son usage prévu** (surcharge inline, `!important`, valeur arbitraire, prop détournée, wrapper qui écrase son style) : si l'existant ne couvre pas le besoin, soit l'étendre proprement (prop/variante typée, additive — les call-sites existants ne bougent pas), soit le scinder si fusionner alourdirait le canonique. Nouveau composant, variante ou scission = registre mis à jour dans le même commit.
+6. Réutiliser avant de créer : consulter component-registry ET la bibliothèque /styleguide AVANT tout composant ou markup de section, et citer dans le plan (rayon d'impact) le composant réutilisé ou étendu, ou ce qui casse sans le nouveau (component-registry.md § Bibliothèque vivante). **Jamais forcer un composant hors de son usage prévu** (surcharge inline, `!important`, valeur arbitraire, prop détournée, wrapper qui écrase son style) : si l'existant ne couvre pas le besoin, soit l'étendre proprement (prop/variante typée, additive — les call-sites existants ne bougent pas), soit le scinder si fusionner alourdirait le canonique. Nouveau composant, variante, prop ou scission = registre ET démo colocalisée (fiche éditeur comprise) mis à jour dans le même commit ; contrôle machine : `pnpm run lint` (scripts/check-styleguide.mjs).
 7. Ne JAMAIS modifier un invariant d archi sans ADR dans docs/decisions/.
 8. Mode cadrage (auto-détecté) = documentation uniquement. Aucune install, aucun fichier de code, aucun build pendant un cadrage.
 9. DRY structurel (CRITIQUE) : tout archétype de page qui se répète avec la MÊME forme (cas clients, fiches produit, secteurs…) = UNE collection Zod + UN seul template/route, JAMAIS N pages .astro bespoke. Si tu écris deux fois la même structure, c est une collection. Le bespoke (.astro) est réservé à un design réellement unique (home).
@@ -121,7 +121,7 @@ URL de prod : UNE seule fois dans `astro.config.mjs` (`site:`) — canonical, si
 ### Créer une nouvelle page
 - Nouvel article : créer `src/content/blog/<slug>.md`. Frontmatter minimum : `title`, `description`, `pubDate` (sinon le build échoue). Optionnels utiles : `updatedDate`, `author` (clé de `src/lib/authors.ts`, défaut `jb`), `tags`, `tldr`, `faq`.
 - Nouvelle page éditoriale : créer `src/content/pages/<slug>.md`. Minimum : `title`, `description`.
-- Nouvelle landing : créer `src/content/landings/<slug>.mdx`. Minimum : `title`, `description`, `hero.headline`. Sections via `sections:` (types disponibles : voir le registre `src/lib/sections.ts` et la galerie /styleguide).
+- Nouvelle landing : créer `src/content/landings/<slug>.mdx`. Minimum : `title`, `description`, `hero.headline`. Sections via `sections:` (types disponibles : la bibliothèque /styleguide, rubriques « Sections », source `src/lib/sections.ts`).
 - Ajouter un lien vers la nouvelle page dans `nav` (site.json) si besoin.
 
 ### Auteurs
@@ -177,7 +177,7 @@ Un éditeur novice (Claude Code desktop) formule en mots courants ; une seconde 
 
 ### Circuit de publication : branches → TEST → production (Demande JB 2026-10-21, ADR 0002)
 Mapping, invariants git, réglages : `.claude/conventions/deploy.md` § Circuit branches → TEST → production ; adresses du site : § Projet.
-- **Vocabulaire avec les éditeurs**, ces mots et pas d'autres : *site de test* (la version que le client relit, qui partira telle quelle ; jamais « TEST » seul, et jamais « en ligne » à son sujet), *site public* (la production : le seul qui soit « en ligne »), *branche* (copie du site pour un chantier, avec son adresse d'*aperçu*). Verbes : modifier sur le site de test, mettre en ligne (= passer sur le site public), ouvrir une branche, envoyer sur le site de test, retirer du site de test, abandonner une branche. Jamais commit, push, merge, pull request, rebase, worktree, origin, HEAD, tag. Dans ce fichier et les skills, TEST et production restent les noms techniques ; ils ne sortent pas tels quels vers l'éditeur.
+- **Vocabulaire avec les éditeurs**, ces mots et pas d'autres : *site de test* (la version que le client relit, qui partira telle quelle ; jamais « TEST » seul, et jamais « en ligne » à son sujet), *site public* (la production : le seul qui soit « en ligne »), *branche* (copie du site pour un chantier, avec son adresse d'*aperçu*), *bibliothèque* (la page des blocs du site, sur le site de test : `<TEST>/styleguide/`, § Projet ; on y désigne un bloc par son nom français). Verbes : modifier sur le site de test, mettre en ligne (= passer sur le site public), ouvrir une branche, envoyer sur le site de test, retirer du site de test, abandonner une branche. Jamais commit, push, merge, pull request, rebase, worktree, origin, HEAD, tag. Dans ce fichier et les skills, TEST et production restent les noms techniques ; ils ne sortent pas tels quels vers l'éditeur.
 - **Par défaut, modification directe sur TEST** (pas de branche à la va-vite) : texte, faute, article, image, couleur, FAQ, menu, blocs d'une page réordonnés, toute modification courte terminée dans la session. Elle part sur TEST à la fin de la demande, sans confirmation (TEST n'est pas public) : `branches` § 3.
 - **Branche, seulement pour un chantier** : travail sur plusieurs sessions ou plusieurs jours, plusieurs pages refaites, nouvelle page ou section à montrer seule avant TEST, essai qu'on n'est pas sûr de garder, développement (code). Le dire à l'éditeur avec la raison ; doute : `AskUserQuestion`, « directement sur TEST » recommandé. **2 branches en cours au plus par personne** (pas encore sur TEST) : à la troisième, en finir ou en abandonner une d'abord (`branches` § 4).
 - **Avant toute modification d'un fichier du site** dans une session (skill d'intention compris) : skill `branches` § 1-2. TEST est la branche `main` ; la production ne change que par `publier` (action « Mise en ligne », tag `production`).
@@ -192,7 +192,7 @@ Le push passe TOUJOURS par `/commit-push` (lint + astro check + build = validati
 Exception (§ Circuit de publication) : un envoi d'éditeur sur TEST ou sur sa branche passe par le contrôle léger de `branches` § 5, la construction complète étant faite par Vercel ; la mise en ligne est l'action « Mise en ligne » sur le commit de TEST, sans commit nouveau, après la construction Vercel de TEST.
 
 ## Design System
-Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design system viendra plus tard : ne pas sur-investir le style. Réutiliser les composants src/components/ui/. Registry : .claude/conventions/component-registry.md + galerie /styleguide (noindex) — tenir les deux à jour dans le même commit.
+Tokens neutres légers dans src/styles/global.css (@theme Tailwind 4). Le design system viendra plus tard : ne pas sur-investir le style. Réutiliser les composants src/components/ui/. Registry : .claude/conventions/component-registry.md + bibliothèque /styleguide (noindex, absente de la production, ADR 0003), alimentée par les démos colocalisées : tenir les deux à jour dans le même commit.
 
 ## Conventions par tags
 Index : .claude/conventions/_index.md. Base toujours lues : coding-standards.md, tech-stack.md, component-registry.md.
