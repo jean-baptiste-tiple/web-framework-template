@@ -41,7 +41,7 @@ jobs:
       # d'Astro, node_modules/.astro/assets) : sans lui, toutes les variantes sont
       # régénérées à chaque fois. Pas tout node_modules/.astro :
       # data-store.json y garderait des pages supprimées.
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: node_modules/.astro/assets
           key: astro-${{ runner.os }}-${{ hashFiles('src/**/*.png', 'src/**/*.jpg', 'src/**/*.jpeg', 'src/**/*.webp', 'src/**/*.avif', 'astro.config.mjs', 'pnpm-lock.yaml') }}
