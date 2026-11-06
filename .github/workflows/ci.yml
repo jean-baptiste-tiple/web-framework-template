@@ -27,7 +27,7 @@ jobs:
     if: github.event_name != 'push' || github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       # La version de pnpm vient de "packageManager" dans package.json.
       # Ne PAS remettre `with: version`, sinon conflit ERR_PNPM_BAD_PM_VERSION.
       - uses: pnpm/action-setup@v6
