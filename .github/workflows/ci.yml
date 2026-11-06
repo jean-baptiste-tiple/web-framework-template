@@ -31,7 +31,7 @@ jobs:
       # La version de pnpm vient de "packageManager" dans package.json.
       # Ne PAS remettre `with: version`, sinon conflit ERR_PNPM_BAD_PM_VERSION.
       - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
