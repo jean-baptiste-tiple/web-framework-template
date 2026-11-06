@@ -1,0 +1,19 @@
+# Veille des dépendances : une proposition de mise à jour par semaine, en pull
+# request sur main ; son aperçu Vercel se construit seul, la fusion envoie sur
+# TEST, la mise en ligne reste l'action « Mise en ligne » (skill publier).
+# Les alertes de sécurité (Settings > Code security) demandent un admin du dépôt.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      astro:
+        patterns: ["astro", "@astrojs/*"]
+      mineures:
+        update-types: ["minor", "patch"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

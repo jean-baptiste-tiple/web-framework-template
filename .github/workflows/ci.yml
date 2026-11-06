@@ -9,8 +9,9 @@ jobs:
   # préfixe client ni ID de tâche, 25 caractères au plus, sinon Vercel abrège
   # l'adresse d'aperçu et elle n'est plus prévisible.
   nom-de-branche:
-    # Branches créées par l'interface de Claude Code en ligne (claude/…) : hors règle.
-    if: github.event_name == 'push' && github.ref_name != 'main' && !startsWith(github.ref_name, 'claude/')
+    # Branches créées par l'interface de Claude Code en ligne (claude/…) et par
+    # Dependabot (dependabot/…) : hors règle.
+    if: github.event_name == 'push' && github.ref_name != 'main' && !startsWith(github.ref_name, 'claude/') && !startsWith(github.ref_name, 'dependabot/')
     runs-on: ubuntu-latest
     steps:
       - name: Contrôler le nom
