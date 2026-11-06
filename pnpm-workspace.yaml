@@ -1,3 +1,13 @@
 allowBuilds:
   esbuild: true
   sharp: true
+# Parues moins de 24 h avant le passage à Astro 7 (06/11/2026, ADR 0005) :
+# exception à retirer dès que la prochaine mise à jour les dépasse.
+minimumReleaseAgeExclude:
+  - '@astrojs/internal-helpers@0.13.1'
+  - '@astrojs/mdx@8.1.3'
+# Astro 7 : @napi-rs/wasm-runtime prend sinon la bêta 2.0.0 d'emnapi, qui plante
+# `astro check` (TypeError this.bridge.deleteEnv) ; on reste sur la version stable.
+overrides:
+  '@emnapi/core': ^1.11.3
+  '@emnapi/runtime': ^1.11.3

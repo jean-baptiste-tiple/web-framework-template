@@ -54,7 +54,7 @@ La session écrit elle-même, quel que soit son modèle ; elle délègue quand u
 <!-- Adresses (bootstrap.md) : TEST = https://… (domaine rattaché à `main`) ; bibliothèque des composants = <TEST>/styleguide/ ; aperçu d'une branche = https://<projet>-git-<branche>-<équipe>.vercel.app ; production = `site` d'astro.config.mjs. Relecteurs de TEST : … -->
 
 ## Stack
-Astro 5 (output: static, AUCUN adapter serveur) + TypeScript strict + Tailwind CSS 4 (via @tailwindcss/vite).
+Astro 7 (output: static, AUCUN adapter serveur ; ADR 0005) + TypeScript strict + Tailwind CSS 4 (via @tailwindcss/vite).
 Contenu : Content Collections (Markdown/MDX) typées par Zod.
 Interactivité : par défaut AUCUN framework JS. Préférer le natif (<details>, <script> vanilla). SolidJS est un starter OPT-IN non installé par défaut : ne l'ajouter (`pnpm add @astrojs/solid-js solid-js` + intégration dans astro.config) qu'en cas de besoin réel d'interactivité riche.
 Mono-langue par défaut : pas d'i18n dans le socle. L'i18n est un starter à réactiver si besoin (voir .claude/conventions/i18n.md).

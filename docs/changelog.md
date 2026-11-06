@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-06 · Dépendances à jour, Dependabot, passage à Astro 7 (ADR 0005)
+- **Dependabot** : `.github/dependabot.yml`, npm et GitHub Actions chaque semaine, groupes « astro » (astro, @astrojs/*) et « mineures » (minor, patch) ; la CI ne contrôle pas le nom des branches `dependabot/`. Alertes et correctifs de sécurité Dependabot activés sur le dépôt.
+- **Correctifs dans Astro 5** : `pnpm update`, ESLint 10, `@types/node` ^24 (`astro check` refusait `process.env`).
+- **Astro 7.4.5, MDX 8.1.3, markdown-remark 7.3.5** : `compressHTML: true` (sinon des mots se collent), overrides `@emnapi/*` ^1.11.3, exception d'âge pour mdx 8.1.3 et internal-helpers 0.13.1, Zod 4 (`.value`, `z.ZodObject`, `z` de `astro/zod`).
+- **Vérifié** : 50 pages HTML avant et après, texte rendu identique page par page (37 pages avec mots collés sans `compressHTML: true`) ; lint et build verts ; `pnpm dev` 200 sur 6 pages.
+- **Porter sur un site dérivé** : voir ADR 0005 § Conséquences.
+
 ## 2026-10-21 · Registre des sections : schémas séparés des composants (ADR 0004)
 - **Défaut corrigé** (latent dans le modèle, vu sur Movinmotion) : `content.config.ts` importait `src/lib/sections.ts`, donc tous les composants de section ; dès qu'une section a un `<style>`, `pnpm dev` répondait 500 sur toutes les pages (« reading 'get' », « Content config not loaded »), build intact.
 - **`src/lib/section-schemas.ts`** (nouveau) : `SECTION_SCHEMAS`, `sectionSchema` et les types ; seul import du registre dans `content.config.ts`. **`src/lib/sections.ts`** : composants dans un `Record<SectionType, …>`, fusionnés en `SECTION_REGISTRY` (même forme), types réexportés ; SectionRenderer et /styleguide inchangés. Ajouter une section = une entrée dans chacun des deux fichiers.

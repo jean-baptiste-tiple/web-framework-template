@@ -10,6 +10,10 @@ import markdownTwins from './src/integrations/markdown-twins.mjs';
 export default defineConfig({
   site: 'https://example.com',
   output: 'static',
+  // Astro 7 applique par défaut les règles d'espaces de JSX ('jsx'), qui collent
+  // les mots séparés par un retour à la ligne entre deux balises en ligne ;
+  // `true` garde le comportement d'Astro 5 (ADR 0005).
+  compressHTML: true,
   integrations: [mdx(), markdownTwins()],
   // Alias anglais que les scanners agentiques sondent pour les pages de
   // confiance. Source unique des redirections (deploy.md) ; un site dérivé

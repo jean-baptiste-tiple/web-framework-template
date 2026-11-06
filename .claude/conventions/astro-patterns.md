@@ -1,8 +1,8 @@
 # Astro patterns
 
 - Pages = routing fichier dans src/pages/. Une page = un BaseLayout + des composants.
-- Collections rendues via getCollection + render(entry) (Astro 5 : import { render } from "astro:content"). Pas entry.render().
-- getStaticPaths : params.slug = entry.id (Astro 5, sans extension).
+- Collections rendues via getCollection + render(entry) (depuis Astro 5 : import { render } from "astro:content"). Pas entry.render().
+- getStaticPaths : params.slug = entry.id (depuis Astro 5, sans extension).
 - Routing racine : [...slug].astro sert landings + pages. /blog/* et /index gagnent (routes plus spécifiques prioritaires). Ne pas ajouter un second catch-all racine.
 - Articles : TOUJOURS `getPosts()` (pages, RSS) ou `getIndexablePosts()` (sitemap, llms.txt) de `src/lib/blog.ts`, jamais `getCollection("blog")` dans une page ou une route : la fonction exclut les brouillons et, en production, les articles programmés (ADR 0002), et trie du plus récent au plus ancien. Contrôlable : `rg -n "getCollection\('blog'" src` ne renvoie que `src/lib/blog.ts`.
 - Pas de meta en dur dans une page : passer par BaseLayout (meta, type, faq, breadcrumbs).

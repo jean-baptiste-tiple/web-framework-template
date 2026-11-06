@@ -119,7 +119,7 @@ const DEMOS = import.meta.glob<{ default: AstroComponentFactory; demo?: DemoDoc 
   { eager: true },
 );
 const SCHEMAS = import.meta.glob<{
-  schema: z.AnyZodObject;
+  schema: z.ZodObject;
   demo?: SectionDemo<AnySection>;
 }>('/src/components/sections/**/*.schema.ts', { eager: true });
 // Sources brutes : graphe des imports et styles partagés.
@@ -391,7 +391,8 @@ async function buildGallery() {
   const sectionEntries: { file: string; schemaFile: string; type: string; mod: (typeof SCHEMAS)[string] }[] = [];
   for (const [path, mod] of Object.entries(SCHEMAS)) {
     const schemaFile = rel(path);
-    const type = mod.schema?.shape?.type?._def?.value as string | undefined;
+    // Zod 4 (Astro 7) : `.value` d'un z.literal.
+    const type = mod.schema?.shape?.type?.value as string | undefined;
     if (!type) throw new Error(`${schemaFile} : \`schema\` sans discriminant \`type\` littéral.`);
     if (!(type in SECTION_REGISTRY)) {
       throw new Error(`${schemaFile} : la section « ${type} » n'est pas enregistrée dans src/lib/section-schemas.ts.`);
