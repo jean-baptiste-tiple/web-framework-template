@@ -4,6 +4,7 @@
 - **Dependabot** : `.github/dependabot.yml`, npm et GitHub Actions chaque semaine, groupes « astro » (astro, @astrojs/*) et « mineures » (minor, patch) ; la CI ne contrôle pas le nom des branches `dependabot/`. Alertes et correctifs de sécurité Dependabot activés sur le dépôt.
 - **Correctifs dans Astro 5** : `pnpm update`, ESLint 10, `@types/node` ^24 (`astro check` refusait `process.env`).
 - **Astro 7.4.5, MDX 8.1.3, markdown-remark 7.3.5** : `compressHTML: true` (sinon des mots se collent), overrides `@emnapi/*` ^1.11.3, exception d'âge pour mdx 8.1.3 et internal-helpers 0.13.1, Zod 4 (`.value`, `z.ZodObject`, `z` de `astro/zod`).
+- **Alertes Dependabot restantes** (dépendances indirectes) : overrides `minimatch` ^11.0.4 et `esbuild` ^0.28.2 dans `pnpm-workspace.yaml`. PR Dependabot des GitHub Actions fusionnées (checkout 7, setup-node 7, cache 6).
 - **Vérifié** : 50 pages HTML avant et après, texte rendu identique page par page (37 pages avec mots collés sans `compressHTML: true`) ; lint et build verts ; `pnpm dev` 200 sur 6 pages.
 - **Porter sur un site dérivé** : voir ADR 0005 § Conséquences.
 
