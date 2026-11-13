@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-13 · Vulgarisation au niveau du site dérivé Movinmotion (ADR 0006)
+- **Vocabulaire** : la production se dit « site officiel » (plus « site public ») face aux éditeurs, dans CLAUDE.md, les skills et la bibliothèque /styleguide.
+- **Messages à l'éditeur** (CLAUDE.md § Circuit de publication) : fin de réponse en phrases complètes et rassurantes (3 modèles : site de test, mise en ligne, chantier), chaque site nommé avec son adresse, éditeurs autonomes (le développeur n'est cité que sur un point bloquant). Les skills renvoient aux modèles au lieu de leur ligne télégraphique.
+- **Fenêtres en français** : descriptions d'appel lisibles pour les envois (`branches` § 5) et la mise en ligne (`publier` § 2) ; commande courte `npm run mettre-en-ligne` au lieu de `gh api …` ; garde-fou (hook PreToolUse + règles `ask`/`deny` des réglages Claude Code, ADR 0006). La fenêtre de confirmation est le seul oui.
+- **Gabarits** : `.claude/templates/guide-edition.md` (guide de l'éditeur : quoi préparer, quelle phrase dire) et `.claude/templates/carte-site.md` (où vit chaque texte, lue en premier par `comprendre-demande`), à remplir au bootstrap.
+- **Porter sur un site dérivé** : tirer le socle ; un site qui a déjà son garde-fou et son guide (Movinmotion) garde les siens.
+
 ## 2026-11-06 · Dépendances à jour, Dependabot, passage à Astro 7 (ADR 0005)
 - **Dependabot** : `.github/dependabot.yml`, npm et GitHub Actions chaque semaine, groupes « astro » (astro, @astrojs/*) et « mineures » (minor, patch) ; la CI ne contrôle pas le nom des branches `dependabot/`. Alertes et correctifs de sécurité Dependabot activés sur le dépôt.
 - **Correctifs dans Astro 5** : `pnpm update`, ESLint 10, `@types/node` ^24 (`astro check` refusait `process.env`).

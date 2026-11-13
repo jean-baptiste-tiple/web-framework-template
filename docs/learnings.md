@@ -187,3 +187,7 @@ Format d'une entrée :
 - **Erreur** : la convention imposait la forme arbitraire `bg-[var(--color-accent)]` alors que Tailwind 4 génère les utilitaires sémantiques depuis @theme ; le site enfant (merciyanis) a dû inverser la règle après usage (son ADR 0008), et le socle entier suivait la mauvaise forme.
 - **Règle écrite** : classes générées par @theme en markup, `var(--color-*)` réservé aux blocs `<style>` scoped ; arbitraire seulement si aucun utilitaire n'est généré. Code du socle migré dans le même commit (une règle contredite par le code du socle est morte à la naissance).
 - **Emplacement** : `.claude/conventions/styling-tailwind.md` ; reprise dans CLAUDE.md § Règles Astro 4 et coding-standards.md.
+
+## 2026-11-13 — Observation : le garde-fou de mise en ligne refuse une commande qui cite seulement ses fichiers
+- **Constat** : deux commandes shell (heredoc) qui écrivaient dans `docs/` ont été refusées par le hook de mise en ligne, parce que leur texte citait un fichier protégé et contenait le mot d'un interpréteur ; aucune écriture réelle sur le garde-fou.
+- **Contournement** : éditer par l'outil Edit (seuls les fichiers du garde-fou y sont interdits). Prudence voulue (ADR 0006), pas une règle.

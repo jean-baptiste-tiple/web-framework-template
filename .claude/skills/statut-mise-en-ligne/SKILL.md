@@ -22,11 +22,11 @@ Trois lieux : l'aperçu d'une branche, TEST (`main`), la production (tag `produc
 ## Vérifier qu'elle se voit
 Adresse du lieu + chemin de la page (`src/content/blog/<slug>.md` → `/blog/<slug>/`, `src/content/pages/<slug>.md` → `/<slug>/`) : `curl -s` filtré sur un fragment du texte modifié, sans apostrophe (le site écrit ’, pas ') ; le statut 200 seul ne prouve rien. Absent alors que git dit présent : construction en cours (quelques minutes) ou en échec :
 - aperçu, TEST : connecteur Vercel `list_deployments` (`projectId` ; `teamId` = `orgId` de `.vercel/project.json`, sinon `list_projects`), avec `branch` et `since` = il y a 48 h en millisecondes (sans lui, la réponse est très longue) : état (`READY`, en cours, `ERROR`) du commit visé ;
-- production : dernière exécution de l'action « Mise en ligne » (`publier` § 3.4).
+- production : dernière exécution de l'action « Mise en ligne » (`gh api "repos/<propriétaire>/<dépôt>/actions/workflows/production.yml/runs?per_page=1"`).
 
 ## Répondre en une phrase
-- « Pas encore envoyée » ; « Sur l'aperçu seulement : <adresse> » ; « Visible sur le site de test : <adresse>, pas encore sur le site public » ; « En ligne sur le site public depuis <heure> : <adresse> » ; les sources donnent l'heure en UTC, l'annoncer en heure de Paris (UTC+2 l'été, UTC+1 l'hiver) ;
-- article à `pubDate` future, présent dans `production` : « Mis en ligne, programmé : il paraîtra sur le site public le <date> vers 6 h » (`integrer-article` § Article programmé) ;
+- « Pas encore envoyée » ; « Sur l'aperçu seulement : <adresse> » ; « C'est sur le site de test : <adresse>. Le site officiel (<adresse>) ne l'a pas encore » ; « C'est en ligne sur le site officiel depuis <heure> : <adresse> » ; les sources donnent l'heure en UTC, l'annoncer en heure de Paris (UTC+2 l'été, UTC+1 l'hiver) ;
+- article à `pubDate` future, présent dans `production` : « Mis en ligne, programmé : il paraîtra sur le site officiel (<adresse>) le <date> vers 6 h » (`integrer-article` § Article programmé) ;
 - « Bloqué : la construction du site a échoué parce que <cause en clair> » → lire le journal, proposer le correctif (`verifier`).
 Tout est vert mais le changement reste invisible : page en brouillon (`draft: true`, jamais affichée) ; sinon cache du navigateur → rechargement forcé (Ctrl+F5).
 

@@ -23,9 +23,9 @@ Défaire = un nouveau commit (`git revert --no-edit <commit>`), jamais une réé
 - **Sur TEST, pas en production** : tout le sujet → `envoyer-sur-test` § 5 (retirer de TEST) ; une partie d'une modification directe → la corriger directement sur TEST (`branches` § 3) ; une partie d'un sujet de branche → la défaire sur la branche, puis la renvoyer sur TEST.
 
 ## En production
-1. Récap en clair + `AskUserQuestion` (le site public change).
+1. Récap en clair (le site officiel change). Le oui est la fenêtre de confirmation de la mise en ligne (`publier` § 2), pas une question de plus.
 2. La défaire sur TEST comme ci-dessus, puis remettre en ligne (`publier`). Tout ce qui est sur TEST repartirait avec.
-3. TEST contient d'autres sujets pas prêts, ou urgence : retour immédiat à la mise en ligne précédente, `publier` § 3 avec `inputs[ref]=<tag mise-en-ligne-… précédent>` (`git tag --list "mise-en-ligne-*" --sort=-creatordate`), puis la défaire quand même sur TEST, sinon elle repartirait à la prochaine mise en ligne.
+3. TEST contient d'autres sujets pas prêts, ou urgence : retour immédiat à la mise en ligne précédente, `npm run mettre-en-ligne -- <tag mise-en-ligne-… précédent>` (`publier` § 2-3) (`git tag --list "mise-en-ligne-*" --sort=-creatordate`), puis la défaire quand même sur TEST, sinon elle repartirait à la prochaine mise en ligne.
 
 ## Garde-fous
 - Jamais `push --force`, jamais de réécriture d'un historique envoyé, jamais de tag posé à la main.

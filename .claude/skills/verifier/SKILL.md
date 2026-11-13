@@ -18,7 +18,7 @@ Ce skill ne modifie aucun contenu : une correction repasse par le skill d'éditi
 - Contrôle local (développement, lecture d'une erreur sans connecteur Vercel) : `pnpm run lint`, puis `pnpm run build`. Fichier de contenu supprimé ou renommé depuis le dernier build : `rm -rf node_modules/.astro dist` avant.
 
 ## Rendre compte, en clair
-- Tout va bien : « Visible sur le site de test : <adresse> ; le site se construit sans erreur. » Proposer `publier`.
+- Tout va bien : le modèle « modification sur le site de test » de CLAUDE.md § Circuit de publication (ou « chantier » pour un aperçu), en ajoutant que le site se construit sans erreur.
 - Erreur : la traduire (« l'article n'a pas de description, elle est obligatoire »), dire où, proposer le correctif. Jamais le journal brut.
 - Construction en échec : on ne met pas en ligne ; corriger, puis revérifier.
 

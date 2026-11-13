@@ -13,6 +13,7 @@ Personnalisation technique à dérouler AVANT mise en ligne. Complète le cadrag
 - [ ] Contenus d'exemple : remplacer `src/content/blog/premier-article.md`, `src/content/landings/audit-energetique.mdx`, `src/content/pages/a-propos.md` ; compléter `mentions-legales.md` ; réécrire la home (`src/pages/index.astro`) et les descriptions des pages bespoke (140-160 car.).
 - [ ] Formulaire contact : définir `PUBLIC_FORM_ENDPOINT` dans l'ENV DE BUILD de l'hébergeur (valeur inlinée au build, un .env local ne suffit pas) — ou retirer le starter forms (.claude/starters/forms/README.md).
 - [ ] `CLAUDE.md` § Projet : nom + description du site.
+- [ ] Éditeurs : copier `.claude/templates/guide-edition.md` vers `docs/guide-edition.md` et le remplir (adresses, dépôt, tâches propres au site) ; copier `.claude/templates/carte-site.md` dans `.claude/skills/comprendre-demande/projet.md` (§ Carte du site) et le remplir (CLAUDE.md § Demandes non techniques).
 - [ ] docs/ : brief, sitemap, content-model remplis → gate .claude/checklists/site-ready.md.
 - [ ] Circuit branches → TEST → production (deploy.md § Circuit, ADR 0002), dans l'ordre :
   1. Projet Vercel importé depuis le dépôt GitHub ; commande de build = `rm -f node_modules/.astro/data-store.json && pnpm astro build` (deploy.md § Vercel) ; protection « Vercel Authentication » désactivée (Settings > Deployment Protection) pour que les relecteurs ouvrent TEST et les aperçus sans compte Vercel.

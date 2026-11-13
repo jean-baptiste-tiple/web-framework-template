@@ -10,6 +10,7 @@ description: Point d'entrée quand on ne sait pas où vit ce que l'utilisateur v
 Ce skill localise et oriente ; il ne modifie rien. Élément localisé : passer la main au skill du tableau, sans revenir ici.
 
 ## Localiser ce que l'utilisateur voit
+0. Carte du site (`projet.md` § Carte du site : adresse → fichier du texte → textes venus d'ailleurs ; gabarit `.claude/templates/carte-site.md`, remplie au bootstrap) : la lire d'abord ; la page y figure → fichier trouvé, aller au point 3. Absente ou page manquante : points 1-2, puis ajouter la ligne à la carte.
 1. Obtenir la page (adresse ou nom) et le texte exact vu à l'écran ; pour un ajout, l'endroit où il doit apparaître. Une capture ou un copier-coller suffit.
 2. Chercher un fragment de 3-4 mots, sans ponctuation (apostrophes et espaces diffèrent entre l'écran et le fichier), dans `src/content/` (pages, articles, fiches, réglages), puis `src/pages/`, puis `src/components/`.
 3. Trouvé dans une fiche ou un réglage : relever les pages qui affichent CE CHAMP, pas tout le fichier. Chercher `data.<champ>` (ou `SITE.<clé>`) dans `src/`, puis les pages qui rendent les composants trouvés. Contre-épreuve : la phrase dans `dist/` après un build (`verifier`).
@@ -37,7 +38,7 @@ Ce skill localise et oriente ; il ne modifie rien. Élément localisé : passer 
 Plusieurs demandes dans un message : les lister, confirmer l'ordre, les traiter une par une.
 
 ## « Que puis-je faire ? »
-Répondre avec les lignes du tableau en mots courants (ni noms de skills, ni fichiers), un exemple de phrase par ligne, le lien de la bibliothèque (`<site de test>/styleguide/` : chaque bloc du site sur sa fiche, son nom, son aperçu et les pages qui l'utilisent ; l'éditeur choisit un bloc par son nom, et c'est Claude qui lui dit s'il peut l'ajouter seul ou si c'est du développement), et le circuit en une phrase : « une petite modification se fait directement sur le site de test, qu'on relit, puis on la met en ligne sur le site public ; un gros chantier a sa branche et son aperçu » (CLAUDE.md § Circuit de publication).
+Répondre avec les lignes du tableau en mots courants (ni noms de skills, ni fichiers), un exemple de phrase par ligne, le lien de la bibliothèque (`<site de test>/styleguide/` : chaque bloc du site sur sa fiche, son nom, son aperçu et les pages qui l'utilisent ; l'éditeur choisit un bloc par son nom, et c'est Claude qui lui dit s'il peut l'ajouter seul ou si c'est du développement), et le circuit en une phrase : « une petite modification se fait directement sur le site de test, qu'on relit, puis on la met en ligne sur le site officiel ; un gros chantier a sa branche et son aperçu » (CLAUDE.md § Circuit de publication).
 
 ## Demande contraire à une règle du site
 Procédure commune à tous les skills d'intention (CLAUDE.md § Demandes non techniques).

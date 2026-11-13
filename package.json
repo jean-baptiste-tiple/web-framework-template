@@ -11,6 +11,7 @@
     "check": "astro check",
     "lint": "eslint . && node scripts/check-skills.mjs && node scripts/check-styleguide.mjs && node scripts/check-content-config.mjs",
     "audit:lh": "node scripts/audit-lh.mjs",
+    "mettre-en-ligne": "node scripts/mettre-en-ligne.mjs",
     "astro": "astro"
   },
   "dependencies": {

@@ -28,7 +28,7 @@ Dans un worktree temporaire : la copie de l'éditeur ne change pas de branche. T
 4. `git -C .claude/worktrees/envoi-test push origin HEAD:main`, puis `git worktree remove .claude/worktrees/envoi-test`.
 
 ## 4. Contrôler TEST
-Adresse TEST + chemin de la page, contrôlée comme en `branches` § 5.3. Prêt : « Visible sur le site de test : <adresse>. On peut relire ; pour le site public, dites « mets en ligne ». » Construction en échec : retirer le sujet (§ 5) pour rendre TEST sain, corriger sur la branche, renvoyer.
+Adresse TEST + chemin de la page, contrôlée comme en `branches` § 5.3. Prêt : le modèle « modification sur le site de test » de CLAUDE.md § Circuit de publication, en ajoutant que le client peut maintenant relire. Construction en échec : retirer le sujet (§ 5) pour rendre TEST sain, corriger sur la branche, renvoyer.
 
 ## 5. Retirer un sujet de TEST
 1. Trouver ce qui l'a apporté : `git log --first-parent --format="%h %s" production..origin/main` : une fusion « TEST : <sujet> » (branche) ou un ou plusieurs commits simples (modification directe sur TEST). Déjà en production : `annuler-modification`.
@@ -40,4 +40,4 @@ Adresse TEST + chemin de la page, contrôlée comme en `branches` § 5.3. Prêt 
 - Jamais `push --force` sur `main`.
 
 ## Rendre compte
-« <Sujet> est visible sur le site de test : <adresse>. » Puis la ligne d'état (`branches` § Rendre compte).
+Le modèle « modification sur le site de test » de CLAUDE.md § Circuit de publication, avec le sujet (`branches` § Rendre compte).

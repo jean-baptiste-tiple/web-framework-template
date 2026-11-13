@@ -25,7 +25,6 @@
       "Bash(git worktree remove .claude/worktrees/:*)",
       "Bash(git -C .claude/worktrees/:*)",
       "Bash(git tag --list:*)",
-      "Bash(gh api -X POST repos/*/actions/workflows/production.yml/dispatches *)",
       "Bash(gh api \"repos/*/actions/workflows/production.yml/runs*)",
       "Bash(gh api repos/*/actions/runs/*)",
       "Bash(gh run list:*)",
@@ -50,7 +49,31 @@
       "Bash(git push origin --tags:*)",
       "Bash(git push origin refs/tags/:*)",
       "Bash(git tag -f:*)",
-      "Bash(git tag -d:*)"
+      "Bash(git tag -d:*)",
+      "Edit(.claude/settings.json)",
+      "Edit(.claude/settings.local.json)",
+      "Edit(.claude/hooks/**)",
+      "Edit(scripts/mettre-en-ligne.mjs)"
+    ],
+    "ask": [
+      "Bash(npm run mettre-en-ligne:*)",
+      "Bash(pnpm run mettre-en-ligne:*)",
+      "Bash(node scripts/mettre-en-ligne.mjs:*)",
+      "Bash(gh api -X POST repos/*/actions/workflows/production.yml/dispatches *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/mise-en-ligne.mjs\"",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   }
 }
