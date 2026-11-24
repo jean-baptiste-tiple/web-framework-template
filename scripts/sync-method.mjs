@@ -9,11 +9,13 @@
  *   synchro (empreinte notée dans `.claude/sync-state.json`) se remplace sans risque ; un fichier
  *   modifié par le site ne s'écrase qu'avec `--take <chemin>` explicite. Une entrée `!glob`
  *   retire des chemins de la part du socle (`projet.md` : surcouche du site, jamais livrée).
- * - `merge` : contenu mixte (CLAUDE.md, _index.md…), jamais écrit. Le rapport dit ce que le
+ * - `merge` : contenu mixte (CLAUDE.md, _index.md…), jamais écrit, sauf s'il est « sans part
+ *   projet » (aucune ligne propre au site) et cité par `--take`. Le rapport dit ce que le
  *   template a ajouté ; la fusion reste manuelle.
  *
  *   node scripts/sync-method.mjs <dépôt-cible>                  rapport seul, rien n'est écrit
  *   node scripts/sync-method.mjs <dépôt-cible> --apply [--take <chemin>]... [--exclude <chemin>]...
+ *     (`--take` et `--exclude` impliquent `--apply`)
  *   node scripts/sync-method.mjs <dépôt-cible> --diff <chemin>...  diff template → cible, rien n'est écrit
  *
  * Aucune dépendance : il voyage avec la méthode (il est lui-même `owned`).
@@ -37,7 +39,10 @@ export const STATUTS = {
   retire: 'retiré du template',
   propre: 'propre au projet',
   exclu: 'exclu par le projet',
+  doublon: 'doublon à supprimer à la main',
 }
+
+export const MERGE_SANS_PART = 'merge sans part projet'
 
 // ------------------------------------------------------------------ globs (sans dépendance)
 /** `a/{x,y}/b` → [`a/x/b`, `a/y/b`] (accolades non imbriquées : seul usage du manifeste). */
@@ -115,6 +120,22 @@ export function verifierManifeste(root, err) {
   for (const p of fichiersDuGlob(root, '.claude/conventions/*.md')) {
     if (!couverts.has(p)) err(`${MANIFESTE} : \`${p}\` n'est ni owned ni merge — il n'atteindra aucun projet dérivé.`)
   }
+  verifierCitations(root, owned, couverts, err)
+}
+
+/**
+ * Un document qui voyage (owned ou merge) ne cite pas un chemin qui n'existe que dans le
+ * socle : le manifeste n'est pas copié, et un fichier owned à `dest` (ADR) change de dossier.
+ * Le site y lirait un chemin mort.
+ */
+function verifierCitations(root, owned, couverts, err) {
+  const seuls = [MANIFESTE, ...owned.filter(({ dest }) => dest).flatMap(({ glob }) => fichiersDuGlob(root, glob))]
+  for (const p of [...couverts].filter((f) => f.endsWith('.md') && existsSync(join(root, f)))) {
+    const src = readFileSync(join(root, p), 'utf8')
+    for (const s of seuls) {
+      if (src.includes(s)) err(`${p} : cite \`${s}\`, absent des sites dérivés — citer le nom seul (ADR 0006, « le manifeste du socle »).`)
+    }
+  }
 }
 
 /** Chemin dans le dérivé : `dest` remplace le dossier littéral du glob (ADR → `docs/decisions/socle/`). */
@@ -162,8 +183,21 @@ export function analyserOwned(template, cible, manifeste, { tampon, exclus }) {
       if (attendus.has(dest) || !horsSauf(manifeste, dest)) continue
       lignes.push({ src: null, dest, statut: tampon.files?.[dest] ? STATUTS.retire : STATUTS.propre })
     }
+    if (entree.dest) lignes.push(...doublons(template, cible, entree))
   }
   return lignes
+}
+
+/**
+ * Copie d'origine laissée à l'ancien chemin d'un fichier owned à `dest` (ADR directement sous
+ * `docs/decisions/` alors que le socle l'écrit sous `socle/`) : même contenu, CRLF normalisé.
+ * Jamais supprimée par le script ; un contenu différent est une part du site, non signalée.
+ */
+function doublons(template, cible, entree) {
+  const memeContenu = (src) => empreinte(readFileSync(join(cible, src))) === empreinte(readFileSync(join(template, src)))
+  return fichiersDuGlob(template, entree.glob)
+    .filter((src) => existsSync(join(cible, src)) && memeContenu(src))
+    .map((src) => ({ src: null, dest: src, copieDe: versCible(entree, src), statut: STATUTS.doublon }))
 }
 
 // ------------------------------------------------------------------ analyse des fichiers merge
@@ -216,6 +250,16 @@ function stat(template, cible, chemin) {
   }
 }
 
+/**
+ * Version antérieure ou égale du socle, sans ligne propre au site : toutes les lignes non vides
+ * de la cible existent dans le socle. Heuristique (une ligne du site identique à une ligne du
+ * socle passe inaperçue) : d'où `--take` explicite, jamais d'écriture automatique.
+ */
+function sansPartProjet(tpl, cib) {
+  const duTemplate = new Set(tpl.split('\n').map((l) => l.trimEnd()))
+  return cib.split('\n').every((l) => !l.trim() || duTemplate.has(l.trimEnd()))
+}
+
 export function analyserMerge(template, cible, manifeste) {
   return manifeste.merge
     .filter((chemin) => existsSync(join(template, chemin)))
@@ -227,7 +271,8 @@ export function analyserMerge(template, cible, manifeste) {
         return { chemin, statut: ajouts.length ? 'différent (scripts)' : 'identique (scripts)', ajouts }
       }
       if (tpl === cib) return { chemin, statut: 'identique', ajouts: [] }
-      return { chemin, statut: 'différent', ajouts: ajoutsDuTemplate(chemin, tpl, cib), stat: stat(template, cible, chemin) }
+      const statut = sansPartProjet(tpl, cib) ? MERGE_SANS_PART : 'différent'
+      return { chemin, statut, ajouts: ajoutsDuTemplate(chemin, tpl, cib), stat: stat(template, cible, chemin) }
     })
 }
 
@@ -264,12 +309,12 @@ function commitDuTemplate(template) {
 }
 
 /**
- * Écrit `nouveau`, `à jour sûr` et les `modifié par le projet` cités par `--take` ; jamais un
- * fichier merge. Le tampon note l'empreinte de chaque fichier owned désormais égal au template ;
+ * Écrit `nouveau`, `à jour sûr`, les `modifié par le projet` et les `merge sans part projet`
+ * cités par `--take` ; jamais un autre fichier merge. Le tampon note l'empreinte de chaque fichier owned désormais égal au template ;
  * un fichier modifié laissé en place garde son empreinte précédente, pour qu'un retour du projet
  * à l'état synchronisé redevienne « à jour sûr ».
  */
-export function appliquer(template, cible, lignes, { takes, exclus }) {
+export function appliquer(template, cible, lignes, { takes, exclus, merge = [] }) {
   const ancien = lireTampon(cible)
   const files = {}
   const ecrits = []
@@ -283,6 +328,11 @@ export function appliquer(template, cible, lignes, { takes, exclus }) {
     }
     if (ecrire || l.statut === STATUTS.identique) files[l.dest] = l.hash
     else if (ancien.files?.[l.dest]) files[l.dest] = ancien.files[l.dest]
+  }
+  for (const m of merge) {
+    if (m.statut !== MERGE_SANS_PART || !takes.has(m.chemin)) continue
+    writeFileSync(join(cible, m.chemin), readFileSync(join(template, m.chemin)))
+    ecrits.push(m.chemin)
   }
   const nom = JSON.parse(readFileSync(join(template, 'package.json'), 'utf8')).name
   const meta = { template: nom, commit: commitDuTemplate(template), date: new Date().toISOString() }
@@ -302,20 +352,23 @@ function lireArgs(argv) {
     else args.cible = resolve(argv[i])
   }
   if (!args.cible) return { erreur: 'dépôt cible manquant' }
-  if ((args.takes.size || args.excludes.size) && !args.apply) return { erreur: '--take et --exclude n’ont de sens qu’avec --apply' }
-  if (args.diffs.size && args.apply) return { erreur: '--diff n’écrit rien : il ne se combine pas avec --apply' }
+  if (args.takes.size || args.excludes.size) args.apply = true
+  if (args.diffs.size && args.apply) return { erreur: '--diff n’écrit rien : il ne se combine ni avec --apply, ni avec --take, ni avec --exclude' }
   const lesDeux = [...args.takes].filter((t) => args.excludes.has(t))
   if (lesDeux.length) return { erreur: `--take et --exclude sur le même fichier : ${lesDeux.join(', ')}` }
   return args
 }
 
 function imprimer(cible, owned, merge) {
-  const ordre = [STATUTS.nouveau, STATUTS.sur, STATUTS.modifie, STATUTS.exclu, STATUTS.retire, STATUTS.propre]
+  const ordre = [STATUTS.nouveau, STATUTS.sur, STATUTS.modifie, STATUTS.exclu, STATUTS.retire, STATUTS.propre, STATUTS.doublon]
   for (const statut of ordre) {
     const liste = owned.filter((l) => l.statut === statut)
     if (!liste.length) continue
     console.log(`\n## ${statut} (${liste.length})`)
-    for (const l of liste) console.log(`  ${l.dest}${l.src && l.src !== l.dest ? `  ← ${l.src}` : ''}`)
+    for (const l of liste) {
+      const origine = l.copieDe ? `  (même contenu que ${l.copieDe})` : l.src && l.src !== l.dest ? `  ← ${l.src}` : ''
+      console.log(`  ${l.dest}${origine}`)
+    }
   }
   console.log(`\n## identique (${owned.filter((l) => l.statut === STATUTS.identique).length}) : non listés`)
   console.log('\n## fichiers merge (jamais écrits : fusion manuelle)')
@@ -323,6 +376,7 @@ function imprimer(cible, owned, merge) {
     console.log(`  ${m.chemin} : ${m.statut}${m.stat ? ` (${m.stat})` : ''}`)
     for (const a of m.ajouts) console.log(`      + ${a}`)
     if (m.stat) console.log(`      diff : node scripts/sync-method.mjs "${cible}" --diff ${m.chemin}`)
+    if (m.statut === MERGE_SANS_PART) console.log(`      aucune ligne propre au site : --take ${m.chemin} écrit la version du socle`)
   }
 }
 
@@ -330,17 +384,17 @@ function resume(owned, merge) {
   const n = (s) => owned.filter((l) => l.statut === s).length
   const differents = merge.filter((m) => m.statut.startsWith('différent') || m.statut.startsWith('absent')).length
   return (
-    `owned : ${owned.length} — nouveau ${n(STATUTS.nouveau)}, identique ${n(STATUTS.identique)}, ` +
+    `owned : ${owned.length - n(STATUTS.doublon)} — nouveau ${n(STATUTS.nouveau)}, identique ${n(STATUTS.identique)}, ` +
     `à jour sûr ${n(STATUTS.sur)}, modifié par le projet ${n(STATUTS.modifie)}, exclu ${n(STATUTS.exclu)}, ` +
-    `retiré du template ${n(STATUTS.retire)}, propre au projet ${n(STATUTS.propre)} · ` +
-    `merge : ${merge.length} — à fusionner ${differents}`
+    `retiré du template ${n(STATUTS.retire)}, propre au projet ${n(STATUTS.propre)}, doublon à supprimer ${n(STATUTS.doublon)} · ` +
+    `merge : ${merge.length} — à fusionner ${differents}, sans part projet ${merge.filter((m) => m.statut === MERGE_SANS_PART).length}`
   )
 }
 
 function main() {
   const template = join(dirname(fileURLToPath(import.meta.url)), '..')
   const args = lireArgs(process.argv.slice(2))
-  const usage = 'Usage : node scripts/sync-method.mjs <dépôt-cible> [--apply [--take <chemin>]... [--exclude <chemin>]...] [--diff <chemin>]...'
+  const usage = 'Usage : node scripts/sync-method.mjs <dépôt-cible> [--apply] [--take <chemin>]... [--exclude <chemin>]... | --diff <chemin>...'
   if (args.erreur) return sortir(`✖  ${args.erreur}\n${usage}`)
   if (!existsSync(join(template, MANIFESTE))) return sortir(`✖  ${MANIFESTE} absent : ce script se lance depuis le socle.`)
   if (!existsSync(join(args.cible, '.claude/conventions/_index.md'))) return sortir(`✖  ${args.cible} n'est pas un site de la méthode (pas de .claude/conventions/_index.md).`)
@@ -350,28 +404,29 @@ function main() {
   const tampon = lireTampon(args.cible)
   const exclus = new Set([...(tampon.exclude ?? []), ...args.excludes])
   const owned = analyserOwned(template, args.cible, manifeste, { tampon, exclus })
-  const erreur = controlerChemins(args, owned, manifeste)
+  const merge = analyserMerge(template, args.cible, manifeste)
+  const erreur = controlerChemins(args, owned, manifeste, merge)
   if (erreur) return sortir(`✖  ${erreur}`)
   if (args.diffs.size) return afficherDiffs(template, args, owned)
-  const merge = analyserMerge(template, args.cible, manifeste)
   const modifies = new Set(owned.filter((l) => l.statut === STATUTS.modifie).map((l) => l.dest))
 
   console.log(`Synchro de la méthode : ${template} → ${args.cible}${args.apply ? '' : ' (rapport seul, rien n’est écrit)'}`)
   imprimer(args.cible, owned, merge)
   console.log(`\nRésumé : ${resume(owned, merge)}`)
   if (args.apply) {
-    const ecrits = appliquer(template, args.cible, owned, { takes: args.takes, exclus })
+    const ecrits = appliquer(template, args.cible, owned, { takes: args.takes, exclus, merge })
     const laisses = [...modifies].filter((d) => !args.takes.has(d)).length
     console.log(`Appliqué : ${ecrits.length} fichier(s) écrit(s), ${laisses} modifié(s) par le projet laissé(s) en place, tampon ${TAMPON} écrit.`)
   }
 }
 
 /** `--take`, `--exclude` et `--diff` ne visent que des fichiers que le script connaît. */
-function controlerChemins(args, owned, manifeste) {
+function controlerChemins(args, owned, manifeste, merge) {
   const parStatut = (s) => new Set(owned.filter((l) => l.statut === s).map((l) => l.dest))
   const duTemplate = new Set(owned.filter((l) => l.src).map((l) => l.dest))
+  const sansPart = merge.filter((m) => m.statut === MERGE_SANS_PART).map((m) => m.chemin)
   const regles = [
-    [args.takes, parStatut(STATUTS.modifie), '--take sur un fichier qui n’est pas « modifié par le projet »'],
+    [args.takes, new Set([...parStatut(STATUTS.modifie), ...sansPart]), '--take sur un fichier ni « modifié par le projet » ni « merge sans part projet »'],
     [args.excludes, duTemplate, '--exclude sur un fichier que le template ne fournit pas'],
     [args.diffs, new Set([...duTemplate, ...manifeste.merge]), '--diff sur un fichier ni owned ni merge'],
   ]

@@ -70,7 +70,7 @@ if (existsSync(agentsRoot)) {
 }
 
 // Manifeste de synchro des sites dérivés (socle seulement : sans manifeste, rien n'est contrôlé).
-verifierManifeste('.', (m) => errors.push(`${m} Corriger .claude/sync-manifest.json (CLAUDE.md § Mettre à jour un site dérivé).`));
+verifierManifeste('.', (m) => errors.push(`${m} (CLAUDE.md § Mettre à jour un site dérivé)`));
 
 if (errors.length) {
   console.error(errors.join('\n'));
