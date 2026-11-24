@@ -15,3 +15,6 @@ node_modules/
 
 # Copies de travail temporaires (git worktree : fusions dans TEST, sous-agents)
 .claude/worktrees/
+
+# Captures de vérification (scripts/verify/shot.mjs), jamais versionnées
+.captures/

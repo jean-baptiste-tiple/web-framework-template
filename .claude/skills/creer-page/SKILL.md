@@ -19,6 +19,7 @@ Forme qu'aucun des trois ne couvre → `modifier-design` (c'est du développemen
 2. Frontmatter conforme au schéma de la collection (`src/content.config.ts`) : champs requis remplis, aucun champ inventé.
 3. Textes : ceux de l'utilisateur. Manquants → les demander, ou proposer un brouillon présenté comme tel ; jamais de fait inventé.
 4. Menu : proposer d'ajouter la page à `nav` (`editer-global`), sans le faire d'office.
+5. Page de présentation à blocs : avant de proposer les blocs, dire en une phrase à quoi sert la page et quelle est son action principale ; la suite de blocs tient les seuils de `design-craft`, `reference/integration.md` (une famille de bloc une fois, un seul appel à l'action par intention, accroche ≤ 4 textes). Page créée : l'agent `relecteur-visuel` la relit, une seule passe.
 
 ## Garde-fous
 - Blocs de la bibliothèque seulement (CLAUDE.md règle absolue 6) : aucun composant créé ici, aucun bloc inventé. Un besoin qu'aucun bloc ne couvre = développement (`modifier-design`), le dire avant de continuer.

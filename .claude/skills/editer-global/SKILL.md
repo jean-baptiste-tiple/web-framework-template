@@ -19,7 +19,7 @@ Prévenir avant d'éditer : « Ce changement s'affichera sur toutes les pages. �
 
 ## Garde-fous
 - Jamais de texte en dur dans `Header.astro` ou `Footer.astro` : clé absente de `site.json` = changement de schéma, c'est du développement.
-- Menu : 5 entrées au plus (`.claude/conventions/a11y.md`, charge cognitive). Au-delà : le dire et demander ce qu'on retire (`AskUserQuestion`).
+- Menu : 5 entrées au plus (`.claude/conventions/a11y.md`, charge cognitive). Au-delà : le dire et demander ce qu'on retire (`AskUserQuestion`). Un lien qui mène à la même chose qu'un lien existant (deux entrées pour « contact ») se signale de même : une intention, un lien (`design-craft`, `reference/integration.md`).
 - `name` et `description` alimentent aussi le titre de l'onglet, l'aperçu des liens partagés et llms.txt : le signaler.
 
 ## Rendre compte

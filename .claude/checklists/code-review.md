@@ -55,6 +55,7 @@
 - [ ] Stabilité (craft-floor § Verify 11) : hauteur du document relevée 5 s puis 60 s après le chargement, identique ; aucune taille posée d'après une mesure d'un contenu qui dépend de cette taille (iframe, `vh`, `%`)
 - [ ] Copy self-audit passé ; chiffres précis sourcés ou marqués mock
 - [ ] Une comparaison de captures avant/après ne prouve rien sans témoin : deux captures de la MÊME page doivent d'abord donner 0 pixel d'écart. Neutraliser ce qui varie seul — aléa au chargement (`Math.random`), images paresseuses que le défilement vertical ne charge pas, rastérisation partielle hors viewport (`captureBeyondViewport`) — puis mesurer
+- [ ] Bloc ajouté, déplacé ou retiré, page créée, code d'une page : coup d'œil d'ensemble fait avant (captures avant citées, seuils de `design-craft` `reference/integration.md` vérifiés, seuil franchi = question posée), et relecture de l'agent `relecteur-visuel` faite après, ses remarques corrigées ou posées en question ; développement qui touche la forme d'une page : brief du `concepteur` avant le code
 - [ ] **Test du directeur artistique** : chaque archétype de page est posé CÔTE À CÔTE avec sa page source du template du monde (capture du kit) ; placeholders vides, silhouettes, mouvements absents, largeurs de sections inégales ou écart de densité visible = `fix` au mieux, jamais « livré » (une note /20 ne remplace pas ce test)
 
 ## Documentation

@@ -13,6 +13,7 @@ Distillé de pbakaus/impeccable (Apache-2.0, © 2025 Paul Bakaus) et Leonxlnx/ta
 | --- | --- |
 | Toute édition d'UI, même micro (composant, section, styles, tokens) | `reference/craft-floor.md` — juste avant d'éditer, jamais pour planifier |
 | Créer/modifier une page ou une section de landing | + `reference/composition.md` |
+| Ajouter, déplacer ou retirer un bloc ; créer une page ; ajouter un lien au menu | + `reference/integration.md` (coup d'œil d'ensemble avant, relecteur à contexte neuf après) |
 | Toucher typo, palette, tokens, dark mode | + `reference/typo-couleur.md` |
 | Ajouter la moindre animation/transition | + `reference/motion-css.md` |
 | Auditer ou redesigner un site existant (dont migration) | `reference/audit-redesign.md` |
@@ -37,5 +38,6 @@ Le mode se déduit de la SURFACE demandée, pas du produit : la landing d'un out
 
 ## Consignes sous-agents (le pilote les copie dans chaque prompt UI)
 
+- Les rôles sont des agents nommés (`.claude/agents/`) : `concepteur` avant le code, `relecteur-visuel` après le rendu (`reference/integration.md`), `executant` pour un lot délégué. Celui qui juge ne reçoit jamais le raisonnement de celui qui a produit.
 - Toute dégradation de protocole (pas de screenshot possible, revue inline au lieu d'un agent isolé…) s'ANNONCE en une ligne en tête de rapport — une revue dégradée silencieuse est une revue ratée.
 - Un correctif revendiqué mais invisible dans la vérification est non résolu : la narration n'est pas une preuve.
