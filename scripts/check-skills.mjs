@@ -10,6 +10,7 @@
 // « : » ni « # » précédé d'une espace.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { verifierManifeste } from './sync-method.mjs';
 
 const root = '.claude/skills';
 const errors = [];
@@ -67,6 +68,9 @@ if (existsSync(agentsRoot)) {
     if (!corpus.includes(`\`${nom}\``)) errors.push(`${file} : agent cité par aucun skill ni par CLAUDE.md`);
   }
 }
+
+// Manifeste de synchro des sites dérivés (socle seulement : sans manifeste, rien n'est contrôlé).
+verifierManifeste('.', (m) => errors.push(`${m} Corriger .claude/sync-manifest.json (CLAUDE.md § Mettre à jour un site dérivé).`));
 
 if (errors.length) {
   console.error(errors.join('\n'));

@@ -1,0 +1,31 @@
+{
+  "$comment": "Part du socle dans un site dérivé, lue par scripts/sync-method.mjs. owned : le socle fait foi, copié tel quel (dest : préfixe de destination dans le dérivé, à la place du dossier littéral du glob ; !glob : chemins retirés de la part du socle, jamais écrits ni listés). merge : contenu mixte, jamais écrit, rapporté. Tout le reste (contenu, composants, pages, styles, src/) appartient au site.",
+  "owned": [
+    ".claude/skills/**",
+    "!.claude/skills/*/projet.md",
+    ".claude/agents/**",
+    ".claude/checklists/**",
+    ".claude/templates/**",
+    ".claude/playbooks/**",
+    ".claude/starters/**",
+    ".claude/commands/**",
+    ".claude/hooks/**",
+    ".claude/conventions/{a11y,astro-patterns,coding-standards,content-patterns,deploy,forms,i18n,images,islands-solid,performance,seo-geo,styling-tailwind}.md",
+    "scripts/{check-skills,check-styleguide,check-content-config,sync-method,audit-lh,mettre-en-ligne}.mjs",
+    "scripts/verify/**",
+    ".github/workflows/production.yml",
+    { "glob": "docs/decisions/*.md", "dest": "docs/decisions/socle/" }
+  ],
+  "merge": [
+    "CLAUDE.md",
+    ".claude/conventions/_index.md",
+    ".claude/conventions/component-registry.md",
+    ".claude/conventions/tech-stack.md",
+    ".claude/settings.json",
+    "package.json",
+    ".gitignore",
+    "README.md",
+    ".github/workflows/ci.yml",
+    ".github/dependabot.yml"
+  ]
+}

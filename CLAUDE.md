@@ -68,6 +68,14 @@ Site neuf depuis le template : dérouler .claude/checklists/bootstrap.md (URL de
 Migration d'un site Webflow existant : dérouler .claude/playbooks/migration-webflow.md (phases + gates) avec l'outillage scripts/migration/ + scripts/parity/ (config : scripts/migration/config.mjs).
 Site complet depuis un brief client : dérouler .claude/playbooks/website-builder.md (P0 intake → P8 apprentissage, gates par phase) avec le kit C:\apps\web-kit (skills section-catalog, copywriting, design-craft). Plan et décisions : docs/website-builder.md.
 
+### Mettre à jour un site dérivé
+La plupart des sites dérivés sont des copies sans l'historique du socle : la méthode les atteint par `scripts/sync-method.mjs`, lancé depuis le socle, selon `.claude/sync-manifest.json` (`owned` : le socle fait foi ; `!glob` : retiré de la part du socle, ex. les `projet.md` ; `merge` : contenu mixte, jamais écrit ; tout le reste, `src/` compris, appartient au site).
+1. **Rapport** : `node scripts/sync-method.mjs <site>`, rien n'est écrit. Statuts : `nouveau`, `identique`, `à jour sûr` (inchangé depuis la dernière synchro, empreinte du tampon `.claude/sync-state.json` du site), `modifié par le projet`, `exclu par le projet`, `retiré du template` (jamais supprimé : à retirer à la main), `propre au projet` (jamais touché). Fichiers `merge` : sections, lignes de tableau, scripts, hooks, lignes `.gitignore` que le socle a et pas le site. `--diff <chemin>` (répétable) : diff socle → site, CRLF normalisé.
+2. **Écriture** : `--apply` écrit `nouveau` et `à jour sûr`, puis le tampon. `--take <chemin>` écrase un `modifié par le projet`, **seulement après avoir lu son `--diff`**. `--exclude <chemin>` refuse durablement un fichier du socle (noté dans le tampon).
+3. **ADR du socle** : copiés sous `docs/decisions/socle/` du site, qui fait foi ; les copies d'origine directement sous `docs/decisions/` se suppriment à la main après la première synchro.
+4. Fusion manuelle des fichiers `merge`, puis `pnpm run lint` et `pnpm run build` dans le site, puis son `/commit-push`.
+Un fichier ajouté au socle qui doit voyager s'ajoute au manifeste : `pnpm run lint` (`scripts/check-skills.mjs`) refuse un glob `owned` qui ne matche rien, un fichier `merge` absent et une convention ni `owned` ni `merge`.
+
 ## Règles absolues
 1. output: static. Ne JAMAIS introduire d adapter, de SSR, d API route dynamique, de Server Action ou de dépendance serveur. Tout doit être généré au build.
 2. Zéro JS par défaut. Pas d îlot Solid sauf besoin réel d interactivité (state, events). Pousser client:* le plus bas possible et préférer client:visible / client:idle à client:load.
