@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 · Les ADR du socle se citent « ADR socle 000N »
+- **Problème** : site-open-kairos, casalino-site et website-movinmotion ont leurs propres ADR 0002 à 0007 sur d'autres sujets ; un fichier repris du socle qui citait « ADR 0002 » y désignait le mauvais ADR.
+- **Socle** : 45 citations qualifiées « ADR socle 000N » (skills, conventions, hooks, scripts, CLAUDE.md, commentaires de `src/`) ; `pnpm run lint` refuse désormais un fichier owned ou merge qui cite « ADR 000N » sans « socle ». CLAUDE.md § Mettre à jour un site dérivé, point 3.
+- **Porter sur un site dérivé** : `sync-method` ; les fichiers que le site garde en version propre citent encore le numéro nu, à qualifier au passage.
+
 ## 2026-11-24 · `sync-method` : retours du premier pilote de dev-framework
 - **Problème** : la première synchro d'un dérivé de dev-framework a remonté un contrôle du dérivé en échec (un document voyageur citait le chemin du manifeste, absent d'un dérivé), des copies d'ADR en double, des fichiers `merge` sans part propre qu'il fallait recopier à la main, et `--take` refusé sans `--apply`.
 - **`scripts/sync-method.mjs`** (même logique que dev-framework) : `--take` et `--exclude` impliquent `--apply` ; `--diff` ne se combine avec aucun des trois. Statut `merge sans part projet` (toutes les lignes non vides du site existent dans le socle) : `--take` y écrit la version du socle, refusé sur tout autre `merge`. Statut `doublon à supprimer à la main` : copie d'origine, même contenu, d'un ADR que le socle écrit sous `docs/decisions/socle/` (jamais supprimée par le script). `pnpm run lint` refuse un document `owned` ou `merge` qui cite le chemin du manifeste ou d'un ADR du socle ; CLAUDE.md corrigé en conséquence. Non porté : le rappel Playwright (le socle n'a pas `@playwright/test`) et le découpage du script (pas de limite de lignes au lint).

@@ -1,4 +1,4 @@
-// Garde-fou de mise en ligne (ADR 0006) : hook PreToolUse de .claude/settings.json.
+// Garde-fou de mise en ligne (ADR socle 0006) : hook PreToolUse de .claude/settings.json.
 // Lit l'appel d'outil sur l'entrée standard et répond à Claude Code :
 // - `npm run mettre-en-ligne` (scripts/mettre-en-ligne.mjs, qui déclenche l'action
 //   « Mise en ligne ») : « ask » avec ce qui part ; Claude Code ouvre sa fenêtre de
@@ -63,13 +63,13 @@ for await (const chunk of process.stdin) input += chunk;
 const command = String(JSON.parse(input || '{}').tool_input?.command ?? '');
 
 if (PROTECTED.test(command) && WRITES.test(command)) {
-  reply('deny', 'Les fichiers du garde-fou de mise en ligne ne se modifient pas depuis Claude (ADR 0006) : le développeur du site les change à la main.');
+  reply('deny', 'Les fichiers du garde-fou de mise en ligne ne se modifient pas depuis Claude (ADR socle 0006) : le développeur du site les change à la main.');
 }
 if (LAUNCH.test(command)) {
   reply('ask', `Mettre en ligne sur le site officiel ?\n\n${recap(command)}\n\nAutoriser = mise en ligne (environ 2 minutes). Refuser = rien ne part.`);
 }
 if (OTHER_ROUTES.some((re) => re.test(command))) {
-  reply('deny', 'La production ne change que par `npm run mettre-en-ligne` (skill publier, ADR 0006) : cette commande est refusée.');
+  reply('deny', 'La production ne change que par `npm run mettre-en-ligne` (skill publier, ADR socle 0006) : cette commande est refusée.');
 }
 
 // Envoi vers le site de test (main) ou vers une branche : aucune fenêtre, le site

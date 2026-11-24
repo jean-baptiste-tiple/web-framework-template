@@ -1,5 +1,5 @@
 ---
-// Fiche d'un composant de la bibliothèque : /styleguide/<id>/ (ADR 0003,
+// Fiche d'un composant de la bibliothèque : /styleguide/<id>/ (ADR socle 0003,
 // révision v2). Une fiche par page, rien d'autre : le NOM, le VISUEL (cadre
 // ordinateur 1280 px réduit à la colonne, ou téléphone 390 px) et « Utilisé
 // sur » avec les liens des pages. Pas de phrase d'usage, pas de vue technique :
@@ -98,7 +98,7 @@ const more = entry.usedBy.length - shown.length;
   // Cadre de l'aperçu : la page isolée est rendue à sa vraie largeur (donc ses
   // vrais points de rupture), réduite à la colonne si elle est plus étroite. Sa
   // hauteur vient de la place libre (le cadre), JAMAIS du contenu : un composant
-  // en `vh` ne peut plus faire grandir la page (ADR 0003, révision v2). Le choix
+  // en `vh` ne peut plus faire grandir la page (ADR socle 0003, révision v2). Le choix
   // ordinateur / téléphone suit l'éditeur de fiche en fiche (sessionStorage,
   // facultatif). Sans JS : l'aperçu à la largeur de la colonne.
   const WIDTH = { desktop: 1280, phone: 390 } as const;

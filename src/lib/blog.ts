@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-// Source unique de la liste des articles (ADR 0002) : toute page ou route qui
+// Source unique de la liste des articles (ADR socle 0002) : toute page ou route qui
 // liste ou rend des articles passe par ici, jamais par getCollection('blog').
 export type Post = CollectionEntry<'blog'>;
 

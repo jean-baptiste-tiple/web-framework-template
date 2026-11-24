@@ -1,6 +1,6 @@
 # Stack technique
 
-- Astro ^7.4 — output: "static", aucun adapter (ADR 0005). `compressHTML: true` dans astro.config (le défaut `'jsx'` d'Astro 7 colle des mots). Schémas : Zod 4, `z` importé de `astro/zod`. `pnpm-workspace.yaml` fixe `@emnapi/*` sur ^1.11 (la bêta 2.0 fait planter `astro check`).
+- Astro ^7.4 — output: "static", aucun adapter (ADR socle 0005). `compressHTML: true` dans astro.config (le défaut `'jsx'` d'Astro 7 colle des mots). Schémas : Zod 4, `z` importé de `astro/zod`. `pnpm-workspace.yaml` fixe `@emnapi/*` sur ^1.11 (la bêta 2.0 fait planter `astro check`).
 - TypeScript strict (extends astro/tsconfigs/strict). Alias @/* -> src/*.
 - Tailwind CSS ^4 via @tailwindcss/vite (config CSS-first dans global.css, PAS de tailwind.config.js).
 - @astrojs/mdx ^8 (+ @astrojs/markdown-remark ^7, sa dépendance pair) — landings.

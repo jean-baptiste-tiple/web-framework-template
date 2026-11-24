@@ -1,7 +1,7 @@
 allowBuilds:
   esbuild: true
   sharp: true
-# Parues moins de 24 h avant le passage à Astro 7 (06/11/2026, ADR 0005) :
+# Parues moins de 24 h avant le passage à Astro 7 (06/11/2026, ADR socle 0005) :
 # exception à retirer dès que la prochaine mise à jour les dépasse.
 minimumReleaseAgeExclude:
   - '@astrojs/internal-helpers@0.13.1'

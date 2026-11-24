@@ -11,7 +11,7 @@ import { schema as ctaBanner } from '@/components/sections/convert/CtaBanner.sch
 // Séparé des composants (src/lib/sections.ts) : content.config.ts n'importe que
 // ce fichier. Importer un .astro depuis la config des collections fait
 // transformer ses styles avant que Vite soit prêt, et `pnpm dev` renvoie 500
-// sur toutes les pages (« reading 'get' », ADR 0004). Contrôlé au lint
+// sur toutes les pages (« reading 'get' », ADR socle 0004). Contrôlé au lint
 // (scripts/check-content-config.mjs).
 //
 // `chrome: true` = variante rendue UNE fois par BaseLayout (header/footer/barre

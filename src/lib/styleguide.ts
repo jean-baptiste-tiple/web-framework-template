@@ -1,5 +1,5 @@
 // Bibliothèque de composants (/styleguide) : tout ce qu'elle montre est
-// DÉCOUVERT au build, rien n'y est listé à la main (ADR 0003).
+// DÉCOUVERT au build, rien n'y est listé à la main (ADR socle 0003).
 //  - composants : chaque `<Nom>.demo.astro` colocalisé (rendu + `export const demo`) ;
 //  - sections : `export const demo` (nom + `examples` typés) de chaque
 //    `<Variante>.schema.ts`, rendus par SectionRenderer ;
@@ -12,7 +12,7 @@
 //  - bloc qu'une section ne fait qu'emballer (`wraps` du `demo` de la section) :
 //    UNE fiche, celle de la section ; le bloc n'a pas de démo et ses usages
 //    directs (pages .astro) s'ajoutent à ceux de la section.
-// Une fiche par page (ADR 0003, révision v2) : /styleguide/<id>/ = nom, aperçu,
+// Une fiche par page (ADR socle 0003, révision v2) : /styleguide/<id>/ = nom, aperçu,
 // « Utilisé sur » ; /styleguide/<id>/apercu/ = le rendu seul (cadre de l'aperçu).
 // Le contrôle « tout composant a sa démo » et la forme des noms sont faits au
 // lint (scripts/check-styleguide.mjs) ; ce module casse le build si une démo est

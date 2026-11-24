@@ -2,7 +2,7 @@
 // sur le commit de TEST, ou sur un tag pour revenir en arrière, puis attend son résultat.
 //   npm run mettre-en-ligne                     → dernier commit de main (site de test)
 //   npm run mettre-en-ligne -- <tag ou commit>  → retour à une mise en ligne précédente
-// Seule voie vers la production (ADR 0006) : la fenêtre de confirmation de Claude Code
+// Seule voie vers la production (ADR socle 0006) : la fenêtre de confirmation de Claude Code
 // s'ouvre sur cette commande courte (règle « ask » et hook), et le commit est résolu ici,
 // jamais recopié à la main. Le suivi se fait ici aussi : en session cloud, `gh` lancé
 // seul n'a pas d'accès à l'API (constaté le 06/11/2026 sur un site dérivé). Fichier protégé, comme le

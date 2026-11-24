@@ -1,5 +1,5 @@
 // CONTRÔLE DE LA CONFIG DES COLLECTIONS — src/content.config.ts n'importe jamais un
-// .astro, ni directement ni via un module qui le fait (ADR 0004).
+// .astro, ni directement ni via un module qui le fait (ADR socle 0004).
 //
 //   node scripts/check-content-config.mjs   (appelé par pnpm run lint)
 //
@@ -80,7 +80,7 @@ while (queue.length) {
 if (errors.length) {
   console.error(errors.join('\n'));
   console.error(
-    'content.config.ts ne doit importer aucun .astro (ADR 0004) : importer les schémas (src/lib/section-schemas.ts, *.schema.ts), jamais le registre des composants (src/lib/sections.ts).',
+    'content.config.ts ne doit importer aucun .astro (ADR socle 0004) : importer les schémas (src/lib/section-schemas.ts, *.schema.ts), jamais le registre des composants (src/lib/sections.ts).',
   );
   process.exit(1);
 }

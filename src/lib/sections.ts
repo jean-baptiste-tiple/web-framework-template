@@ -17,7 +17,7 @@ export type { SectionType, ChromeType, PageSectionType, Section, AnySection } fr
 // src/components/sections/<famille>/ + UNE entrée dans chacun des deux fichiers ;
 // le `Record<SectionType, …>` ci-dessous casse `astro check` si l'une manque.
 // Ce fichier importe des .astro : content.config.ts ne l'importe JAMAIS
-// (section-schemas.ts seulement, ADR 0004, contrôlé au lint).
+// (section-schemas.ts seulement, ADR socle 0004, contrôlé au lint).
 const COMPONENTS: Record<SectionType, AstroComponentFactory> = {
   'nav.header-simple': HeaderSimple,
   'nav.footer-simple': FooterSimple,

@@ -1,5 +1,5 @@
 // CONTRÔLE DE LA BIBLIOTHÈQUE (/styleguide) — chaque composant de src/components a sa
-// démo colocalisée, sinon il n'existe pas pour les éditeurs ni pour la review (ADR 0003).
+// démo colocalisée, sinon il n'existe pas pour les éditeurs ni pour la review (ADR socle 0003).
 //
 //   node scripts/check-styleguide.mjs   (appelé par pnpm run lint)
 //

@@ -1,13 +1,13 @@
 # Component registry
 
-Vérifier ICI + la bibliothèque **/styleguide** (noindex, absente de la production, ADR 0003) AVANT
+Vérifier ICI + la bibliothèque **/styleguide** (noindex, absente de la production, ADR socle 0003) AVANT
 de créer un composant OU d'écrire du markup de section. Tout nouveau composant/variante → l'ajouter
 ici ET lui donner sa démo colocalisée dans le même commit (§ Bibliothèque vivante).
 
 ## Bibliothèque vivante (/styleguide)
 La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styleguide.ts`) : ses pages
 (`src/pages/styleguide/`) ne listent rien, chaque composant y entre par sa démo.
-- **Forme (ADR 0003, révision v2)** : UNE fiche par page, jamais toutes les fiches sur une page.
+- **Forme (ADR socle 0003, révision v2)** : UNE fiche par page, jamais toutes les fiches sur une page.
   `/styleguide/` = accueil léger (familles, nombre de fiches) ; `/styleguide/<id>/` = une fiche ;
   `/styleguide/fondations/<rubrique>/` = une rubrique de Fondations ; `/styleguide/<id>/apercu/` = le
   rendu seul, affiché dans le cadre de la fiche et ouvrable seul. Mise en page dédiée
@@ -16,7 +16,7 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
   celle de la page courante ouverte, page marquée `aria-current`, recherche qui filtre), filet
   `border-r` entre menu et fiche sur toute la hauteur ; précédente / suivante dans l'ordre du menu
   (`GalleryPager.astro`). Téléphone : la fiche, puis le menu (lien « Menu »).
-- **Ordre du menu : celui d'une page** (ADR 0003, révision du 21/10 soir) : Fondations, Éléments
+- **Ordre du menu : celui d'une page** (ADR socle 0003, révision du 21/10 soir) : Fondations, Éléments
   (`ui/`), les autres dossiers de composants, puis les familles de sections : haut et bas de page,
   haut de page, offre, preuve, équipe, contenu, conversion. Réglé en UN endroit, l'ordre des clés de
   `FOLDER_LABELS` puis de `SECTION_FAMILY_LABELS` (`src/lib/styleguide.ts`), qui donnent aussi les
@@ -29,7 +29,7 @@ La bibliothèque montre TOUS les composants, découverts au build (`src/lib/styl
   des pages (une route dynamique est dépliée en ses pages réelles par son `getStaticPaths`), les 5
   premières puis « et N autres » ; sinon « Utilisé sur aucune page pour l'instant ». Contrôle :
   `DemoDoc` = `{ name }`, `SectionDemo` = `{ name, wraps?, examples }` (un champ de plus casse
-  `astro check`) ; ajouter une ligne à la fiche = révision de l'ADR 0003.
+  `astro check`) ; ajouter une ligne à la fiche = révision de l'ADR socle 0003.
 - **Bloc qu'une section ne fait qu'emballer : UNE fiche, la section** : quand une section se contente
   de poser un composant existant (le « bloc ») dans sa Section/Container, elle le déclare par
   `wraps: '<chemin sous src/components>'` dans son `demo` (ex. `wraps: 'blocks/FinalCta.astro'`). Le
@@ -168,7 +168,7 @@ l'`example` du `demo` exporté par le `.schema.ts` (lint et build cassent s'il m
 prop `section`, typé depuis le schéma.
 
 **`content.config.ts` n'importe jamais un `.astro`, ni directement ni via un module qui le fait**
-(ADR 0004) : il importe `section-schemas.ts` et les `*.schema.ts`, jamais `sections.ts`. Sinon
+(ADR socle 0004) : il importe `section-schemas.ts` et les `*.schema.ts`, jamais `sections.ts`. Sinon
 `pnpm dev` répond 500 sur toutes les pages dès qu'un composant atteint a un `<style>` (« reading
 'get' », « Content config not loaded »), alors que le build passe. Un `.schema.ts` n'importe donc
 aucun `.astro` (`import type` permis : effacé à la compilation). Contrôle machine :

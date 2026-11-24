@@ -133,8 +133,16 @@ function verifierCitations(root, owned, couverts, err) {
   for (const p of [...couverts].filter((f) => f.endsWith('.md') && existsSync(join(root, f)))) {
     const src = readFileSync(join(root, p), 'utf8')
     for (const s of seuls) {
-      if (src.includes(s)) err(`${p} : cite \`${s}\`, absent des sites dérivés — citer le nom seul (ADR 0006, « le manifeste du socle »).`)
+      if (src.includes(s)) err(`${p} : cite \`${s}\`, absent des sites dérivés — citer le nom seul (ADR socle 0006, « le manifeste du socle »).`)
     }
+  }
+  // Un fichier qui voyage cite un ADR du socle « ADR socle 0003 » : dans un site, « ADR 0003 »
+  // désigne souvent un autre ADR, celui du site (site-open-kairos, casalino-site, 2026-11-24).
+  for (const p of [...couverts].filter((f) => existsSync(join(root, f)) && !f.startsWith('docs/'))) {
+    const lignes = readFileSync(join(root, p), 'utf8').split('\n')
+    lignes.forEach((l, i) => {
+      if (/ADR (?!socle )0\d{3}/.test(l)) err(`${p}:${i + 1} : ADR cité sans « socle » — écrire « ADR socle 000N », le numéro seul désigne un ADR du site dans un dérivé.`)
+    })
   }
 }
 
@@ -226,7 +234,7 @@ function ajoutsDuTemplate(chemin, tpl, cib) {
       .map((k) => (k in b ? `script \`${k}\` différent : « ${a[k]} »` : `script \`${k}\` : « ${a[k]} »`))
   }
   if (chemin === '.claude/settings.json') {
-    // allow / ask / deny portent le garde-fou de mise en ligne (ADR 0006) : une règle absente se nomme.
+    // allow / ask / deny portent le garde-fou de mise en ligne (ADR socle 0006) : une règle absente se nomme.
     const regles = (src, cle) => JSON.parse(src).permissions?.[cle] ?? []
     return [
       ...absents(commandesDeHooks(tpl), commandesDeHooks(cib)).map((c) => `hook « ${c} »`),

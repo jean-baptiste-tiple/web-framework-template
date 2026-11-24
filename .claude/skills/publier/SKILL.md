@@ -22,7 +22,7 @@ Circuit : CLAUDE.md § Circuit de publication. Lieux et invariants : `.claude/co
 5. Article programmé (`pubDate` future) parmi ce qui part : le dire (« il restera caché jusqu'au <date> »), `integrer-article` § Article programmé.
 
 ## 2. Oui explicite : la fenêtre de confirmation, une seule fois
-Pas d'`AskUserQuestion` : le oui est celui de la fenêtre que Claude Code ouvre lui-même au lancement du § 3 (règle `ask` de `.claude/settings.json` et hook `.claude/hooks/mise-en-ligne.mjs`, ADR 0006). Elle montre la description de l'appel et la commande courte `npm run mettre-en-ligne`, pas toujours le récapitulatif : c'est le texte écrit juste avant qui informe l'éditeur.
+Pas d'`AskUserQuestion` : le oui est celui de la fenêtre que Claude Code ouvre lui-même au lancement du § 3 (règle `ask` de `.claude/settings.json` et hook `.claude/hooks/mise-en-ligne.mjs`, ADR socle 0006). Elle montre la description de l'appel et la commande courte `npm run mettre-en-ligne`, pas toujours le récapitulatif : c'est le texte écrit juste avant qui informe l'éditeur.
 - Avant de lancer, écrire le récapitulatif du § 1 en clair (« Tout ce qui est sur le site de test part »), puis exactement : « Une fenêtre « Autoriser Claude à exécuter cette commande ? » va s'ouvrir : « Autoriser une fois » veut dire OUI, je mets en ligne ; « Refuser » veut dire NON, rien ne change. »
 - Description de l'appel (affichée dans la fenêtre) : « Souhaitez-vous mettre en ligne ces changements sur le site officiel (<adresse>) ? Autoriser une fois = OUI · Refuser = NON ».
 - Claude ne voit pas le clic : la commande qui s'exécute veut dire que l'éditeur a cliqué « Autoriser une fois ». Refusé : rien ne part, le dire.

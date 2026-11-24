@@ -1,6 +1,6 @@
 name: Mise en ligne
 
-# Seule voie vers la production (ADR 0002) : `main` est TEST, la production est
+# Seule voie vers la production (ADR socle 0002) : `main` est TEST, la production est
 # le commit marqué par le tag `production`.
 # - Déclenchée à la main (skill publier) : construit la production depuis `ref`
 #   (main par défaut), puis déplace le tag `production` sur ce commit et pose un
