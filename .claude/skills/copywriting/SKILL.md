@@ -27,7 +27,17 @@ Sans brief pour un item : le marquer `<!-- à confirmer -->`, jamais inventer un
 ## Voix et registre
 - La voix se déduit du brief (ton, exemples, concurrents) et s'écrit en 3 adjectifs + 3 interdits dans docs/brief.md ; tout texte s'y tient.
 - Tutoiement/vouvoiement : décidé une fois, tenu partout.
-- Interdits par défaut : superlatifs sans preuve (« leader », « meilleur »), jargon interne, buzzwords (« solutions innovantes », « accompagnement sur-mesure »), phrases creuses de transition, exclamations.
+- Interdits par défaut : superlatifs sans preuve (« leader », « meilleur »), jargon interne (§ Texte d'une vue), buzzwords (« solutions innovantes », « accompagnement sur-mesure »), phrases creuses de transition, exclamations.
+
+## Texte d'une vue (contrôlable sur capture)
+Une vue : ce que le visiteur voit ensemble (un écran, un bloc, une fiche). Source unique de ces règles ; `composition.md`, la relecture et les briefs y renvoient.
+- **Pas de jargon** : aucun mot de l'outillage (nom de champ, de collection, de composant, slug, état comme « brouillon » ou « draft »), aucun compteur sans son objet (« 3 » ou « 12 traités » : « 3 offres », « 12 dossiers traités »).
+- **Vocabulaire décidé stable** : un terme déjà affiché sur le site (menu, boutons, titres) ou écrit dans le brief fait foi et ne se renomme pas au détour d'une édition. Le renommer est une question à l'éditeur (`AskUserQuestion`), avec la liste des pages, blocs et boutons qui le portent : renommé partout, ou nulle part.
+- **Aucune contradiction dans une vue** : deux textes visibles ensemble ne disent pas l'inverse (« sans engagement » et « engagement de 12 mois ») ; un compteur égale le nombre d'éléments qu'il annonce (« 3 offres » au-dessus de trois cartes) ; un message « aucun résultat » ne s'affiche pas à côté de résultats.
+- **Aucune promesse que le service ne tient pas** : une phrase qui décrit un comportement (délai de réponse, gratuité, sort des données envoyées, email de confirmation, disponibilité) s'écrit après lecture de sa source (brief, page de confidentialité, réglage du formulaire, parole de l'éditeur), citée dans le brief ou le récap ; sans source, `<!-- à confirmer -->`.
+- **Moins de texte** : pas d'explication de l'évidence (bloc « comment ça marche » au-dessus d'un formulaire de contact, titre au-dessus d'un champ déjà libellé, phrase qui répète le bouton) ; au plus une phrase courte près du bouton qu'elle éclaire.
+- **Une information par ligne** quand elle tient à la largeur (coordonnées, horaires, caractéristiques) : jamais deux faits fondus dans une phrase grise.
+- **Accords justes** : « 1 offre », « 3 offres », « aucune offre » ; jamais « offre(s) ».
 
 ## Typographie française (contrôlable au grep)
 - Zéro tiret cadratin `—` ni demi-cadratin `–` (règle craft-floor). Incise : virgules, parenthèses, deux-points.
@@ -40,5 +50,5 @@ Relire CHAQUE chaîne visible (titres, sous-titres, labels, boutons, alt, footer
 - grammaire et référent clairs ; aucune phrase « mignonne mais fausse » ; dans le doute, phrase fonctionnelle plate ;
 - chaque chiffre a sa source dans le brief ou porte `<!-- mock -->` ;
 - un label par intention de CTA, identique partout sur le site ;
-- aucune promesse absente du brief ; aucun texte de démonstration du template restant (grep « Lorem », noms de démo).
+- aucune promesse absente du brief ni que le service ne tient pas, aucune contradiction dans une vue (§ Texte d'une vue) ; aucun texte de démonstration du template restant (grep « Lorem », noms de démo).
 Le récap liste : hiérarchie de message par page, items `à confirmer`, chiffres mock.

@@ -15,6 +15,10 @@
 - Mécanismes fermés, à réutiliser tels quels : form multi-champs · capture email 1 champ · téléchargement gated (le succès du form révèle le lien).
 - L'aval (notifications, tâches, emails) vit dans l'outil marketing (workflows natifs), pas dans le site.
 
+## Champs et choix (formulaire, configurateur ; contrôlable sur capture)
+- Rien n'est demandé qui a un bon défaut : la valeur est pré-remplie, ou le champ disparaît (un champ `required` du schéma serveur garde alors sa valeur en champ caché, § Règles ci-dessus).
+- Choix exclusif à 2 ou 3 options : contrôle segmenté (radios natifs en rangée, aucune hydratation), option active marquée sobrement (fond `surface`, pas `accent`), libellés qui disent ce qu'on choisit (« Particulier », « Entreprise », pas « Oui » ou « Option A »), aide d'une ligne, exacte. Une seule option possible : aucun contrôle, la valeur s'écrit en texte.
+
 ## Tester
 - JAMAIS de soumission de test sur un form branché à des automatisations réelles (notifications, création de contact/lead) : tester uniquement sur un form sans workflow actif.
 - Tester depuis la préprod : une protection type Basic Auth ne bloque pas le POST (il part du navigateur).

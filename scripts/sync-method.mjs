@@ -136,7 +136,7 @@ function verifierCitations(root, owned, couverts, err) {
       if (src.includes(s)) err(`${p} : cite \`${s}\`, absent des sites dérivés — citer le nom seul (ADR socle 0006, « le manifeste du socle »).`)
     }
   }
-  // Un fichier qui voyage cite un ADR du socle « ADR socle 0003 » : dans un site, « ADR 0003 »
+  // Un fichier qui voyage cite un ADR du socle « ADR socle 0003 » : dans un site, le numéro nu
   // désigne souvent un autre ADR, celui du site (site-open-kairos, casalino-site, 2026-11-24).
   for (const p of [...couverts].filter((f) => existsSync(join(root, f)) && !f.startsWith('docs/'))) {
     const lignes = readFileSync(join(root, p), 'utf8').split('\n')

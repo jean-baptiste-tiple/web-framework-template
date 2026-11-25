@@ -13,6 +13,10 @@ Pour créer/modifier une page ou des sections de landing. Toutes contrôlables p
 - **Une famille de layout apparaît au plus 1 fois par page** (une landing de 8 sections utilise ≥ 4 familles différentes). Max 2 sections consécutives en split image+texte : la 3e est un échec.
 - Rythmer le scroll : varier densité, échelle, image et calme DANS une même grammaire ; un passage dense s'achète un passage calme ; la page se termine sur une vraie clôture (pas une section qui s'éteint).
 - Test de mémoire du premier viewport : si un visiteur partait après un écran, que décrirait-il une heure plus tard ? Si la réponse honnête est « une ambiance », le concept ne s'est pas engagé.
+- **Un objet par page, un objet par bloc** : la page parle de l'objet que le visiteur cherche (un service, une offre, un produit), chaque bloc d'un seul. Un second objet détaillé (une autre offre, un second produit) que le brief ne justifie pas devient un lien vers sa page.
+- **Titres de section lisibles** : couleur du texte principal (`text-fg`), graisse visible (`font-semibold` ou plus), au moins la taille du corps ; jamais en couleur secondaire (`text-muted`), jamais sous un sur-titre pâle (l'accroche du hero, § Hero, n'en est pas un).
+- **Seule l'exception se marque** : aucune pastille, icône ni couleur pour l'état normal (« Disponible », « Inclus » ou une coche sur chaque ligne) ; un marqueur visible signale un écart (« Complet », « Nouveau » sur un seul élément).
+- Texte de chaque vue (jargon, vocabulaire, contradictions, promesses, longueur) : skill `copywriting` § Texte d'une vue.
 
 ## Grilles (bento)
 - N items ⇒ EXACTEMENT N cellules. Une cellule vide au milieu ou en fin = grille mal planifiée : re-dessiner la grille, ne jamais coller une tuile vide. Vérifier l'arithmétique des col-span/row-span (`grid-flow-dense` aide).
@@ -21,9 +25,12 @@ Pour créer/modifier une page ou des sections de landing. Toutes contrôlables p
 ## CTA
 - **Un label par intention, réutilisé à l'identique** partout (nav, hero, footer). « Nous contacter » = « Parlons-en » = « Démarrer un projet » : même intention ⇒ même label, une seule fois par page en primaire.
 - Aucun label de bouton ne passe à 2 lignes en desktop : raccourcir (1-3 mots) ou élargir le bouton, jamais contraindre sa largeur.
+- **Bouton d'action : un libellé, toujours.** L'icône seule est réservée aux contrôles d'interface (menu, fermer, changer de thème), avec un nom accessible (`aria-label`) ; une icône posée à côté d'un libellé est `aria-hidden`.
 
 ## Listes et contenus longs
 - Au-delà de 5 items, `<ul>` + filets est le choix paresseux : préférer split 2 colonnes groupé, grille de cartes, tabs/accordéon (`<details>`) si catégorisable.
+- Groupes repliés (`<details>`) : une ligne par groupe (libellé, résumé, nombre aligné à droite), fermés par défaut ; jamais une grille de cartes étroites où le texte passe à la ligne.
+- **Grille dense de pastilles** (tableau comparatif d'offres) : pictogramme seul dans la cellule, une forme distincte par état (jamais la même icône en deux couleurs), sens dans le nom accessible et dans une légende visible (pas de survol sur téléphone).
 - Jamais `border-t` ET `border-b` sur chaque ligne d'une liste/table de specs.
 - Pas de méta-labels génériques : « SECTION 01 », « QUESTION 05 », « Stage 1/2/3 », « Phase 01 ».
 

@@ -11,7 +11,7 @@ Ce skill ne modifie aucun contenu : une correction repasse par le skill d'éditi
 
 ## Voir le rendu
 - « Montre-moi » : TEST (modification directe) ou l'aperçu de la branche (chantier), construits par Vercel à chaque envoi (`branches` § 5) ; donner l'adresse de chaque page touchée, avec le slash final (adresses : CLAUDE.md § Projet), et la capture sur ordinateur et, si la mise en page a bougé, en largeur téléphone (390 px).
-- Capture : `node scripts/verify/shot.mjs <adresse> .captures/<page>-<largeur>.png <1440 | 390> --full` (sans dépendance, Chrome, Edge ou Chromium du poste ou de la session). Aucun navigateur trouvé : l'outil navigateur de la session, et le dire.
+- Capture : `node scripts/verify/shot.mjs <adresse> .captures/<page>-<largeur>.png <1440 | 390> --full` (sans dépendance, Chrome, Edge ou Chromium du poste ou de la session). Aucun navigateur trouvé : l'outil navigateur de la session, et le dire. Avant de montrer une capture, y repérer la modification : absente, le site de test (ou l'aperçu) n'est pas encore reconstruit ; attendre et recapturer, jamais montrer l'ancienne version comme la nouvelle (`design-craft`, `reference/integration.md` § Captures).
 - Rendu immédiat avant envoi : aperçu local, seulement si Node est présent sur le poste. Première fois (`node_modules/` absent) : `pnpm install` ; puis `pnpm dev` (http://localhost:4321), dans Claude Code desktop par la configuration `.claude/launch.json`.
 
 ## Contrôler le site

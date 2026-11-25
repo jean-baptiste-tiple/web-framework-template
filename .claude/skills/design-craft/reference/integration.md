@@ -8,8 +8,12 @@ Les seuils ci-dessous ne se recopient pas : ils citent `composition.md` et `a11y
 ## Avant de toucher la page
 
 1. **Capturer la page telle qu'elle est**, ordinateur et téléphone, page entière
-   (`node scripts/verify/shot.mjs <adresse> .captures/<page>-avant-1440.png 1440 --full`,
-   puis 390). Pas de navigateur : capturer avec l'outil navigateur de la session, et le dire.
+   (`node scripts/verify/shot.mjs <adresse> .captures/<sujet>/avant/<page>-1440.png 1440 --full`,
+   puis 390 ; dossier : § Captures). Pas de navigateur : capturer avec l'outil navigateur de
+   la session, et le dire. **Le cas signalé d'abord** : quand la demande part d'un problème vu
+   (« le bouton ne se voit pas sur téléphone »), ce cas exact (même page, même largeur, même
+   état) est capturé en premier et devient le premier critère de réussite ; puis chaque autre
+   état touché (formulaire envoyé ou en erreur, menu ouvert, liste vide), une capture chacun.
 2. **Inventaire en une ligne** : à quoi sert la page, son action principale, la suite de ses
    blocs dans l'ordre.
 3. **Coup d'œil d'ensemble** : la page dira-t-elle encore en une phrase à quoi elle sert, une
@@ -27,7 +31,9 @@ Un seuil franchi par le changement demandé, et seulement alors, déclenche une 
 - plus de 5 entrées dans le menu (`a11y.md`) ;
 - un bloc qui redit ce qu'un autre bloc de la page dit déjà (mêmes témoignages, mêmes
   avantages, même FAQ) ;
-- l'action principale de la page repoussée sous le premier écran.
+- l'action principale de la page repoussée sous le premier écran ;
+- un second objet détaillé sur la page (une autre offre, un second produit) que le brief ne
+  justifie pas (`composition.md` § Sections, un objet par page).
 
 ## Ce qu'on fait
 
@@ -53,6 +59,19 @@ session lance l'agent `relecteur-visuel` avec les captures avant, une seule pass
 (`design-craft` principe 4). Ses remarques se corrigent si elles ne contredisent pas la
 demande ; sinon elles deviennent une question, en mots courants. Texte, image, faute,
 couleur d'un bloc existant : pas de relecture, `verifier` suffit.
+
+## Captures
+
+- **Version servie vérifiée avant de juger** : sur chaque capture après, repérer d'abord un
+  élément propre au changement (texte, bloc). Absent, la capture montre une autre version (site
+  de test pas encore reconstruit après l'envoi, aperçu local arrêté, cache) : on s'arrête et on
+  le dit, aucun jugement sur cette capture.
+- **Un dossier par rôle**, créé avant la première capture (`mkdir -p`, `shot.mjs` ne le crée
+  pas) : `.captures/<sujet>/avant/` (la session ou le `concepteur`, avant le changement),
+  `.captures/<sujet>/relecture/` (le `relecteur-visuel`). Personne n'écrit dans le dossier d'un
+  autre ni dans `scripts/` ; un état que `--click` / `--type` ne savent pas produire (survol)
+  se capture par un script ponctuel rangé dans ce même dossier. Le brief et la relecture
+  citent ces chemins. `.captures/` n'est pas versionné.
 
 ## Chemin développeur (code d'une page, bloc nouveau, landing composée)
 
